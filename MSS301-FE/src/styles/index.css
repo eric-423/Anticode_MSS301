@@ -1,3 +1,20 @@
 @layer base {
   @import "tailwindcss";
+
+  :root {
+    --color-elevated-hover-button: #f58020;
+    --color-elevated-button: #f36a3c;
+  }
 }
+
+.font-nunito-sans {
+  font-family: "Nunito Sans", sans-serif;
+}
+
+*::-webkit-scrollbar {
+  width: 0px;
+}
+.scroll-bar-hidden::-webkit-scrollbar{
+  display: none;
+}
+
