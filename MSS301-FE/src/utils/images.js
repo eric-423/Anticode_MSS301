@@ -29,6 +29,9 @@ import qrGalaxy from "../assets/glx-qr-code.svg";
 import iosApp from "../assets/icon-ios-app-store.svg";
 import googleApp from "../assets/icon-google-app-store.svg";
 
+import galaxyFooter from "../assets/glx-footer.svg";
+import galaxyTrade from "../assets/glx_trade-footer.png";
+
 const IMAGES = {
   galaxyLogo,
   ticket,
@@ -58,6 +61,8 @@ const IMAGES = {
   qrGalaxy,
   iosApp,
   googleApp,
+  galaxyFooter,
+  galaxyTrade,
 };
 
 export default IMAGES;
