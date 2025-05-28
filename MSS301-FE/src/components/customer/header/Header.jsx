@@ -1,0 +1,81 @@
+import React, { useState } from "react";
+import IMAGES from "../../../utils/images";
+import LIST_NAVIGATION from "../../../utils/list-nav";
+import Film from "./item-film/Film";
+import Others from "./item-others/Others";
+
+const Header = () => {
+  const [itemHover, setItemHover] = useState();
+
+  return (
+    <header className="pt-3 pb-2 z-50">
+      <div className="mx-auto max-w-[1280px]">
+        <nav className="flex justify-start justify-items-center items-center flex-row h-[94px]">
+          <a className="mr-[20px] grow-0">
+            <img
+              className="max-w-min w-[77px] h-[40px] lg:w-[115px] lg:h-[60px] object-cover"
+              src={IMAGES.galaxyLogo}
+            />
+          </a>
+          <div className="relative flex grow justify-center px-[20px]">
+            <a className="mr-[15px]">
+              <img
+                className="max-w-min w-[84px] h-[27px] lg:w-[112px] lg:h-[36px]"
+                src={IMAGES.ticket}
+              />
+            </a>
+            <ul className="flex items-center">
+              {LIST_NAVIGATION.map((item) => (
+                <li
+                  className="px-[12px] relative font-nunito-sans text-[14px] justify-center items-center flex text-[#4a4a4a] gap-[4px] cursor-pointer hover:text-(--color-elevated-hover-button)"
+                  onMouseEnter={() => setItemHover(item)}
+                  onMouseLeave={() => setItemHover()}
+                >
+                  {item.name}
+                  <div className="w-[14px] h-[14px]">
+                    <img
+                      src={
+                        itemHover === item
+                          ? IMAGES.arrowDownActive
+                          : IMAGES.arrowDown
+                      }
+                    />
+                  </div>
+                  <div className="absolute w-[100%] h-[100%]  top-[100%]"></div>
+                  {itemHover?.name !== "Phim" &&
+                  itemHover?.name !== "Rạp/Giá Vé" &&
+                  item === itemHover ? (
+                    <Others item={item} />
+                  ) : null}
+                  {itemHover?.name === "Phim" && item === itemHover ? (
+                    <Film />
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex grow justify-end items-center">
+            <div className="mr-[24px]">
+              <img
+                className="w-[14px] h-[14px] cursor-pointer"
+                src={IMAGES.search}
+              />
+            </div>
+            <a className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)">
+              Đăng Nhập
+            </a>
+            <div className="px-[12px] ">
+              <img
+                className="w-[100px] cursor-pointer"
+                src={IMAGES.joinMember}
+              />
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
