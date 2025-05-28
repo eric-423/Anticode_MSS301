@@ -11,8 +11,8 @@ const Information = () => {
       </div>
 
       <div>
-        <div class="text-sm">
-          <p className="text-[14px] font-nunito-sans mt-[8pt]">
+        <div class="text-sm pb-[8pt] text-[#4a4a4a] font-nunito-sans">
+          <p className="text-[14px] font-nunito-sans my-[8pt]">
             <span className="text-[#485FC7] font-bold">Galaxy Cinema</span> là
             một trong những công ty tư nhân đầu tiên về điện ảnh được thành lập
             từ năm 2003, đã khẳng định thương hiệu là 1 trong 10 địa điểm vui
@@ -22,7 +22,7 @@ const Information = () => {
             hấp dẫn khán giả bởi không khí thân thiện cũng như chất lượng dịch
             vụ hàng đầu.
           </p>
-          <p className="text-[14px] font-nunito-sans mt-[8pt]">
+          <p className="text-[14px] font-nunito-sans my-[8pt]">
             Đến website{" "}
             <span className="italic text-[#485fc7]">galaxycine.vn</span>, khách
             hàng sẽ dễ dàng tham khảo các{" "}
@@ -35,7 +35,7 @@ const Information = () => {
             <span className="text-[#485FC7] font-bold">Galaxy Cinema</span> cũng
             được cập nhật đầy đủ hàng ngày hàng giờ trên trang chủ.
           </p>
-          <p className="text-[14px] font-nunito-sans mt-[8pt]">
+          <p className="text-[14px] font-nunito-sans my-[8pt]">
             Giờ đây đặt vé tại{" "}
             <span className="text-[#485FC7] font-bold">Galaxy Cinema</span> càng
             thêm dễ dàng chỉ với vài thao tác vô cùng đơn giản. Để mua vé, hãy
@@ -49,7 +49,7 @@ const Information = () => {
             quét mã QR để một bước vào rạp mà không cần tốn thêm bất kỳ công
             đoạn nào nữa.
           </p>
-          <p className="text-[14px] font-nunito-sans mt-[8pt]">
+          <p className="text-[14px] font-nunito-sans my-[8pt]">
             Nếu bạn đã chọn được{" "}
             <span className="italic text-[#485fc7]">phim hay</span> để xem, hãy
             đặt vé cực nhanh bằng box Mua Vé Nhanh ngay từ{" "}
@@ -58,7 +58,7 @@ const Information = () => {
             <span className="text-[#485FC7] font-bold">Galaxy Cinema</span> sẽ
             gửi ngay vào điện thoại và hộp mail của bạn.
           </p>
-          <p className="text-[14px] font-nunito-sans mt-[8pt]">
+          <p className="text-[14px] font-nunito-sans my-[8pt]">
             Nếu chưa quyết định sẽ xem phim mới nào, hãy tham khảo các bộ{" "}
             <span className="italic text-[#485fc7]">phim hay</span> trong mục
             <span className="italic text-[#485fc7]">Phim Đang Chiếu</span> cũng
@@ -71,7 +71,7 @@ const Information = () => {
             chỉ việc đặt vé bằng box Mua Vé Nhanh ngay ở đầu trang để chọn được
             suất chiếu và chỗ ngồi vừa ý nhất.{" "}
           </p>
-          <p className="text-[14px] font-nunito-sans mt-[8pt]">
+          <p className="text-[14px] font-nunito-sans my-[8pt]">
             <span className="text-[#485FC7] font-bold">Galaxy Cinema</span> luôn
             có những chương trình{" "}
             <span className="italic text-[#485fc7]">khuyến mãi</span>,{" "}
@@ -79,7 +79,7 @@ const Information = () => {
             cùng hấp dẫn như giảm giá vé, tặng vé xem phim miễn phí, tặng Combo,
             tặng quà phim… dành cho các khách hàng
           </p>
-          <p className="text-[14px] font-nunito-sans mt-[8pt]">
+          <p className="text-[14px] font-nunito-sans my-[8pt]">
             Trang web galaxycine.vn còn có mục Góc Điện Ảnh - nơi lưu trữ dữ
             liệu về phim, diễn viên và đạo diễn, những bài viết chuyên sâu về
             điện ảnh, hỗ trợ người yêu phim dễ dàng hơn trong việc lựa chọn phim
@@ -91,7 +91,7 @@ const Information = () => {
             nhất trong mục{" "}
             <span className="italic text-[#485fc7]">Phim Hay Tháng</span> .
           </p>
-          <p className="text-[14px] font-nunito-sans mt-[8pt]">
+          <p className="text-[14px] font-nunito-sans my-[8pt]">
             Hiện nay,{" "}
             <span className="text-[#363636] font-bold">Galaxy Cinema</span> đang
             ngày càng phát triển hơn nữa với các chương trình đặc sắc, các
