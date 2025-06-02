@@ -1,4 +1,5 @@
 import Home from "../pages/customer/home/Home";
+import TicketPrice from "../pages/customer/ticket-price/TicketPrice";
 
 const ROUTER = [
   {
@@ -6,6 +7,21 @@ const ROUTER = [
     path: "/",
     page: <Home />,
     title: "Home",
+    subRouter: [
+      {
+        name: "",
+        path: "",
+        page: "",
+        title: "",
+        subRouter: null,
+      },
+    ],
+  },
+  {
+    name: "customer",
+    path: "/ticket-price",
+    page: <TicketPrice />,
+    title: "Ticket Price",
     subRouter: [
       {
         name: "",
