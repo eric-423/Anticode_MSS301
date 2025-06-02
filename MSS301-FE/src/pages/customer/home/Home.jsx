@@ -10,7 +10,7 @@ import Footer from "../../../components/customer/footer/Footer";
 
 const Home = () => {
   return (
-    <div>
+    <>
       <Header />
       <main>
         <HeadSection />
@@ -23,7 +23,7 @@ const Home = () => {
         <Information />
       </main>
       <Footer />
-    </div>
+    </>
   );
 };
 
