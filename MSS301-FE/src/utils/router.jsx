@@ -1,3 +1,4 @@
+import Film from "../pages/customer/film/film";
 import Home from "../pages/customer/home/Home";
 import TicketPrice from "../pages/customer/ticket-price/TicketPrice";
 
@@ -22,6 +23,21 @@ const ROUTER = [
     path: "/ticket-price",
     page: <TicketPrice />,
     title: "Ticket Price",
+    subRouter: [
+      {
+        name: "",
+        path: "",
+        page: "",
+        title: "",
+        subRouter: null,
+      },
+    ],
+  },
+  {
+    name: "customer",
+    path: "/film",
+    page: <Film />,
+    title: "Home",
     subRouter: [
       {
         name: "",
