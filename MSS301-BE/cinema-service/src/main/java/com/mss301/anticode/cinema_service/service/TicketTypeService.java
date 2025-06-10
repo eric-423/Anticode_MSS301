@@ -1,0 +1,47 @@
+package com.mss301.anticode.cinema_service.service;
+
+import com.mss301.anticode.cinema_service.entity.TicketType;
+import com.mss301.anticode.cinema_service.repository.TicketTypeRepository;
+import com.mss301.anticode.cinema_service.service.Imp.TicketTypeServiceImp;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class TicketTypeService implements TicketTypeServiceImp {
+    private final TicketTypeRepository repository;
+
+    public TicketTypeService(TicketTypeRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public TicketType create(TicketType entity) {
+        return repository.save(entity);
+    }
+
+    @Override
+    public Optional<TicketType> getById(Integer id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    public List<TicketType> getAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public TicketType update(Integer id, TicketType entity) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("TicketType not found: " + id);
+        }
+        entity.setId(id);
+        return repository.save(entity);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        repository.deleteById(id);
+    }
+}
