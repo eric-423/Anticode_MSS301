@@ -36,34 +36,4 @@ public class BookingConcessionsServiceImpl implements BookingConcessionsService 
         });
         return BookingConcessionDTOs;
     }
-
-    @Override
-    public BookingConcessionDTO createBookingConcession(BookingConcessionDTO bookingConcessionDTO) {
-        BookingConcession bookingConcession = new BookingConcession();
-        BeanUtils.copyProperties(bookingConcessionDTO, bookingConcession);
-        BookingConcession bookingConcessionReturn = bookingConcessionRepository.save(bookingConcession);
-        BookingConcessionDTO bookingConcessionDTOReturn = new BookingConcessionDTO();
-        BeanUtils.copyProperties(bookingConcessionReturn, bookingConcessionDTOReturn);
-        return bookingConcessionDTOReturn;
-    }
-
-    @Override
-    public BookingConcessionDTO updateBookingConcession(int id, BookingConcessionDTO bookingConcessionDTO) {
-        BookingConcession bookingConcession = bookingConcessionRepository.getBookingConcessionById(id);
-        BeanUtils.copyProperties(bookingConcessionDTO, bookingConcession);
-        BookingConcession bookingConcessionReturn = bookingConcessionRepository.save(bookingConcession);
-        BookingConcessionDTO bookingConcessionDTOReturn = new BookingConcessionDTO();
-        BeanUtils.copyProperties(bookingConcessionReturn, bookingConcessionDTOReturn);
-        return bookingConcessionDTOReturn;
-    }
-
-    @Override
-    public boolean deleteBookingConcession(int id) {
-        try{
-            bookingConcessionRepository.deleteById(id);
-            return true;
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

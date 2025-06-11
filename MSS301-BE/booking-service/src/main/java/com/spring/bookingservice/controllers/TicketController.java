@@ -27,18 +27,4 @@ public class TicketController {
         return new ResponseEntity<>(ticketService.getTicket(id), HttpStatus.OK);
     }
 
-    @PostMapping("")
-    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO) {
-        return new ResponseEntity<>(ticketService.createTicket(ticketDTO), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<TicketDTO> updateTicket(@PathVariable int id, @RequestBody TicketDTO ticketDTO) {
-        return new ResponseEntity<>(ticketService.updateTicket(id, ticketDTO), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteTicket(@PathVariable int id) {
-        return new ResponseEntity<>(ticketService.deleteTicket(id), HttpStatus.OK);
-    }
 }
