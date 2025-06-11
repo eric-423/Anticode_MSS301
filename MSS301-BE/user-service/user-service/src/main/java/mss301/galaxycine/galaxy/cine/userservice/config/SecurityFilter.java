@@ -37,6 +37,7 @@ public class SecurityFilter {
             "/api/users/reset-password",
             "/api/users/register",
             "/api/users/login",
+            "/api/users/verify-code",
 
     };
 
