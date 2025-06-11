@@ -9,12 +9,12 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "password_reset_tokens")
+@Table(name = "verify_tokens")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class PasswordResetToken {
+public class VerifyToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -27,4 +27,7 @@ public class PasswordResetToken {
 
     @Column(name = "expiry_date")
     private Date expiryDate;
+
+    @Column(name = "created_at")
+    private Date createdAt;
 }

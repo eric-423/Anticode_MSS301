@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "Users")
@@ -41,12 +41,15 @@ public class Users {
     @Column(name = "created_at")
     private Date createdAt;
 
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified = false;
+
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "membership_id", nullable = false)
+    @JoinColumn(name = "membership_id", nullable = true)
     private MemberShip memberShip;
 
 

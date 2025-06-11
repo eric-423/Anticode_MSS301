@@ -2,12 +2,10 @@ package mss301.galaxycine.galaxy.cine.userservice.service;
 
 import mss301.galaxycine.galaxy.cine.userservice.dto.LoginRequest;
 import mss301.galaxycine.galaxy.cine.userservice.dto.RegisterRequest;
-import mss301.galaxycine.galaxy.cine.userservice.entity.PasswordResetToken;
+import mss301.galaxycine.galaxy.cine.userservice.entity.VerifyToken;
 import mss301.galaxycine.galaxy.cine.userservice.entity.Users;
 import mss301.galaxycine.galaxy.cine.userservice.payload.ResponseData;
-import mss301.galaxycine.galaxy.cine.userservice.repository.RoleRepository;
-import mss301.galaxycine.galaxy.cine.userservice.repository.TokenRepository;
-import mss301.galaxycine.galaxy.cine.userservice.repository.UserRepository;
+import mss301.galaxycine.galaxy.cine.userservice.repository.*;
 import mss301.galaxycine.galaxy.cine.userservice.service.Imp.UserService;
 import mss301.galaxycine.galaxy.cine.userservice.utils.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.util.Date;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -41,6 +42,13 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     JavaMailSender mailSender;
+
+
+    @Autowired
+    VerifyTokenRepository verifyTokenRepository;
+
+    @Autowired
+    private MemberShipRepository memberShipRepository;
 
     @Value("http://localhost:5173")
     String frontEndUrl;
@@ -71,13 +79,15 @@ public class UserServiceImp implements UserService {
     public ResponseData login(LoginRequest loginRequest) {
         String jwt;
         Users users = userRepository.findByEmail(loginRequest.getEmail());
-        if (users != null) {
-            jwt = jwtTokenHelpers.generateToken(users);
+        if (!users.isEmailVerified()) {
             ResponseData data = new ResponseData();
-            data.setData(jwt);
+            data.setDesc("Email chưa được xác minh. Vui lòng kiểm tra email để xác minh tài khoản.");
             return data;
         }
-        return null;
+        jwt = jwtTokenHelpers.generateToken(users);
+        ResponseData data = new ResponseData();
+        data.setData(jwt);
+        return data;
     }
 
     @Override
@@ -91,11 +101,32 @@ public class UserServiceImp implements UserService {
         user.setEmail(registerRequest.getEmail());
         user.setPhoneNumber(registerRequest.getPhone());
         user.setRole(roleRepository.findByNameIgnoreCase("user"));
+        user.setMemberShip(memberShipRepository.findByNameIgnoreCase("vip"));
         user.setRoyalPoint(0);
-        user.setCreatedAt(new Date(System.currentTimeMillis()));
+        user.setCreatedAt(new Date());
         userRepository.save(user);
         ResponseData responseData = new ResponseData();
-        responseData.setDesc("User registered successfully");
+        responseData.setDesc("Dăng ký thành công, vui lòng kiểm tra email để xác minh tài khoản.");
+
+        // Gửi email xác minh qua mail
+        Date expiryDate = Date.from(Instant.now().plus(10, ChronoUnit.MINUTES));
+
+        String otp = String.format("%06d", new Random().nextInt(999999));
+        VerifyToken verificationCode = new VerifyToken();
+        verificationCode.setToken(otp);
+        verificationCode.setUser(user);
+        verificationCode.setExpiryDate(expiryDate);
+        verifyTokenRepository.save(verificationCode);
+
+        String mailText = String.format("Xin chào %s,\n\nMã xác minh tài khoản của bạn là: %s\nMã có hiệu lực trong 10 phút.", user.getFullName(), otp);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("Xác minh đăng ký tài khoản");
+        message.setText(mailText);
+        mailSender.send(message);
+
+
         return responseData;
     }
 
@@ -129,35 +160,38 @@ public class UserServiceImp implements UserService {
         }
 
         String token = UUID.randomUUID().toString();
-        PasswordResetToken resetToken = new PasswordResetToken();
+        VerifyToken resetToken = new VerifyToken();
 
-        for (PasswordResetToken existingToken : tokenRepository.findAll()) {
+        for (VerifyToken existingToken : tokenRepository.findAll()) {
             Users existingUser = existingToken.getUser();
             if (existingUser != null && existingUser.equals(user)) {
                 tokenRepository.delete(existingToken);
             }
         }
 
+        Date expiryDate = Date.from(Instant.now().plus(10, ChronoUnit.MINUTES));
+
         resetToken.setToken(token);
         resetToken.setUser(user);
-        resetToken.setExpiryDate(new java.util.Date(System.currentTimeMillis() + 600_000));
+        resetToken.setExpiryDate(expiryDate);
+
+
         tokenRepository.save(resetToken);
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
-        message.setSubject("Password Reset");
+        message.setSubject("Đặt lại mật khẩu");
 
         String resetUrl = frontEndUrl + "/reset-password";
 
-        String text = String.format("Hello %s,\n\n" + "We have received a request to reset the password for your account.\n" + "Your password reset token is:\n\n%s\n\n" + "Please click the link below to proceed with resetting your password:\n\n%s\n\n" + "Note: This link will expire 10 minute from the time the request was made.\n\n" + "If you did not request this, please ignore this email. Your account will remain secure.\n\n" + "Best regards,\n" + "System Support Team.", user.getFullName(), token, resetUrl);
-
+        String text = String.format("Xin chào %s,\n\n" + "Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.\n" + "Mã đặt lại mật khẩu của bạn là:\n\n%s\n\n" + "Vui lòng nhấn vào đường link bên dưới để tiến hành đặt lại mật khẩu:\n\n%s\n\n" + "Lưu ý: Liên kết này sẽ hết hạn sau 10 phút kể từ thời điểm yêu cầu được gửi.\n\n" + "Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này. Tài khoản của bạn sẽ vẫn được bảo mật.\n\n" + "Trân trọng,\n" + "Đội hỗ trợ hệ thống.", user.getFullName(), token, resetUrl);
         message.setText(text);
         mailSender.send(message);
     }
 
     @Override
     public void resetPassword(String token, String newPassword) {
-        PasswordResetToken resetToken = tokenRepository.findByToken(token);
+        VerifyToken resetToken = tokenRepository.findByToken(token);
         if (resetToken == null) {
             return;
         }

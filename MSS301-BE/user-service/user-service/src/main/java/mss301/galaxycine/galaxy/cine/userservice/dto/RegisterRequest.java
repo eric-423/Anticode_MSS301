@@ -13,7 +13,6 @@ import lombok.Setter;
 public class RegisterRequest {
     private String email;
     private String fullName;
-    private String lastName;
     private String phone;
     private String password;
 }
