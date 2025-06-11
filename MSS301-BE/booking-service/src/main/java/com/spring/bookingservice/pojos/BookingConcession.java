@@ -13,13 +13,13 @@ public class BookingConcession {
     @Column(name = "concession_id")
     private int id;
 
-    @Column(name = "quantity", nullable = false)
+    @Column(name = "quantity")
     private int quantity;
 
     @ManyToOne
-    @JoinColumn(name = "booking_id", nullable = false)
+    @JoinColumn(name = "booking_id")
     private Booking booking;
 
-    @Column(name = "concession_product_id", nullable = false)
+    @Column(name = "concession_product_id")
     private int concessionProductID;
 }

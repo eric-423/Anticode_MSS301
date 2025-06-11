@@ -44,42 +44,4 @@ public class TicketServiceImpl implements TicketService {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public TicketDTO createTicket(TicketDTO ticketDTO) {
-       try {
-           Ticket ticket = new Ticket();
-           BeanUtils.copyProperties(ticketDTO, ticket);
-           Ticket ticketReturn = ticketRepository.save(ticket);
-           TicketDTO ticketDTOReturn = new TicketDTO();
-           BeanUtils.copyProperties(ticketReturn, ticketDTOReturn);
-           return ticketDTOReturn;
-       } catch (RuntimeException e) {
-           throw new RuntimeException(e);
-       }
-    }
-
-    @Override
-    public TicketDTO updateTicket(int id, TicketDTO ticketDTO) {
-        try{
-            Ticket ticket = ticketRepository.getTicketsById(id);
-            BeanUtils.copyProperties(ticketDTO, ticket);
-            Ticket ticketReturn = ticketRepository.save(ticket);
-            TicketDTO ticketDTOReturn = new TicketDTO();
-            BeanUtils.copyProperties(ticketReturn, ticketDTOReturn);
-            return ticketDTOReturn;
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public boolean deleteTicket(int id) {
-        try {
-            ticketRepository.deleteById(id);
-            return true;
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

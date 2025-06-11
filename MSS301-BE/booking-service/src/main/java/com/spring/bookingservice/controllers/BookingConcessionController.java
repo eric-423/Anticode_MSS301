@@ -26,19 +26,5 @@ public class BookingConcessionController {
         return new ResponseEntity<>(bookingConcessionsService.getBookingConcession(id), HttpStatus.OK);
     }
 
-    @PostMapping("")
-    public ResponseEntity<BookingConcessionDTO> createBookingConcession(@RequestBody BookingConcessionDTO bookingConcession) {
-        return new ResponseEntity<>(bookingConcessionsService.createBookingConcession(bookingConcession), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<BookingConcessionDTO> updateBookingConcession(@RequestBody BookingConcessionDTO bookingConcession, @PathVariable("id") int id) {
-        return new ResponseEntity<>(bookingConcessionsService.updateBookingConcession(id, bookingConcession), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteBookingConcession(@PathVariable("id") int id) {
-        return new ResponseEntity<>(bookingConcessionsService.deleteBookingConcession(id),HttpStatus.OK);
-    }
 
 }
