@@ -4,6 +4,7 @@ package mss301.galaxycine.galaxy.cine.userservice.controller;
 import mss301.galaxycine.galaxy.cine.userservice.dto.*;
 import mss301.galaxycine.galaxy.cine.userservice.entity.Users;
 import mss301.galaxycine.galaxy.cine.userservice.entity.VerifyToken;
+import mss301.galaxycine.galaxy.cine.userservice.payload.ResponseData;
 import mss301.galaxycine.galaxy.cine.userservice.repository.UserRepository;
 import mss301.galaxycine.galaxy.cine.userservice.repository.VerifyTokenRepository;
 import mss301.galaxycine.galaxy.cine.userservice.service.Imp.UserService;
@@ -11,6 +12,7 @@ import mss301.galaxycine.galaxy.cine.userservice.utils.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,5 +101,37 @@ public class UserController {
         return ResponseEntity.ok("Password reset successfully");
     }
 
+    @GetMapping("me")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN','MANAGER')")
+    public ResponseEntity<?> getCurrentUser() {
+        ResponseData data = new ResponseData();
+        data.setData(userService.getUserById());
+        data.setDesc("get user by id success");
+        if (userService.getUserById() == null) {
+            data.setStatus(404);
+            return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+        } else {
+            data.setStatus(200);
+        }
 
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+
+
+    @PutMapping("me")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN','MANAGER')")
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
+        ResponseData data = new ResponseData();
+        try {
+            UserDTO updatedUser = userService.updateUserById(userDTO);
+            data.setData(updatedUser);
+            data.setDesc("Update user by id success");
+            data.setStatus(200);
+        } catch (Exception e) {
+            data.setDesc(e.getMessage());
+            data.setStatus(400);
+            return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
 }

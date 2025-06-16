@@ -2,12 +2,14 @@ package mss301.galaxycine.galaxy.cine.userservice.service;
 
 import mss301.galaxycine.galaxy.cine.userservice.dto.LoginRequest;
 import mss301.galaxycine.galaxy.cine.userservice.dto.RegisterRequest;
+import mss301.galaxycine.galaxy.cine.userservice.dto.UserDTO;
 import mss301.galaxycine.galaxy.cine.userservice.entity.VerifyToken;
 import mss301.galaxycine.galaxy.cine.userservice.entity.Users;
 import mss301.galaxycine.galaxy.cine.userservice.payload.ResponseData;
 import mss301.galaxycine.galaxy.cine.userservice.repository.*;
 import mss301.galaxycine.galaxy.cine.userservice.service.Imp.UserService;
 import mss301.galaxycine.galaxy.cine.userservice.utils.JwtTokenHelper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -203,5 +205,48 @@ public class UserServiceImp implements UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         tokenRepository.delete(resetToken);
+    }
+
+
+    @Override
+    public UserDTO getUserById() {
+        int userId = jwtTokenHelpers.getUserIdFromToken();
+        UserDTO dto = new UserDTO();
+        try {
+            Users user = userRepository.findById(userId).orElseThrow(() -> new Exception("User not found"));
+            BeanUtils.copyProperties(user, dto);
+            dto.setMemberShip(user.getMemberShip().getName());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return dto;
+    }
+
+
+    @Override
+    public UserDTO updateUserById(UserDTO userDTO) throws Exception {
+        int userId = jwtTokenHelpers.getUserIdFromToken();
+        Users user = userRepository.findById(userId).orElseThrow(() -> new Exception("User not found"));
+
+        if (userDTO.getFullName() != null && !userDTO.getFullName().trim().isEmpty()) {
+            user.setFullName(userDTO.getFullName());
+        }
+        if (userDTO.getEmail() != null && !userDTO.getEmail().trim().isEmpty()) {
+            user.setEmail(userDTO.getEmail());
+        }
+        if (userDTO.getPhoneNumber() != null && !userDTO.getPhoneNumber().trim().isEmpty()) {
+            user.setPhoneNumber(userDTO.getPhoneNumber());
+        }
+        if (userDTO.getDateOfBirth() != null) {
+            user.setDateOfBirth(userDTO.getDateOfBirth());
+        }
+
+        userRepository.save(user);
+
+        userDTO.setMemberShip(user.getMemberShip().getName());
+
+        return userDTO;
     }
 }
