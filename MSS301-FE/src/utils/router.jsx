@@ -1,4 +1,4 @@
-import Film from '../pages/customer/film/film'
+import Film from '../pages/customer/film/Film'
 import Home from '../pages/customer/home/Home'
 import TicketPrice from '../pages/customer/ticket-price/TicketPrice'
 import Product from '../pages/customer/product/Product'

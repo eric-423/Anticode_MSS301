@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import IMAGES from "../../../../../utils/images";
+import React, { useState } from 'react'
+import IMAGES from '../../../../../utils/images'
 
-const FilmCard = () => {
-  const [hover, setHover] = useState(false);
+const FilmCard = ({ movie = {} }) => {
+  const [hover, setHover] = useState(false)
 
   return (
     <div className="h-[500px] relative">
@@ -11,11 +11,21 @@ const FilmCard = () => {
         onMouseLeave={() => setHover(false)}
         className="w-[290px] h-[435px] relative flex left-[50%] translate-x-[-50%] rounded-[10px] overflow-hidden"
       >
-        <img className="object-cover" src={IMAGES.thamTuKienPoster} alt="" />
+        <img
+          className="object-cover"
+          src={movie.imageUrl || IMAGES.thamTuKienPoster}
+          alt=""
+        />
         <div className="bg-[rgba(0,0,0,0.4)] right-[-5px] absolute w-[100px] h-[24px] skew-x-[25deg] bottom-[40px]">
           <div className="flex justify-end items-center gap-[20px] translate-y-[-2px]">
-            <img className="skew-x-[-25deg] w-[14px] h-[14px]" src={IMAGES.star} alt="" />
-            <p className="skew-x-[-25deg] text-[18px] font-bold text-white mr-[10px]">9.5</p>
+            <img
+              className="skew-x-[-25deg] w-[14px] h-[14px]"
+              src={IMAGES.star}
+              alt=""
+            />
+            <p className="skew-x-[-25deg] text-[18px] font-bold text-white mr-[10px]">
+              9.5
+            </p>
           </div>
         </div>
         <div className="w-[38px] h-[28px] bg-[rgb(245,128,32,1)] absolute flex justify-center items-center rounded-[5px] bottom-[5px] right-[5px]">
@@ -53,11 +63,11 @@ const FilmCard = () => {
       </div>
       <div className="mt-2.5">
         <h3 className="line-clamp-2 font-semibold text-[16px] text-[#333333]">
-          Thám Tử Kiên: Kỳ Án Không Đầu
+          {movie.title || movie.name || ''}
         </h3>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FilmCard;
+export default FilmCard

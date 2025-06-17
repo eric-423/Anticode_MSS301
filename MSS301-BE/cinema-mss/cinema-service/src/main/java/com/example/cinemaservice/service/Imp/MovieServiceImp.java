@@ -1,7 +1,9 @@
 package com.example.cinemaservice.service.Imp;
 
+import com.example.cinemaservice.dtos.MovieDTO;
 import com.example.cinemaservice.entity.Movie;
 import com.example.cinemaservice.entity.enums.MovieStatus;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +16,7 @@ public interface MovieServiceImp {
 
     public List<Movie> getAll();
 
-    List<Movie> getByStatus(MovieStatus status);
+    Page<MovieDTO> getByStatus(String status, int page, int size);
 
     public Movie update(Integer id, Movie entity);
 
