@@ -2,10 +2,15 @@ package com.example.cinemaservice.controller;
 
 import com.example.cinemaservice.entity.Movie;
 import com.example.cinemaservice.entity.enums.MovieStatus;
+import com.example.cinemaservice.payload.ResponseData;
 import com.example.cinemaservice.service.Imp.MovieServiceImp;
 import com.example.cinemaservice.service.Imp.ShowtimeServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/movies")
@@ -18,11 +23,14 @@ public class MovieController {
     private ShowtimeServiceImp showtimeServiceImp;
 
     @GetMapping
-    public Iterable<Movie> getAllMovies(@RequestParam(value = "status", required = false) MovieStatus status) {
-        if (status != null) {
-            return movieServiceImp.getByStatus(status);
-        }
-        return movieServiceImp.getAll();
+    public ResponseEntity<?> getAllMovies(@RequestParam(value = "status", required = false) String status, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        ResponseData responseData = new ResponseData();
+        responseData.setData(movieServiceImp.getByStatus(status, page, size));
+        responseData.setStatus(200);
+        responseData.setDesc("Movies retrieved successfully");
+
+        return ResponseEntity.ok(responseData);
     }
 
     @GetMapping("/{id}")

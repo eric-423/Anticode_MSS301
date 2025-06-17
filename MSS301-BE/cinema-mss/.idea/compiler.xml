@@ -19,8 +19,8 @@
         </processorPath>
         <module name="transaction-service" />
         <module name="common-service" />
-        <module name="cinema-service" />
         <module name="booking-service" />
+        <module name="cinema-service" />
       </profile>
     </annotationProcessing>
   </component>

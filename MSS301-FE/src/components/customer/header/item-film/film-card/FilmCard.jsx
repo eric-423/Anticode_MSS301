@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import IMAGES from "../../../../../utils/images";
+import React, { useState } from 'react'
+import IMAGES from '../../../../../utils/images'
 
-const FilmCard = () => {
-  const [activeHover, setActiveHover] = useState();
+const FilmCard = ({ movie = {} }) => {
+  const [activeHover, setActiveHover] = useState(false)
 
   return (
     <div className="py-2 relative">
@@ -11,7 +11,7 @@ const FilmCard = () => {
         onMouseEnter={() => setActiveHover(true)}
         onMouseLeave={() => setActiveHover(false)}
       >
-        <img src={IMAGES.muaLua} />
+        <img src={movie.imageUrl || IMAGES.muaLua} />
         <div className="absolute py-[.75rem] px-[2.8rem] bg-[rgba(0,0,0,0.4)] skew-x-[25deg] bottom-[40px] right-[-10px]">
           <span className="absolute skew-x-[-25deg] top-[50%] translate-y-[-50%] right-[20px] text-white font-nunito-sans">
             9.5
@@ -27,7 +27,7 @@ const FilmCard = () => {
         )}
       </div>
       <p className="w-[140px] line-clamp-2 text-[14px] text-[#333333] font-nunito-sans mt-2 font-[600]">
-        Mưa Lửa - Anh Trai Vượt Ngàn Chông Gai Movie
+        {movie.title || movie.name || ''}
       </p>
     </div>
   );
