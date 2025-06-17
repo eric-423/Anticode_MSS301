@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import LIST_TYPE_FILM from "../../../../../utils/list-type-film";
 
-const FilmNav = () => {
-  const [itemActive, setItemActive] = useState(LIST_TYPE_FILM.LIST_TYPE_FILM_MAIN[0]);
+const FilmNav = ({ itemActive, onChange }) => {
   return (
     <div className="flex items-center h-[30px] mb-10">
       <div className="flex items-center">
@@ -16,7 +15,7 @@ const FilmNav = () => {
           {LIST_TYPE_FILM.LIST_TYPE_FILM_MAIN.map((item) => (
             <li
               className="mr-8 cursor-pointer relative"
-              onClick={() => setItemActive(item)}
+              onClick={() => onChange?.(item)}
             >
               <span
                 className="text-[#333333] opacity-50 text-[16px] font-semibold hover:text-[#034EA2]"

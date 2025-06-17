@@ -33,6 +33,7 @@ public class Movie {
     private int ageRanging;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private MovieStatus status;
 
     @Column(name = "image_url")
