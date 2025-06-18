@@ -37,6 +37,7 @@
         <module>booking-service</module>
         <module>transaction-service</module>
         <module>common-service</module>
+        <module>gateway-service</module>
     </modules>
 
     <dependencies>

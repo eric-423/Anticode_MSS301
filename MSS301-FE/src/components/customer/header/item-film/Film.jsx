@@ -7,7 +7,6 @@ import { MOVIE_STATUS } from '../../../../utils/status'
 const STATUS_MAP = {
   'PHIM ĐANG CHIẾU': MOVIE_STATUS.NOW_SHOWING,
   'PHIM SẮP CHIẾU': MOVIE_STATUS.COMING_SOON,
-  'PHIM IMAX': MOVIE_STATUS.NOT_SHOWING,
 }
 
 const Film = () => {
@@ -18,8 +17,8 @@ const Film = () => {
       Object.entries(STATUS_MAP).map(([key, status]) =>
         getMovies({ status })
           .then((res) => ({ key, data: res.data?.data?.content || [] }))
-          .catch(() => ({ key, data: [] })),
-      ),
+          .catch(() => ({ key, data: [] }))
+      )
     ).then((results) => {
       const obj = {}
       results.forEach(({ key, data }) => {
@@ -41,7 +40,9 @@ const Film = () => {
         <div className="relative" key={item.name}>
           <div className="flex gap-[8px]">
             <div className="w-[4px] h-[22px] bg-[#034ea2]"></div>
-            <h4 className="text-[15px] font-nunito-sans text-[#333333] ">{item.name}</h4>
+            <h4 className="text-[15px] font-nunito-sans text-[#333333] ">
+              {item.name}
+            </h4>
           </div>
           <div className="relative flex gap-5">
             {(movies[item.name] || []).slice(0, 4).map((movie) => (
@@ -54,4 +55,4 @@ const Film = () => {
   )
 }
 
-export default Film;
+export default Film

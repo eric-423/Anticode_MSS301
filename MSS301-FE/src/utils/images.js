@@ -31,6 +31,9 @@ import googleApp from "../assets/icon-google-app-store.svg";
 
 import galaxyFooter from "../assets/glx-footer.svg";
 import galaxyTrade from "../assets/glx_trade-footer.png";
+import blurLeft from "../assets/blur-left.png"
+import blurRight from "../assets/blur-right.png"
+import buttonPlay from "../assets/button-play.png"
 
 import clock from "../assets/clock.png";
 
@@ -66,6 +69,9 @@ const IMAGES = {
   galaxyFooter,
   galaxyTrade,
   clock,
+  blurLeft,
+  blurRight,
+  buttonPlay
 };
 
 export default IMAGES;
