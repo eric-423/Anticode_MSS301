@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Objects;
 
 @Component
-public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter> {
+public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
     @Autowired
     private RouteValidator validator;
@@ -19,9 +19,17 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     @Autowired
     private WebClient.Builder webClientBuilder;
 
+    public AuthenticationFilter() {
+        super(Config.class);
+    }
+
+    public static class Config {
+    }
+
     @Override
-    public GatewayFilter apply(AuthenticationFilter config) {
+    public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
+            System.out.println("Chay qua day");
           if(validator.isSecured.test(exchange.getRequest())){
               System.out.println(exchange.getRequest().getURI().getPath()+"uri");
              if(!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
