@@ -1,8 +1,13 @@
-import Film from "../pages/customer/film/Film";
-import Home from "../pages/customer/home/Home";
-import TicketPrice from "../pages/customer/ticket-price/TicketPrice";
+
+import Film from '../pages/customer/film/Film'
+import Home from '../pages/customer/home/Home'
+import TicketPrice from '../pages/customer/ticket-price/TicketPrice'
+import Product from '../pages/customer/product/Product'
+import ProductDetail from '../pages/customer/product-detail/product-detail'
+import Login from '../components/customer/auth/login'
 import Product from "../pages/customer/product/Product";
 import Booking from "../pages/customer/booking/Booking";
+
 
 const ROUTER = [
   {
@@ -20,15 +25,29 @@ const ROUTER = [
     subRouter: [],
   },
   {
-    name: "customer",
-    path: "/film",
+    name: 'customer',
+    path: '/login',
+    page: <Login />,
+    title: 'Login',
+    subRouter: [],
+  },
+  {
+    name: 'customer',
+    path: '/film',
     page: <Film />,
     title: "Home",
     subRouter: [],
   },
   {
-    name: "customer",
-    path: "/product",
+    name: 'customer',
+    path: '/detail',
+    page: <ProductDetail />,
+    title: 'Product Detail',
+    subRouter: [],
+  },
+  {
+    name: 'customer',
+    path: '/product',
     page: <Product />,
     title: "Product",
     subRouter: [],
