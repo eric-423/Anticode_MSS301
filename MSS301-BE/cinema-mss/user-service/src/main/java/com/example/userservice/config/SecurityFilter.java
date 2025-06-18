@@ -38,7 +38,8 @@ public class SecurityFilter {
             "/api/users/register",
             "/api/users/login",
             "/api/users/verify-code",
-
+            "/swagger-ui/index.html",
+            "/user-service/*"
     };
 
     @Bean
@@ -52,7 +53,7 @@ public class SecurityFilter {
                 .userDetailsService(userDetailService)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_URLS).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
 
@@ -63,13 +64,11 @@ public class SecurityFilter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("*"));
-
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080","http://localhost:8081","http://localhost:8082"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L); // 1 tiếng
-
+        configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

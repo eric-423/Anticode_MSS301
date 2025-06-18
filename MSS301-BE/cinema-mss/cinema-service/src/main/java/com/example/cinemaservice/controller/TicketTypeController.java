@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ticket-types")
+@CrossOrigin
 public class TicketTypeController {
     @Autowired
     private TicketTypeServiceImp ticketTypeServiceImp;
