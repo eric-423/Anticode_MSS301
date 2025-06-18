@@ -4,9 +4,11 @@ import LIST_NAVIGATION from "../../../utils/list-nav";
 import Film from "./item-film/Film";
 import Others from "./item-others/Others";
 import { useNavigate } from "react-router-dom";
+import LoginPopup from '../auth/login';
 
 const Header = () => {
   const [itemHover, setItemHover] = useState();
+  const [loginPopUp, setLoginPopUp] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -47,8 +49,8 @@ const Header = () => {
                   </div>
                   <div className="absolute w-[100%] h-[100%]  top-[100%]"></div>
                   {itemHover?.name !== "Phim" &&
-                  itemHover?.name !== "Rạp/Giá Vé" &&
-                  item === itemHover ? (
+                    itemHover?.name !== "Rạp/Giá Vé" &&
+                    item === itemHover ? (
                     <Others item={item} />
                   ) : null}
                   {itemHover?.name === "Phim" && item === itemHover ? (
@@ -66,9 +68,16 @@ const Header = () => {
                 src={IMAGES.search}
               />
             </div>
-            <a className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)">
+
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                setLoginPopUp(loginPopUp => !loginPopUp);
+              }}
+              className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)">
               Đăng Nhập
             </a>
+
             <div className="px-[12px] ">
               <img
                 className="w-[100px] cursor-pointer"
@@ -78,7 +87,11 @@ const Header = () => {
           </div>
         </nav>
       </div>
+      {loginPopUp && <LoginPopup onClose={() => setLoginPopUp(loginPopUp => !loginPopUp)} />}
     </header>
+
+
+
   );
 };
 
