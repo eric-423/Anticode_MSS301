@@ -13,4 +13,4 @@ const HeadSection = () => {
   )
 }
 
-export default HeadSection
+export default HeadSection;

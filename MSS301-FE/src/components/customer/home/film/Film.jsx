@@ -15,7 +15,6 @@ const Film = () => {
     const statusMap = {
       'Đang Chiếu': MOVIE_STATUS.NOW_SHOWING,
       'Sắp Chiếu': MOVIE_STATUS.COMING_SOON,
-      'Phim IMAX': MOVIE_STATUS.NOT_SHOWING,
     }
     const status = statusMap[itemActive.name] || MOVIE_STATUS.NOW_SHOWING
     getMovies({ status })
