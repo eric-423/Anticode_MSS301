@@ -5,8 +5,7 @@ const LIST_NAVIGATION = [
   {
     name: "Sản Phẩm",
     sub_items: [
-      { name: "Anh Trai Vượt Ngàn Chông Gai" },
-      { name: "Galaxy Merch" },
+      { name: "Đồ Ăn Kèm" },
     ],
   },
   {

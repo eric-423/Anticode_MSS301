@@ -6,19 +6,14 @@ const RESERVATION_STEP = [
   },
   {
     id: "2",
-    name: "Chọn Rạp",
-    class: "relative col-span-2"
-  },
-  {
-    id: "3",
     name: "Chọn Ngày",
     class: "relative col-span-2"
   },
   {
-    id: "4",
+    id: "3",
     name: "Chọn Suất",
     class: "relative col-span-2"
   },
 ];
 
-export default RESERVATION_STEP; 
+export default RESERVATION_STEP;

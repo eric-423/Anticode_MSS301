@@ -1,13 +1,11 @@
 const LIST_TYPE_FILM_HOVER = [
   { name: "PHIM ĐANG CHIẾU" },
-  { name: "PHIM SẮP CHIẾU" },
-  { name: "PHIM IMAX" },
+  { name: "PHIM SẮP CHIẾU" }
 ];
 
 const LIST_TYPE_FILM_MAIN = [
-   { name: "Đang Chiếu" },
-  { name: "Sắp Chiếu" },
-  { name: "Phim IMAX" },
+  { name: "Đang Chiếu" },
+  { name: "Sắp Chiếu" }
 ]
 
 const LIST_TYPE_FILM = {
