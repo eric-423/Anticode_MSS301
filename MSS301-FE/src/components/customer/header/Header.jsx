@@ -4,15 +4,18 @@ import LIST_NAVIGATION from "../../../utils/list-nav";
 import Film from "./item-film/Film";
 import Others from "./item-others/Others";
 import LoginPopup from '../auth/login';
+import UserProfileCard from "../../../components/customer/home/user-info/UserProfileCard";
 
 const Header = () => {
   const [itemHover, setItemHover] = useState();
   const [loginPopUp, setLoginPopUp] = useState(false);
 
+  const [auth, setAuth] = useState('asdasdasda');
+
 
 
   return (
-    <header className="pt-3 pb-2 z-50">
+    <header className="pt-3 pb-2 z-50" >
       <div className="mx-auto max-w-[1280px]">
         <nav className="flex justify-start justify-items-center items-center flex-row h-[94px]">
           <a className="mr-[20px] grow-0">
@@ -67,26 +70,36 @@ const Header = () => {
               />
             </div>
 
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                setLoginPopUp(loginPopUp => !loginPopUp);
-              }}
-              className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)">
-              Đăng Nhập
-            </a>
+            {
+              auth != null ? (
+                <UserProfileCard />
+              ) : (
+                <>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setLoginPopUp(loginPopUp => !loginPopUp);
+                    }}
+                    className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)">
+                    Đăng Nhập
+                  </a>
 
-            <div className="px-[12px] ">
-              <img
-                className="w-[100px] cursor-pointer"
-                src={IMAGES.joinMember}
-              />
-            </div>
+                  <div className="px-[12px] ">
+                    <img
+                      className="w-[100px] cursor-pointer"
+                      src={IMAGES.joinMember}
+                    />
+                  </div>
+                </>
+              )
+            }
+
+
           </div>
         </nav>
-      </div>
+      </div >
       {loginPopUp && <LoginPopup onClose={() => setLoginPopUp(loginPopUp => !loginPopUp)} />}
-    </header>
+    </header >
 
 
 
