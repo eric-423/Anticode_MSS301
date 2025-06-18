@@ -32,6 +32,8 @@ import googleApp from "../assets/icon-google-app-store.svg";
 import galaxyFooter from "../assets/glx-footer.svg";
 import galaxyTrade from "../assets/glx_trade-footer.png";
 
+import clock from "../assets/clock.png";
+
 const IMAGES = {
   galaxyLogo,
   ticket,
@@ -63,6 +65,7 @@ const IMAGES = {
   googleApp,
   galaxyFooter,
   galaxyTrade,
+  clock,
 };
 
 export default IMAGES;

@@ -2,6 +2,8 @@ import Film from '../pages/customer/film/Film'
 import Home from '../pages/customer/home/Home'
 import TicketPrice from '../pages/customer/ticket-price/TicketPrice'
 import Product from '../pages/customer/product/Product'
+import ProductDetail from '../pages/customer/product-detail/product-detail'
+import Login from '../components/customer/auth/login'
 
 const ROUTER = [
   {
@@ -36,9 +38,39 @@ const ROUTER = [
   },
   {
     name: 'customer',
+    path: '/login',
+    page: <Login />,
+    title: 'Login',
+    subRouter: [
+      {
+        name: '',
+        path: '',
+        page: '',
+        title: '',
+        subRouter: null,
+      },
+    ],
+  },
+  {
+    name: 'customer',
     path: '/film',
     page: <Film />,
     title: 'Home',
+    subRouter: [
+      {
+        name: '',
+        path: '',
+        page: '',
+        title: '',
+        subRouter: null,
+      },
+    ],
+  },
+  {
+    name: 'customer',
+    path: '/detail',
+    page: <ProductDetail />,
+    title: 'Product Detail',
     subRouter: [
       {
         name: '',
