@@ -3,13 +3,13 @@ import IMAGES from "../../../utils/images";
 import LIST_NAVIGATION from "../../../utils/list-nav";
 import Film from "./item-film/Film";
 import Others from "./item-others/Others";
+import { useNavigate } from "react-router-dom";
 import LoginPopup from '../auth/login';
 
 const Header = () => {
   const [itemHover, setItemHover] = useState();
   const [loginPopUp, setLoginPopUp] = useState(false);
-
-
+  const navigate = useNavigate();
 
   return (
     <header className="pt-3 pb-2 z-50">
@@ -34,6 +34,8 @@ const Header = () => {
                   className="px-[12px] relative font-nunito-sans text-[14px] justify-center items-center flex text-[#4a4a4a] gap-[4px] cursor-pointer hover:text-(--color-elevated-hover-button)"
                   onMouseEnter={() => setItemHover(item)}
                   onMouseLeave={() => setItemHover()}
+                    onClick={() => item.path && navigate(item.path)}
+
                 >
                   {item.name}
                   <div className="w-[14px] h-[14px]">
