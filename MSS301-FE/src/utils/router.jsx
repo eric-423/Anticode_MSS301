@@ -5,7 +5,6 @@ import TicketPrice from '../pages/customer/ticket-price/TicketPrice'
 import Product from '../pages/customer/product/Product'
 import ProductDetail from '../pages/customer/product-detail/product-detail'
 import Login from '../components/customer/auth/login'
-import Product from "../pages/customer/product/Product";
 import Booking from "../pages/customer/booking/Booking";
 
 
