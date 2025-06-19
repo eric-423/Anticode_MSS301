@@ -14,7 +14,17 @@
 *::-webkit-scrollbar {
   width: 0px;
 }
+
+
 .scroll-bar-hidden::-webkit-scrollbar{
   display: none;
 }
-
+.scroll-bar-show::-webkit-scrollbar{
+  display: block;
+  width: 2px;
+  height: 5px;
+}
+.scroll-bar-show::-webkit-scrollbar-thumb {
+  background: #f36a3c;
+  border-radius:10px;
+}

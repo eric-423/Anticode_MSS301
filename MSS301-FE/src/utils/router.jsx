@@ -3,6 +3,7 @@ import Home from "../pages/customer/home/Home";
 import TicketPrice from "../pages/customer/ticket-price/TicketPrice";
 import Product from "../pages/customer/product/Product";
 import Booking from "../pages/customer/booking/Booking";
+import BookingTickets from "../pages/customer/booking-tickets/BookingTickets";
 
 const ROUTER = [
   {
@@ -40,20 +41,12 @@ const ROUTER = [
     title: "Booking",
     subRouter: [],
   },
-  {
-    name: "admin",
-    path: "",
-    page: "",
-  },
-  {
-    name: "staff",
-    path: "",
-    page: "",
-  },
-  {
-    name: "manager",
-    path: "",
-    page: "",
+   {
+    name: "booking",
+    path: "/booking-ticket",
+    page: <BookingTickets />,
+    title: "Booking",
+    subRouter: [],
   },
 ];
 
