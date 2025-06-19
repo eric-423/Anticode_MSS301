@@ -39,7 +39,7 @@ const ROUTER = [
   },
   {
     name: 'customer',
-    path: '/detail',
+    path: '/product/:productId',
     page: <ProductDetail />,
     title: 'Product Detail',
     subRouter: [],
@@ -53,7 +53,7 @@ const ROUTER = [
   },
   {
     name: "booking",
-    path: "/booking",
+    path: "/booking/:movieId",
     page: <Booking />,
     title: "Booking",
     subRouter: [],

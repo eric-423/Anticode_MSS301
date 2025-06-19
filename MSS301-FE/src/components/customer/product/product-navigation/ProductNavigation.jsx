@@ -18,18 +18,15 @@ const ProductNavigation = () => {
     </svg>
   )
 
-  const [activeCategory, setActiveCategory] = useState('ATVNCG')
+  const [activeCategory, setActiveCategory] = useState('Đồ Ăn Kèm')
 
   const breadcrumbs = [
     { label: 'Trang chủ', href: '#' },
     { label: 'Sản phẩm', href: '#' },
-    { label: 'ATVNCG', href: '#', isCurrent: true },
+    { label: 'Đồ Ăn Kèm', href: '#', isCurrent: true },
   ]
 
-  const categories = [
-    { id: 'ATVNCG', label: 'ATVNCG' },
-    { id: 'GLX_MERCH', label: 'GLX Merch' },
-  ]
+  const categories = [{ id: 'food', label: 'Đồ Ăn Kèm' }]
 
   return (
     <div className="font-sans p-4 md:p-8 bg-white">

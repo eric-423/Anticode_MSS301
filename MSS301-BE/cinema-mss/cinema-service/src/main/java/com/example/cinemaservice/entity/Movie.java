@@ -39,6 +39,9 @@ public class Movie {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "trailer_url")
+    private String trailerUrl;
+
     @ManyToMany
     @JoinTable(
         name = "Movie_Genres",

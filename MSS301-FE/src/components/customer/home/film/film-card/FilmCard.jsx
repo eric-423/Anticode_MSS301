@@ -36,7 +36,7 @@ const FilmCard = ({ movie = {} }) => {
         {hover && (
           <div className="absolute z-50 flex flex-col justify-center items-center w-full h-full gap-3 hover:bg-[rgba(0,0,0,0.4)] cursor-pointer">
             <div className="text-white bg-[#f26b38] cursor-pointer w-[120px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center"
-            onClick={() => navigate('/booking')}
+            onClick={() => navigate(`/booking/${movie.id}`)}
             >
               <img className="mr-2" src={IMAGES.ticketHover} />
               <span className="font-nunito-sans">Mua Vé</span>

@@ -1,18 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import Header from "../../../components/customer/header/Header";
 import ProductDetail from "../../../components/customer/home/product-detail/product-detail";
 import ProductDescription from "../../../components/customer/home/product-detail/product-description";
+import { getConcessionProductDetail } from "../../../utils/api";
 
 
 
 const ProductDetailPage = () => {
+    const { productId } = useParams()
+    const [productData, setProductData] = useState(null)
 
-    const productData = {
-        name: 'ATVNCG - Blindbox Kakadoll Ver.2',
-        price: '300.000 ₫',
-        images: 'https://cdn.galaxycine.vn/media/2025/4/16/kakadoll-anh-dai-dien-2_1744787848604.jpg',
-        description: "\"Xú túi mè\" Kakadoll ngay tại Galaxy Cinema. Còn do dự, người khác xé ra sít rịt mất!Hộp mù Kakadoll gồm phiên bản chibi của 12 Anh Tài và 1 Secret được lựa chọn ngẫu nhiên. Kakadoll được thiết kế mô phỏng theo ngoại hình và trang phục của các Anh Tài trong các tiết mục được công diễn của chương trình ATVNCG."
-    };
+    useEffect(() => {
+        if (!productId) return
+        getConcessionProductDetail(productId)
+            .then(res => setProductData(res.data.data))
+            .catch(err => console.error(err))
+    }, [productId])
+
+    if (!productData) return null
 
     return (
         <div className="">
