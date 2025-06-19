@@ -16,7 +16,7 @@ const UserInfoPage = () => {
         <div style={{ marginRight: 48 }}>
           <UserProfile user={userData} spending={spendingData} />
         </div>
-        <div style={{ flex: 1, maxWidth: 900, borderRadius: 16, padding: 32 }}>
+        <div style={{ flex: 1, maxWidth: 900, borderRadius: 16, padding: 32, paddingTop: 0 }}>
           <TabNavigation tab={tab} setTab={setTab} />
           {tab === "history" && <TransactionHistory transactions={transactionHistory} />}
           {tab === "profile" && <UserDetail userData={userData} />}
