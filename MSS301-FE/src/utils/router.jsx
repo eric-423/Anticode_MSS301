@@ -8,6 +8,7 @@ import Login from '../components/customer/auth/login'
 import Booking from "../pages/customer/booking/Booking";
 import BookingTickets from "../pages/customer/booking-tickets/BookingTickets";
 import UserInfoPage from "../components/customer/user-detail/UserInfoPage";
+import ConcessionsPage from "../pages/customer/concessions/ConcessionsPage";
 
 const ROUTER = [
   {
@@ -66,11 +67,18 @@ const ROUTER = [
     title: "Booking",
     subRouter: [],
   },
-   {
+  {
     name: "booking",
-    path: "/booking-ticket",
+    path: "/booking-ticket/:movieId",
     page: <BookingTickets />,
     title: "Booking",
+    subRouter: [],
+  },
+  {
+    name: "booking",
+    path: "/concessions",
+    page: <ConcessionsPage />,
+    title: "Concessions",
     subRouter: [],
   },
 ];

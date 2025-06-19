@@ -20,9 +20,10 @@ public class ShowtimeController {
     }
 
     @GetMapping("/{id}")
-    public Showtime getShowtimeById(Integer id) {
-        return showtimeServiceImp.getById(id)
-                .orElseThrow(() -> new RuntimeException("Showtime not found with id: " + id));
+    public ResponseEntity<?> getShowtimeById(@PathVariable int id) {
+        ResponseData responseData = new ResponseData();
+        responseData.setData(showtimeServiceImp.getById(id));
+        return ResponseEntity.ok(responseData);
     }
 
     @PostMapping
