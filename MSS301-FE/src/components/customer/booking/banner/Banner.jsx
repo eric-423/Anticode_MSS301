@@ -1,7 +1,7 @@
 import React from "react";
 import IMAGES from "../../../../utils/images";
 
-const Banner = () => {
+const Banner = ({ movie }) => {
   return (
     <div className="h-[500px] bg-black w-full relative flex justify-center">
       <div className="w-[860px] bg-gray-300 h-full relative">
@@ -17,7 +17,7 @@ const Banner = () => {
             width="1440"
             height="440"
             className='w-[860px] h-full duration-500 ease-in-out'
-            src="https://cdn.galaxycine.vn/media/2025/2/17/bi-kip-luyen-rong-750_1739776701532.jpg"
+            src={movie?.imageUrl || "https://cdn.galaxycine.vn/media/2025/2/17/bi-kip-luyen-rong-750_1739776701532.jpg"}
           />
           <div className="absolute w-full h-full bg-[rgba(0,0,0,0.15)] left-0 top-0 flex justify-center items-center">
                 <div className="w-[64px] h-[64px]">

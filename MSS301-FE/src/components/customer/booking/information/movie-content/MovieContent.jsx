@@ -3,12 +3,12 @@ import MovieIntro from './movie-intro/MovieIntro'
 import ContentDetail from './content-detail/ContentDetail'
 import ShowTimes from './showtimes/ShowTimes'
 
-const MovieContent = () => {
+const MovieContent = ({ movie, movieId }) => {
   return (
     <div className='col-span-5'>
-        <MovieIntro />
-        <ContentDetail />
-        <ShowTimes />
+        <MovieIntro movie={movie} />
+        <ContentDetail movie={movie} />
+        <ShowTimes movieId={movieId} />
     </div>
   )
 }

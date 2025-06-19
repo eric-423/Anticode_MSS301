@@ -32,8 +32,13 @@ public class MovieService implements MovieServiceImp {
     }
 
     @Override
-    public Optional<Movie> getById(Integer id) {
-        return repository.findById(id);
+    public MovieDTO getById(Integer id) {
+        Movie movie = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movie not found with id: " + id));
+
+        MovieDTO result = convertToDTO(movie);
+
+        return result;
     }
 
     @Override

@@ -12,7 +12,7 @@ public interface MovieServiceImp {
 
     public Movie create(Movie entity);
 
-    public Optional<Movie> getById(Integer id);
+    public MovieDTO getById(Integer id);
 
     public List<Movie> getAll();
 

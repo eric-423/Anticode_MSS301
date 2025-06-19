@@ -1,38 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const NavTime = () => {
-  const [showTimes, setShowTimes] = useState([
-    {
-      day: "Hôm Nay",
-      date: "18/06",
-    },
-    {
-      day: "Thứ Năm",
-      date: "19/06",
-    },
-    {
-      day: "Thứ Sáu",
-      date: "20/06",
-    },
-    {
-      day: "Thứ Bảy",
-      date: "21/06",
-    },
-    {
-      day: "Chủ Nhật",
-      date: "22/06",
-    },
-    {
-      day: "Thứ Hai",
-      date: "23/06",
-    },
-    {
-      day: "Thứ Ba",
-      date: "24/06",
-    },
-  ]);
+const NavTime = ({ onSelectDate }) => {
+  const generateDays = () => {
+    const days = [];
+    const weekdays = [
+      "Chủ Nhật",
+      "Thứ Hai",
+      "Thứ Ba",
+      "Thứ Tư",
+      "Thứ Năm",
+      "Thứ Sáu",
+      "Thứ Bảy",
+    ];
+    for (let i = 0; i < 7; i += 1) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      const dayLabel = i === 0 ? "Hôm Nay" : weekdays[date.getDay()];
+      const dd = String(date.getDate()).padStart(2, "0");
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const yyyy = date.getFullYear();
+      days.push({
+        day: dayLabel,
+        date: `${dd}/${mm}`,
+        fullDate: `${dd}/${mm}/${yyyy}`,
+      });
+    }
+    return days;
+  };
+
+  const [showTimes] = useState(generateDays());
 
   const [activeDay, setActiveDay] = useState(showTimes[0]);
+
+  useEffect(() => {
+    if (onSelectDate) {
+      onSelectDate(activeDay.fullDate);
+    }
+  }, [activeDay, onSelectDate]);
 
   return (
     <div className=" w-full">
