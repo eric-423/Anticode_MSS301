@@ -7,6 +7,7 @@ import ProductDetail from '../pages/customer/product-detail/product-detail'
 import Login from '../components/customer/auth/login'
 import Booking from "../pages/customer/booking/Booking";
 import UserInfoPage from "../components/customer/user-detail/UserInfoPage";
+import ManageDashboardPage from '../pages/manager/ManageDashboardPage'
 
 
 
@@ -65,6 +66,13 @@ const ROUTER = [
     path: "/booking/:movieId",
     page: <Booking />,
     title: "Booking",
+    subRouter: [],
+  },
+  {
+    name: "manager",
+    path: "/manager",
+    page: <ManageDashboardPage />,
+    title: "Manage Dashboard",
     subRouter: [],
   },
   {
