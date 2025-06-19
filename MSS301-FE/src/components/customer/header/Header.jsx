@@ -36,7 +36,7 @@ const Header = () => {
                   className="px-[12px] relative font-nunito-sans text-[14px] justify-center items-center flex text-[#4a4a4a] gap-[4px] cursor-pointer hover:text-(--color-elevated-hover-button)"
                   onMouseEnter={() => setItemHover(item)}
                   onMouseLeave={() => setItemHover()}
-                    onClick={() => item.path && navigate(item.path)}
+                  onClick={() => item.path && navigate(item.path)}
 
                 >
                   {item.name}

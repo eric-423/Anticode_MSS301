@@ -6,6 +6,8 @@ import Product from '../pages/customer/product/Product'
 import ProductDetail from '../pages/customer/product-detail/product-detail'
 import Login from '../components/customer/auth/login'
 import Booking from "../pages/customer/booking/Booking";
+import UserInfoPage from "../components/customer/user-detail/UserInfoPage";
+
 
 
 const ROUTER = [
@@ -14,6 +16,13 @@ const ROUTER = [
     path: "/",
     page: <Home />,
     title: "Home",
+    subRouter: [],
+  },
+  {
+    name: "user-detail",
+    path: "/user-detail",
+    page: <UserInfoPage />,
+    title: "User Info",
     subRouter: [],
   },
   {
