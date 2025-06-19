@@ -17,6 +17,9 @@ export const getShowtimesByMovie = (movieId) =>
 export const getShowtimesByMovieDate = (movieId, date) =>
   api.get(`/cinema-service/showtimes/movie/show-time-date/${movieId}`, { params: { date } });
 
+export const getShowtimeById = (showtimeId) =>
+  api.get(`/cinema-service/showtimes/${showtimeId}`);
+
 export const getMovieDetail = (movieId) =>
   api.get(`/cinema-service/movies/${movieId}`);
 

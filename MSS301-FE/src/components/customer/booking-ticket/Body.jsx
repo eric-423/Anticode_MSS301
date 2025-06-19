@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import ProgressBar from "./progress-bar/ProgressBar";
-import TicketInfor from "./ticket-infor/TicketInfor";
-import ChooseSeat from "./choose-seat/ChooseSeat";
-import Concessions from "./concessions/Concessions";
-import Payment from "./choose-seat/payment/Payment";
+import React, { useState } from 'react'
+import ProgressBar from './progress-bar/ProgressBar'
+import TicketInfor from './ticket-infor/TicketInfor'
+import ChooseSeat from './choose-seat/ChooseSeat'
+import Concessions from './concessions/Concessions'
+import Payment from './choose-seat/payment/Payment'
 
-const Body = () => {
+const Body = ({ movieId, showtimeId }) => {
   return (
     <div className="bg-[#F9F9F9] pt-[6px]">
       <ProgressBar />
       <div className="grid grid-cols-3 max-w-[1390px] mx-auto">
-        {/* <ChooseSeat /> */}
+        <ChooseSeat movieId={movieId} showtimeId={showtimeId} />
         {/* <Concessions /> */}
-        <Payment />
-        <TicketInfor />
+        {/* <Payment /> */}
+        {/* <TicketInfor /> */}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Body;
+export default Body
