@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import jwtDecode from 'jwt-decode';
+import { login as loginApi } from '../../../utils/api';
 
 
 const CloseIcon = ({ className = "w-6 h-6" }) => (
@@ -61,16 +63,24 @@ const Button = ({ children, onClick, variant = 'primary', type = 'button' }) => 
 
 
 
-const LoginPopup = ({ onClose, onSwitchToRegister }) => {
+const LoginPopup = ({ onClose, onSwitchToRegister, onLoginSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({ email, password });
-        alert(`Đăng nhập với:\nEmail: ${email}`);
-        onClose();
+        try {
+            const response = await loginApi({ email, password });
+            const token = response.data.data;
+            localStorage.setItem('token', token);
+            const user = jwtDecode(token);
+            onLoginSuccess && onLoginSuccess(user);
+            onClose();
+        } catch (err) {
+            console.error(err);
+            alert('Đăng nhập thất bại');
+        }
     };
 
     return (
@@ -157,7 +167,7 @@ const RegisterPopup = ({ onClose, onSwitchToLogin }) => {
     );
 };
 
-export default function Login() {
+export default function Login({ onLoginSuccess }) {
 
     const [activePopup, setActivePopup] = useState('login');
 
@@ -167,6 +177,7 @@ export default function Login() {
                 <LoginPopup
                     onClose={() => setActivePopup(null)}
                     onSwitchToRegister={() => setActivePopup('register')}
+                    onLoginSuccess={onLoginSuccess}
                 />
             )}
 

@@ -11,11 +11,11 @@ import java.util.function.Predicate;
 public class RouteValidator {
 
     public static final List<String> openApiEndpoints = List.of(
-            "/api/users/forgot-password",
-            "/api/users/reset-password",
-            "/api/users/register",
-            "/api/users/login",
-            "/api/users/verify-code",
+            "/users/forgot-password",
+            "/users/reset-password",
+            "/users/register",
+            "/users/login",
+            "/users/verify-code",
             "/swagger-ui/index.html",
             "/user-service/*",
             "/cinema-service/*"
