@@ -33,11 +33,11 @@ public class SecurityFilter {
     }
 
     public static final String[] PUBLIC_URLS = {
-            "/api/users/forgot-password",
-            "/api/users/reset-password",
-            "/api/users/register",
-            "/api/users/login",
-            "/api/users/verify-code",
+            "/users/forgot-password",
+            "/users/reset-password",
+            "/users/register",
+            "/users/login",
+            "/users/verify-code",
             "/swagger-ui/index.html",
             "/user-service/*"
     };
@@ -65,7 +65,7 @@ public class SecurityFilter {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080","http://localhost:8081","http://localhost:8082"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080","http://localhost:8081","http://localhost:8082"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);

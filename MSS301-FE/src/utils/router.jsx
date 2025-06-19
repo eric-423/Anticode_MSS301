@@ -6,9 +6,11 @@ import Product from '../pages/customer/product/Product'
 import ProductDetail from '../pages/customer/product-detail/product-detail'
 import Login from '../components/customer/auth/login'
 import Booking from "../pages/customer/booking/Booking";
+import BookingTickets from "../pages/customer/booking-tickets/BookingTickets";
 import UserInfoPage from "../components/customer/user-detail/UserInfoPage";
 import ManageDashboardPage from '../pages/manager/ManageDashboardPage'
 
+import ConcessionsPage from "../pages/customer/concessions/ConcessionsPage";
 
 
 const ROUTER = [
@@ -76,19 +78,18 @@ const ROUTER = [
     subRouter: [],
   },
   {
-    name: "admin",
-    path: "",
-    page: "",
+    name: "booking",
+    path: "/booking-ticket/:movieId",
+    page: <BookingTickets />,
+    title: "Booking",
+    subRouter: [],
   },
   {
-    name: "staff",
-    path: "",
-    page: "",
-  },
-  {
-    name: "manager",
-    path: "",
-    page: "",
+    name: "booking",
+    path: "/concessions",
+    page: <ConcessionsPage />,
+    title: "Concessions",
+    subRouter: [],
   },
 ];
 

@@ -1,8 +1,13 @@
 package com.example.cinemaservice.service;
 
+import com.example.cinemaservice.dtos.CinemaHallsDTO;
+import com.example.cinemaservice.dtos.HallTypeDTO;
 import com.example.cinemaservice.dtos.ShowTimeDTO;
+import com.example.cinemaservice.entity.CinemaHall;
+import com.example.cinemaservice.entity.HallType;
 import com.example.cinemaservice.entity.Movie;
 import com.example.cinemaservice.entity.Showtime;
+import com.example.cinemaservice.repository.CinemaHallRepository;
 import com.example.cinemaservice.repository.MovieRepository;
 import com.example.cinemaservice.repository.ShowtimeRepository;
 import com.example.cinemaservice.service.Imp.ShowtimeServiceImp;
@@ -25,6 +30,9 @@ public class ShowtimeService implements ShowtimeServiceImp {
     @Autowired
     private MovieRepository moveieRepository;
 
+    @Autowired
+    private CinemaHallRepository cinemaHallRepository;
+
     public ShowtimeService(ShowtimeRepository repository) {
         this.repository = repository;
     }
@@ -35,8 +43,15 @@ public class ShowtimeService implements ShowtimeServiceImp {
     }
 
     @Override
-    public Optional<Showtime> getById(Integer id) {
-        return repository.findById(id);
+    public ShowTimeDTO getById(Integer id) {
+        Optional<Showtime> optionalShowtime = repository.findById(id);
+        if (optionalShowtime.isEmpty()) {
+            throw new RuntimeException("Showtime not found: " + id);
+        }
+        Showtime showtime = optionalShowtime.get();
+        ShowTimeDTO showTimeDTO = convertToDTO(showtime);
+
+        return showTimeDTO;
     }
 
     @Override
@@ -104,12 +119,6 @@ public class ShowtimeService implements ShowtimeServiceImp {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
 
-        System.out.println(startOfDay);
-        System.out.println(endOfDay);
-        System.out.println("Current server time: " + new Date());
-        System.out.println("JVM timezone: " + TimeZone.getDefault());
-
-
         Date startDate = java.sql.Timestamp.valueOf(startOfDay);
         Date endDate = java.sql.Timestamp.valueOf(endOfDay);
 
@@ -129,6 +138,31 @@ public class ShowtimeService implements ShowtimeServiceImp {
         }
 
         return result;
+    }
+
+    private ShowTimeDTO convertToDTO(Showtime showtime) {
+        ShowTimeDTO showTimeDTO = new ShowTimeDTO();
+        showTimeDTO.setId(showtime.getId());
+        showTimeDTO.setStartTime(showtime.getStartTime());
+        showTimeDTO.setEndTime(showtime.getEndTime());
+
+        HallTypeDTO hallTypeDTO = new HallTypeDTO();
+        HallType hallType = showtime.getCinemaHall().getHallType();
+        hallTypeDTO.setId(hallType.getId());
+        hallTypeDTO.setName(hallType.getName());
+        hallTypeDTO.setRoll(hallType.getRoll());
+        hallTypeDTO.setColumn(hallType.getColumn());
+
+
+        CinemaHall cinemaHall = showtime.getCinemaHall();
+        CinemaHallsDTO cinemaHallsDTO = new CinemaHallsDTO();
+        cinemaHallsDTO.setId(cinemaHall.getId());
+        cinemaHallsDTO.setHallName(cinemaHall.getHallName());
+        cinemaHallsDTO.setScrrenType(cinemaHall.getScrrenType());
+        cinemaHallsDTO.setHallType(hallTypeDTO);
+        showTimeDTO.setCinemaHall(cinemaHallsDTO);
+
+        return showTimeDTO;
     }
 
 }

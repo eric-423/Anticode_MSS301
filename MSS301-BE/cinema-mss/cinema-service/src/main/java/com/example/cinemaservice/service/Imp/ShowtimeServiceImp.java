@@ -11,7 +11,7 @@ public interface ShowtimeServiceImp {
 
     public Showtime create(Showtime entity);
 
-    public Optional<Showtime> getById(Integer id);
+    public ShowTimeDTO getById(Integer id);
 
     public List<Showtime> getAll();
 

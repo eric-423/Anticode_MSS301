@@ -19,8 +19,8 @@ const GiftIcon = ({ className }) => (
   </svg>
 );
 
-function UserProfileCard() {
-  const userName = "Tran Minh Nhut";
+function UserProfileCard({ user }) {
+  const userName = user?.username || "Tran Minh Nhut";
   const userRank = "Star";
   const userStars = 0;
   const [showDropdown, setShowDropdown] = useState(false);
@@ -127,8 +127,8 @@ function UserProfileCard() {
   );
 }
 
-export default function App() {
+export default function UserProfileCardWrapper({ user }) {
   return (
-    <UserProfileCard />
+    <UserProfileCard user={user} />
   );
 }
