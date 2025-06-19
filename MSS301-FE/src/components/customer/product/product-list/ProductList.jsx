@@ -1,54 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import ProductCard from '../product-card/ProductCard'
+import { getConcessionProducts } from '../../../../utils/api'
 import './ProductList.css'
 
-const productsData = [
-  {
-    id: 1,
-    imageUrl:
-      'https://cdn.galaxycine.vn/media/2025/4/18/02-sold-out-premiere-e-voucher_1744962700255.jpg',
-    title: 'ATVNCG The Movie - Premiere E-Voucher',
-    price: 220000,
-    soldOut: true,
-  },
-  {
-    id: 2,
-    imageUrl:
-      'https://cdn.galaxycine.vn/media/2025/4/18/02-sold-out-premiere-e-voucher_1744962700255.jpg',
-    title: 'ATVNCG - KHIÊN LỬA Lightstick Set',
-    price: 600000,
-    soldOut: false,
-  },
-  {
-    id: 3,
-    imageUrl:
-      'https://cdn.galaxycine.vn/media/2025/4/18/02-sold-out-premiere-e-voucher_1744962700255.jpg',
-    title: 'ATVNCG – Blindbox Kakachain - Dây đeo điện thoại Ảnh Tài',
-    price: 150000,
-    soldOut: false,
-  },
-  {
-    id: 4,
-    imageUrl:
-      'https://cdn.galaxycine.vn/media/2025/4/18/02-sold-out-premiere-e-voucher_1744962700255.jpg',
-    title: 'ATVNCG - Blindbox Kakadoll Ver.2 - Set 6 hộp ngẫu nhiên',
-    price: 1800000,
-    soldOut: false,
-  },
-]
-
 const ProductList = () => {
+  const [productsData, setProductsData] = useState([])
+
+  useEffect(() => {
+    getConcessionProducts({ page: 0, size: 10 })
+      .then((res) => setProductsData(res.data.data?.content || []))
+      .catch((err) => console.error(err))
+  }, [])
   return (
     <div className="product-list">
       {productsData.map((product) => (
-        <ProductCard
-          key={product.id}
-          imageUrl={product.imageUrl}
-          title={product.title}
-          price={product.price}
-          soldOut={product.soldOut}
-          specialText={product.specialText}
-        />
+        <Link key={product.id} to={`/product/${product.id}`}>
+          <ProductCard
+            imageUrl={product.productImageUrl}
+            title={product.name}
+            price={product.price}
+            soldOut={product.soldOut}
+            specialText={product.specialText}
+          />
+        </Link>
       ))}
     </div>
   )

@@ -30,7 +30,7 @@ const Film = () => {
 
   return (
     <div
-      className="px-6 py-4 absolute bg-white top-[100%] left-[-45px] translate-y-[20px] z-50 rounded-[.375rem] flex flex-col gap-5"
+      className="px-6 py-4 absolute bg-white top-[100%] left-[-45px] z-50 rounded-[.375rem] flex flex-col gap-5"
       style={{
         boxShadow:
           '0 6px 16px 0 rgba(0,0,0,.08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgba(0,0,0,.05)',

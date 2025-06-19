@@ -29,6 +29,12 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
+
+            if (exchange.getRequest().getMethod().name().equals("OPTIONS")) {
+                exchange.getResponse().setStatusCode(HttpStatus.OK);
+                return exchange.getResponse().setComplete();
+            }
+
             System.out.println("Chay qua day");
           if(validator.isSecured.test(exchange.getRequest())){
               System.out.println(exchange.getRequest().getURI().getPath()+"uri");

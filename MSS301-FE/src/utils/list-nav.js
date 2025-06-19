@@ -1,9 +1,11 @@
 const LIST_NAVIGATION = [
   {
     name: "Phim",
+    path: '/'
   },
   {
     name: "Sản Phẩm",
+    path: '/product',
     sub_items: [
       { name: "Đồ Ăn Kèm" },
     ],
@@ -29,6 +31,7 @@ const LIST_NAVIGATION = [
   },
   {
     name: "Rạp/Giá Vé",
+    path: '/ticket-price'
   },
 ];
 

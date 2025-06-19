@@ -1,6 +1,6 @@
 import React from "react";
 
-const Time = () => {
+const Time = ({ movie }) => {
   return (
     <div class="flex items-center font-nunito-sans">
       <div class="text-sm flex items-center text-[#4a4a4a]">
@@ -16,7 +16,7 @@ const Time = () => {
             fill="#F58020"
           ></path>
         </svg>
-        <span>126 Phút</span>
+        <span>{movie?.duration ? `${movie.duration} Phút` : ''}</span>
       </div>
       <div class="text-sm ml-4 flex items-center text-[#4a4a4a] ">
         <svg

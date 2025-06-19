@@ -1,8 +1,10 @@
 package com.example.cinemaservice.controller;
 
 import com.example.cinemaservice.entity.ConcessionProduct;
+import com.example.cinemaservice.payload.ResponseData;
 import com.example.cinemaservice.service.Imp.ConcessionProductServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,14 +17,21 @@ public class ConcessionProductController {
     private ConcessionProductServiceImp concessionProductServiceImp;
 
     @GetMapping
-    public List<ConcessionProduct> getAllConcessionProducts() {
-        return concessionProductServiceImp.getAll();
+    public ResponseEntity<?> getAllConcessionProducts(@RequestParam(required = false, defaultValue = "0") int page,
+                                                   @RequestParam(required = false, defaultValue = "10") int size) {
+        ResponseData responseData = new ResponseData();
+        responseData.setData(concessionProductServiceImp.getAll(page, size));
+
+        return ResponseEntity.ok(responseData);
     }
 
     @GetMapping("/{id}")
-    public ConcessionProduct getConcessionProductById(Integer id) {
-        return concessionProductServiceImp.getById(id)
-                .orElseThrow(() -> new RuntimeException("Concession Product not found with id: " + id));
+    public ResponseEntity<?> getConcessionProductById(@PathVariable Integer id) {
+
+        ResponseData responseData = new ResponseData();
+        responseData.setData(concessionProductServiceImp.getById(id));
+
+        return ResponseEntity.ok(responseData);
     }
 
     @PostMapping

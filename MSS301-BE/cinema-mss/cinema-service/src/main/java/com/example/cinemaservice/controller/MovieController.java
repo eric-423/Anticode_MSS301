@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/movies")
-@CrossOrigin
 public class MovieController {
     @Autowired
     private MovieServiceImp movieServiceImp;
@@ -34,9 +33,11 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public Movie getMovieById(@PathVariable("id") Integer id) {
-        return movieServiceImp.getById(id)
-                .orElseThrow(() -> new RuntimeException("Movie not found with id: " + id));
+    public ResponseEntity<?> getMovieById(@PathVariable("id") Integer id) {
+        ResponseData responseData = new ResponseData();
+        responseData.setData(movieServiceImp.getById(id));
+
+        return ResponseEntity.ok(responseData);
     }
 
     @GetMapping("/{id}/showtimes")

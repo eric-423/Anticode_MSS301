@@ -3,12 +3,18 @@ import IMAGES from "../../../utils/images";
 import LIST_NAVIGATION from "../../../utils/list-nav";
 import Film from "./item-film/Film";
 import Others from "./item-others/Others";
+import { useNavigate } from "react-router-dom";
+import LoginPopup from '../auth/login';
+import UserProfileCard from "../../../components/customer/home/user-info/UserProfileCard";
 
 const Header = () => {
   const [itemHover, setItemHover] = useState();
+  const [loginPopUp, setLoginPopUp] = useState(false);
+  const [auth, setAuth] = useState('jwt aut');
+  const navigate = useNavigate();
 
   return (
-    <header className="pt-3 pb-2 z-50">
+    <header className="pt-3 pb-2 z-50" >
       <div className="mx-auto max-w-[1280px]">
         <nav className="flex justify-start justify-items-center items-center flex-row h-[94px]">
           <a className="mr-[20px] grow-0">
@@ -30,6 +36,8 @@ const Header = () => {
                   className="px-[12px] relative font-nunito-sans text-[14px] justify-center items-center flex text-[#4a4a4a] gap-[4px] cursor-pointer hover:text-(--color-elevated-hover-button)"
                   onMouseEnter={() => setItemHover(item)}
                   onMouseLeave={() => setItemHover()}
+                  onClick={() => item.path && navigate(item.path)}
+
                 >
                   {item.name}
                   <div className="w-[14px] h-[14px]">
@@ -43,8 +51,8 @@ const Header = () => {
                   </div>
                   <div className="absolute w-[100%] h-[100%]  top-[100%]"></div>
                   {itemHover?.name !== "Phim" &&
-                  itemHover?.name !== "Rạp/Giá Vé" &&
-                  item === itemHover ? (
+                    itemHover?.name !== "Rạp/Giá Vé" &&
+                    item === itemHover ? (
                     <Others item={item} />
                   ) : null}
                   {itemHover?.name === "Phim" && item === itemHover ? (
@@ -62,19 +70,40 @@ const Header = () => {
                 src={IMAGES.search}
               />
             </div>
-            <a className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)">
-              Đăng Nhập
-            </a>
-            <div className="px-[12px] ">
-              <img
-                className="w-[100px] cursor-pointer"
-                src={IMAGES.joinMember}
-              />
-            </div>
+
+            {
+              auth != null ? (
+                <UserProfileCard />
+              ) : (
+                <>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setLoginPopUp(loginPopUp => !loginPopUp);
+                    }}
+                    className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)">
+                    Đăng Nhập
+                  </a>
+
+                  <div className="px-[12px] ">
+                    <img
+                      className="w-[100px] cursor-pointer"
+                      src={IMAGES.joinMember}
+                    />
+                  </div>
+                </>
+              )
+            }
+
+
           </div>
         </nav>
-      </div>
-    </header>
+      </div >
+      {loginPopUp && <LoginPopup onClose={() => setLoginPopUp(loginPopUp => !loginPopUp)} />}
+    </header >
+
+
+
   );
 };
 
