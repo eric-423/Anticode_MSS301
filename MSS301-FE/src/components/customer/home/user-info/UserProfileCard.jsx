@@ -40,9 +40,9 @@ function UserProfileCard() {
     }, 150);
   };
 
-  const handleDropdownClick = () => {
-    console.log("lalala");
-    setShowDropdown(false);
+  const handleDropdownClick = (event) => {
+    window.location.href = `/${event}`;
+    console.log(`Redirecting to ${event}`);
   };
 
 
@@ -101,7 +101,7 @@ function UserProfileCard() {
           <ul className="space-y-1">
             <li
               className="flex items-center space-x-2 hover:bg-orange-50 p-2 rounded cursor-pointer transition-colors duration-200"
-              onClick={() => handleDropdownClick()}
+              onClick={() => handleDropdownClick('user-detail')}
             >
               <UserIcon className="w-4 h-4 text-gray-500" />
               <span className="text-sm text-gray-700">Tài Khoản</span>
@@ -129,8 +129,6 @@ function UserProfileCard() {
 
 export default function App() {
   return (
-    <div className="bg-gray-100 flex items-center justify-center min-h-screen">
-      <UserProfileCard />
-    </div>
+    <UserProfileCard />
   );
 }
