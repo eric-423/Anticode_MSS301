@@ -8,7 +8,10 @@ import Login from '../components/customer/auth/login'
 import Booking from "../pages/customer/booking/Booking";
 import BookingTickets from "../pages/customer/booking-tickets/BookingTickets";
 import UserInfoPage from "../components/customer/user-detail/UserInfoPage";
+import ManageDashboardPage from '../pages/manager/ManageDashboardPage'
+
 import ConcessionsPage from "../pages/customer/concessions/ConcessionsPage";
+
 
 const ROUTER = [
   {
@@ -65,6 +68,13 @@ const ROUTER = [
     path: "/booking/:movieId",
     page: <Booking />,
     title: "Booking",
+    subRouter: [],
+  },
+  {
+    name: "manager",
+    path: "/manager",
+    page: <ManageDashboardPage />,
+    title: "Manage Dashboard",
     subRouter: [],
   },
   {
