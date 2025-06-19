@@ -6,9 +6,8 @@ import Product from '../pages/customer/product/Product'
 import ProductDetail from '../pages/customer/product-detail/product-detail'
 import Login from '../components/customer/auth/login'
 import Booking from "../pages/customer/booking/Booking";
+import BookingTickets from "../pages/customer/booking-tickets/BookingTickets";
 import UserInfoPage from "../components/customer/user-detail/UserInfoPage";
-
-
 
 const ROUTER = [
   {
@@ -67,20 +66,12 @@ const ROUTER = [
     title: "Booking",
     subRouter: [],
   },
-  {
-    name: "admin",
-    path: "",
-    page: "",
-  },
-  {
-    name: "staff",
-    path: "",
-    page: "",
-  },
-  {
-    name: "manager",
-    path: "",
-    page: "",
+   {
+    name: "booking",
+    path: "/booking-ticket",
+    page: <BookingTickets />,
+    title: "Booking",
+    subRouter: [],
   },
 ];
 
