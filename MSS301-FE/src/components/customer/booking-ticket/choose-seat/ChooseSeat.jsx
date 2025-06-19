@@ -38,15 +38,19 @@ const ChooseSeat = ({ movieId, showtimeId }) => {
         currentId={currentShowtimeId}
         onSelect={setCurrentShowtimeId}
       />
+
       <SeatContainer showtimeDetail={showtimeDetail} />
-      <div className="flex justify-end mt-4">
+      
+      {/* <div className="flex justify-end mt-4">
         <button
           className="bg-[#F58020] text-white px-4 py-2 rounded"
           onClick={() => navigate("/concessions")}
         >
           Tiếp tục
         </button>
-      </div>
+      </div> */}
+
+
     </div>
   );
 };
