@@ -4,6 +4,9 @@ const api = axios.create({
   baseURL: 'http://localhost:8080',
 });
 
+export const login = (credentials) =>
+  axios.post('http://localhost:8084/users/login', credentials);
+
 
 export const getMovies = (params = {}) =>
   api.get('/cinema-service/movies', { params });
