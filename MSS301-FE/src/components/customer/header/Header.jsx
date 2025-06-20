@@ -84,7 +84,7 @@ const Header = () => {
             </div>
 
             {
-              user ? (
+              user != null || user != undefined || user != '' ? (
                 <UserProfileCard user={user} />
               ) : (
                 <>
