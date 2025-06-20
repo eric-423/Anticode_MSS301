@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
-import Dashboard from "./DashBoard";
+import Dashboard from "./Dashboard";
 import Movies from "./Movies";
 import Cinemas from "./Cinemas";
 import Products from "./Products";
