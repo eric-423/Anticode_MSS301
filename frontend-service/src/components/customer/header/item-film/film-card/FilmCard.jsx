@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import IMAGES from '../../../../../utils/images'
 
-const FilmCard = ({ movie = {} }) => {
+const FilmCard = ({ movie }) => {
   const [activeHover, setActiveHover] = useState(false)
 
   return (
@@ -18,7 +18,12 @@ const FilmCard = ({ movie = {} }) => {
           </span>
         </div>
         {activeHover && (
-          <div className="absolute top-0 left-0 flex justify-center items-center w-[100%] h-[100%] bg-[rgba(0,0,0,0.4)] ">
+          <div className="absolute top-0 left-0 flex justify-center items-center w-[100%] h-[100%] bg-[rgba(0,0,0,0.4)] "
+            onClick={() => {
+              console.log('clicked movie', movie.id);
+              window.location.href = `/booking/${movie.id}`;
+            }}
+          >
             <div className="bg-(--color-elevated-button) py-2.5 px-5 flex gap-2 rounded-[.375rem]  w-max">
               <img className="relative" src={IMAGES.ticketHover} />
               <span className="text-white relative">Mua vé</span>

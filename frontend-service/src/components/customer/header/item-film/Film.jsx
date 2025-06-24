@@ -40,7 +40,12 @@ const Film = () => {
         <div className="relative" key={item.name}>
           <div className="flex gap-[8px]">
             <div className="w-[4px] h-[22px] bg-[#034ea2]"></div>
-            <h4 className="text-[15px] font-nunito-sans text-[#333333] ">
+            <h4 className="text-[15px] font-nunito-sans text-[#333333]"
+              onClick={() => {
+                window.location.href = ``
+              }}
+            >
+
               {item.name}
             </h4>
           </div>
@@ -50,8 +55,9 @@ const Film = () => {
             ))}
           </div>
         </div>
-      ))}
-    </div>
+      ))
+      }
+    </div >
   )
 }
 

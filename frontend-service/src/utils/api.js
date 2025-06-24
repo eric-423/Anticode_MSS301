@@ -4,6 +4,9 @@ const api = axios.create({
   baseURL: 'http://localhost:8080',
 });
 
+export const login = (credentials) =>
+  axios.post('http://localhost:8084/users/login', credentials);
+
 
 export const getMovies = (params = {}) =>
   api.get('/cinema-service/movies', { params });
@@ -14,6 +17,9 @@ export const getShowtimesByMovie = (movieId) =>
 export const getShowtimesByMovieDate = (movieId, date) =>
   api.get(`/cinema-service/showtimes/movie/show-time-date/${movieId}`, { params: { date } });
 
+export const getShowtimeById = (showtimeId) =>
+  api.get(`/cinema-service/showtimes/${showtimeId}`);
+
 export const getMovieDetail = (movieId) =>
   api.get(`/cinema-service/movies/${movieId}`);
 
@@ -22,5 +28,8 @@ export const getConcessionProducts = (params = {}) =>
 
 export const getConcessionProductDetail = (productId) =>
   api.get(`/cinema-service/concession-products/${productId}`);
+
+export const logout = () =>
+  api.get(`/api/users/logout`);
 
 export default api;

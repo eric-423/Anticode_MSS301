@@ -21,7 +21,6 @@ const Film = () => {
       .then((res) => setMovies(res.data.data.content || []))
       .catch((err) => console.error(err))
   }, [itemActive])
-  console.log(movies)
 
   return (
     <div className="w-[1280px] mx-auto px-[16px] pt-[24px] pb-[48px] ">

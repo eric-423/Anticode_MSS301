@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { logout } from '../../../../utils/api';
 
 const UserIcon = ({ className }) => (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -19,8 +20,8 @@ const GiftIcon = ({ className }) => (
   </svg>
 );
 
-function UserProfileCard() {
-  const userName = "Tran Minh Nhut";
+function UserProfileCard({ user }) {
+  const userName = user?.username;
   const userRank = "Star";
   const userStars = 0;
   const [showDropdown, setShowDropdown] = useState(false);
@@ -43,6 +44,13 @@ function UserProfileCard() {
   const handleDropdownClick = (event) => {
     window.location.href = `/${event}`;
     console.log(`Redirecting to ${event}`);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setShowDropdown(false);
+    logout().catch(console.error);
+    window.location.href = '/';
   };
 
 
@@ -115,7 +123,7 @@ function UserProfileCard() {
             </li>
             <li
               className="flex items-center space-x-2 hover:bg-orange-50 p-2 rounded cursor-pointer transition-colors duration-200"
-              onClick={() => handleDropdownClick()}
+              onClick={() => handleLogout()}
             >
               <GiftIcon className="w-4 h-4 text-gray-500" />
               <span className="text-sm text-gray-700">Đăng Xuất</span>
@@ -127,8 +135,8 @@ function UserProfileCard() {
   );
 }
 
-export default function App() {
+export default function UserProfileCardWrapper({ user }) {
   return (
-    <UserProfileCard />
+    <UserProfileCard user={user} />
   );
 }

@@ -109,6 +109,4 @@ public class UserController {
         userService.resetPassword(request.getToken(), request.getNewPassword());
         return ResponseEntity.ok("Password reset successfully");
     }
-
-
 }

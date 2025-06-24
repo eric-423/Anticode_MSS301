@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IMAGES from "../../../utils/images";
 import LIST_NAVIGATION from "../../../utils/list-nav";
 import Film from "./item-film/Film";
@@ -6,18 +6,30 @@ import Others from "./item-others/Others";
 import { useNavigate } from "react-router-dom";
 import LoginPopup from '../auth/login';
 import UserProfileCard from "../../../components/customer/home/user-info/UserProfileCard";
+import jwtDecode from 'jwt-decode';
 
 const Header = () => {
   const [itemHover, setItemHover] = useState();
   const [loginPopUp, setLoginPopUp] = useState(false);
-  const [auth, setAuth] = useState('jwt aut');
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        setUser(jwtDecode(token));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
 
   return (
     <header className="pt-3 pb-2 z-50" >
       <div className="mx-auto max-w-[1280px]">
         <nav className="flex justify-start justify-items-center items-center flex-row h-[94px]">
-          <a className="mr-[20px] grow-0">
+          <a className="mr-[20px] grow-0" href="/">
             <img
               className="max-w-min w-[77px] h-[40px] lg:w-[115px] lg:h-[60px] object-cover"
               src={IMAGES.galaxyLogo}
@@ -72,8 +84,8 @@ const Header = () => {
             </div>
 
             {
-              auth != null ? (
-                <UserProfileCard />
+              user != null || user != undefined || user != '' ? (
+                <UserProfileCard user={user} />
               ) : (
                 <>
                   <a
@@ -99,7 +111,15 @@ const Header = () => {
           </div>
         </nav>
       </div >
-      {loginPopUp && <LoginPopup onClose={() => setLoginPopUp(loginPopUp => !loginPopUp)} />}
+      {loginPopUp && (
+        <LoginPopup
+          onClose={() => setLoginPopUp(false)}
+          onLoginSuccess={(u) => {
+            setUser(u);
+            setLoginPopUp(false);
+          }}
+        />
+      )}
     </header >
 
 

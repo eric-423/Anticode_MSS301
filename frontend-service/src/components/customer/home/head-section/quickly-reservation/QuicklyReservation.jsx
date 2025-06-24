@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns'
 import vi from 'date-fns/locale/vi'
 import RESERVATION_STEP from '../../../../../utils/reservation-step'
 import {
@@ -8,6 +8,7 @@ import {
   getShowtimesByMovieDate,
 } from '../../../../../utils/api'
 import { MOVIE_STATUS } from '../../../../../utils/status'
+import { useNavigate } from "react-router-dom";
 
 const QuicklyReservation = () => {
   const [movies, setMovies] = useState([])
@@ -16,12 +17,17 @@ const QuicklyReservation = () => {
   const [selectedDate, setSelectedDate] = useState('')
   const [showtimes, setShowtimes] = useState([])
   const [selectedShowtime, setSelectedShowtime] = useState('')
+  const navigate = useNavigate();
+
+
 
   useEffect(() => {
     getMovies({ status: MOVIE_STATUS.NOW_SHOWING })
       .then((res) => setMovies(res.data.data.content || []))
       .catch((err) => console.error(err))
   }, [])
+
+
 
   useEffect(() => {
     if (!selectedMovie) {
@@ -61,7 +67,7 @@ const QuicklyReservation = () => {
     `${format(new Date(start), 'HH:mm')} - ${format(new Date(end), 'HH:mm')}`
 
   return (
-    <div className="w-[1152px] bg-white overflow-hidden h-full mx-auto shadow-2xl rounded-[.375rem] grid grid-cols-11">
+    <div className="w-[1152px] bg-white overflow-hidden h-full mx-auto shadow-2xl rounded-[.375rem] grid grid-cols-9">
       {RESERVATION_STEP.map((item) => {
         const isStep1 = item.id === '1'
         const isStep2 = item.id === '2'
@@ -73,20 +79,24 @@ const QuicklyReservation = () => {
           <div
             key={item.id}
             className={`
-              ${item.class} flex justify-start items-center pl-[3%]
+              ${item.class} flex justify-center items-center pl-[2%] 
               ${isDisabled ? 'opacity-50 pointer-events-none' : ''}
             `}
           >
             <span className="bg-[#f58020] text-[10px] text-white font-bold px-1.5 py-0.5 rounded-full">
               {item.id}
             </span>
-            <div className="pl-[8px] cursor-pointer w-full">
+
+            <div className="pl-[8px] cursor-pointer w-ful">
+
               <span className="font-nunito-sans text-[14px] text-[#4A4A4A] line-clamp-1 pt-[2px]">
-                {item.name}
+                {/* {item.name} */}
               </span>
+
+
               {isStep1 && (
                 <select
-                  className="mt-1 w-full border rounded text-sm"
+                  className="w-full rounded text-sm outline-none"
                   value={selectedMovie}
                   onChange={(e) => setSelectedMovie(e.target.value)}
                 >
@@ -98,9 +108,11 @@ const QuicklyReservation = () => {
                   ))}
                 </select>
               )}
+
+
               {isStep2 && (
                 <select
-                  className="mt-1 w-full border rounded text-sm"
+                  className="w-full rounded text-sm outline-none"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
                 >
@@ -112,9 +124,11 @@ const QuicklyReservation = () => {
                   ))}
                 </select>
               )}
+
+
               {isStep3 && (
                 <select
-                  className="mt-1 w-full border rounded text-sm"
+                  className="w-full rounded text-sm outline-none"
                   value={selectedShowtime}
                   onChange={(e) => setSelectedShowtime(e.target.value)}
                 >
@@ -131,10 +145,30 @@ const QuicklyReservation = () => {
         )
       })}
 
-      <div className="relative col-span-2 bg-[#f8ac6e] font-nunito-sans text-[14px] flex justify-center items-center text-white cursor-pointer">
+
+      <div
+        className={`relative col-span-2 font-nunito-sans text-[14px] flex justify-center items-center text-white cursor-pointer
+        ${(!selectedMovie || !selectedDate || !selectedShowtime) ? 'bg-gray-400 cursor-not-allowed' : 'bg-[rgb(245,128,32,1)]'}`}
+        onClick={() => {
+          if (selectedMovie && selectedDate && selectedShowtime) {
+            navigate(`/booking-ticket/${selectedMovie}?showtimeId=${selectedShowtime}`);
+          }
+        }}
+      >
         Mua Vé Nhanh
       </div>
+
+
+      {/* <div className="relative col-span-2 bg-[#f8ac6e] 
+                      font-nunito-sans text-[14px] flex justify-center items-center 
+                      text-white cursor-pointer"
+        isDisabled={(!selectedMovie || !selectedDate || !selectedShowtime)}
+        onClick={() => navigate(`/booking-ticket/${selectedMovie.id}?showtimeId=${selectedShowtime}`)}
+      >
+        Mua Vé Nhanh
+      </div> */}
     </div>
+    // http://localhost:5173/booking-ticket/1?showtimeId=51
   )
 }
 

@@ -1,22 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SignSeat from "./sign-seat/SignSeat";
 import Screen from "./screen/Screen";
 
-const SeatContainer = () => {
-  const [col, setCol] = useState(10);
-  const [row, setRow] = useState(10);
+const SeatContainer = ({ showtimeDetail }) => {
+  const col = showtimeDetail?.cinemaHall?.hallType?.column || 0;
+  const row = showtimeDetail?.cinemaHall?.hallType?.roll || 0;
 
-  const [seatHover, setSeatHover] = useState();
 
-  const handleHoverSeat = (row, col) => {
-    setSeatHover({
-      row: row,
-      col: col,
-      seat: String.fromCharCode(65 + row) + (col + 1) ,
-    });
+  const [seatBooked, setSeatBooked] = useState(["A1", "A2", "B1", "B2", "C1"]);
 
-    console.log(row + col);
-  };
+
+  const [selectedSeats, setSelectedSeats] = useState(() => {
+    const saved = localStorage.getItem("selectedSeats")
+    return saved ? JSON.parse(saved) : []
+  })
+
+  useEffect(() => {
+    localStorage.setItem("selectedSeats", JSON.stringify(selectedSeats))
+  }, [selectedSeats])
+
+  const toggleSeat = (seat) => {
+    setSelectedSeats((prev) =>
+      prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat]
+    )
+  }
 
   return (
     <div className="bg-white py-4 px-2 rounded-[.375rem] w-full mb-10">
@@ -25,38 +32,50 @@ const SeatContainer = () => {
         <Screen />
       </div>
       <div className="overflow-x-scroll scroll-bar-show pb-2 w-full">
-        {Array.from({ length: row }).map((item, _indexRow) => (
-          <div className="flex mt-5 items-center w-full">
+        {Array.from({ length: row }).map((_, rowIndex) => (
+          <div key={rowIndex} className="flex mt-5 items-center w-full">
             <div className="relative w-[50px] h-[25px] flex justify-center">
               <div className="w-[30px] h-[25px] bg-[#727575] flex justify-center items-center rounded-[3px] text-white text-[12px] font-bold">
-                {String.fromCharCode(65 + _indexRow)}
+                {String.fromCharCode(65 + rowIndex)}
               </div>
             </div>
             <div
               className="flex gap-5 ml-[20px] justify-center"
-              style={{
-                minWidth: col < 16 ? "calc(100% - 80px)" : null,
-              }}
+              style={{ minWidth: col < 16 ? "calc(100% - 80px)" : null }}
             >
-              {Array.from({ length: col }).map((item, _indexCol) => (
-                <div
-                  className="w-[30px] h-[30px] bg-[#dfdfdf] rounded-[.375rem] cursor-pointer flex justify-center items-center"
-                  onMouseEnter={() => handleHoverSeat(_indexRow, _indexCol)}
-                  onMouseLeave={() => setSeatHover()}
-                >
-                  <span className="text-[12px] font-bold text-[#4A4A4A]">
-                    {seatHover?.col === _indexCol &&
-                      seatHover?.row === _indexRow &&
-                      seatHover?.seat}
-                  </span>
-                </div>
-              ))}
+              {Array.from({ length: col }).map((_, colIndex) => {
+                const seatLabel =
+                  String.fromCharCode(65 + rowIndex) + (colIndex + 1)
+                const isSelected = selectedSeats.includes(seatLabel)
+                const isBooked = seatBooked.includes(seatLabel)
+                return (
+                  <div
+                    key={colIndex}
+                    className="w-[30px] h-[30px] rounded-[.375rem] flex justify-center items-center"
+                    onClick={() => {
+                      if (!isBooked) toggleSeat(seatLabel);
+                    }}
+                    style={{
+                      backgroundColor: isBooked
+                        ? "#727575"
+                        : isSelected
+                          ? "#F58020"
+                          : "#dfdfdf",
+                      color: isBooked || isSelected ? "#ffffff" : "#4A4A4A",
+                      cursor: isBooked ? "not-allowed" : "pointer",
+                      pointerEvents: isBooked ? "none" : "auto", // chặn click chuột
+                    }}
+                  >
+                    <span className="text-[12px] font-bold">{seatLabel}</span>
+                  </div>
+                )
+              })}
             </div>
           </div>
         ))}
       </div>
     </div>
-  );
+  )
 };
 
 export default SeatContainer;

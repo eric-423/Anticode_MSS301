@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import NavTime from './nav-time/NavTime'
 import { getShowtimesByMovieDate } from '../../../../../../utils/api'
 
 const ShowTimes = ({ movieId }) => {
+  const navigate = useNavigate()
   const [listShowTimes, setListShowTimes] = useState([])
 
   // 2. Bọc hàm handleSelectDate trong useCallback
@@ -37,13 +39,14 @@ const ShowTimes = ({ movieId }) => {
             {listShowTimes.map((item) => (
               <div
                 key={item.id}
+                onClick={() => navigate(`/booking-ticket/${movieId}?showtimeId=${item.id}`)}
                 className="cursor-pointer py-2 px-8 text-[14px] text-[#333333] border rounded-lg border-[rgba(0,0,0,0.1)] hover:bg-[#034ea2] hover:text-white transition-all duration-500 ease-in-out"
               >
                 {item.startTime?.slice(11, 16)}
               </div>
             ))}
           </div>
-        </div>
+        </div>  
       </div>
     </div>
   )
