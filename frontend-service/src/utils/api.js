@@ -5,7 +5,14 @@ const api = axios.create({
 });
 
 export const login = (credentials) =>
-  axios.post('http://localhost:8084/api/users/login', credentials);
+  axios.post(
+    'http://localhost:8080/account-service/api/users/login', credentials,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 
 
 export const getMovies = (params = {}) =>

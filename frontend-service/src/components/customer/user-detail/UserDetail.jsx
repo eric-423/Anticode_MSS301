@@ -94,7 +94,7 @@ export default function UserDetail({ userData }) {
                                 type="text"
                                 id="birthDate"
                                 name="birthDate"
-                                defaultValue={userData?.dateOfBirth}
+                                defaultValue={userData?.dateOfBirth?.substring(0, 10)}
                                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
                             />
                         </div>
@@ -134,7 +134,7 @@ export default function UserDetail({ userData }) {
                                 type="tel"
                                 id="phone"
                                 name="phone"
-                                defaultValue={userData?.phoneNumber}
+                                defaultValue={userData?.phone}
                                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
                             />
                         </div>
