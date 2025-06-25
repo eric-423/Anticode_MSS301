@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/movies")
+@CrossOrigin
 public class MovieController {
     @Autowired
     private MovieServiceImp movieServiceImp;
@@ -42,17 +43,17 @@ public class MovieController {
     }
 
     @PostMapping("/create")
-    public Movie createMovie(Movie movie) {
+    public Movie createMovie(@RequestBody Movie movie) {
         return movieServiceImp.create(movie);
     }
 
     @PutMapping("/update/{id}")
-    public Movie updateMovie(Integer id, Movie movie) {
+    public Movie updateMovie(@PathVariable Integer id, @RequestBody Movie movie) {
         return movieServiceImp.update(id, movie);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteMovie(Integer id) {
+    public void deleteMovie(@PathVariable Integer id) {
         movieServiceImp.delete(id);
     }
 
