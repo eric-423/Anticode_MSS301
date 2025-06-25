@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/concession-products")
+@CrossOrigin
 public class ConcessionProductController {
 
     @Autowired
@@ -33,17 +34,17 @@ public class ConcessionProductController {
     }
 
     @PostMapping
-    public ConcessionProduct createConcessionProduct(ConcessionProduct concessionProduct) {
+    public ConcessionProduct createConcessionProduct(@RequestBody ConcessionProduct concessionProduct) {
         return concessionProductServiceImp.create(concessionProduct);
     }
 
     @PutMapping("/{id}")
-    public ConcessionProduct updateConcessionProduct(Integer id, ConcessionProduct concessionProduct) {
+    public ConcessionProduct updateConcessionProduct(@PathVariable Integer id, @RequestBody ConcessionProduct concessionProduct) {
         return concessionProductServiceImp.update(id, concessionProduct);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteConcessionProduct(Integer id) {
+    public void deleteConcessionProduct(@PathVariable Integer id) {
         concessionProductServiceImp.delete(id);
     }
 

@@ -1,4 +1,9 @@
-const DataTable = ({ columns, data, title, onAdd, onEdit, onDelete }) => {
+import { useEffect } from "react";
+
+const DataTable = ({
+    columns, data, title, onAdd, onEdit, onDelete,
+    page = 0, totalPages = 1, onPrevPage, onNextPage
+}) => {
     const getStatusClass = (status) => {
         switch (status) {
             case 'Hoạt động':
@@ -11,10 +16,43 @@ const DataTable = ({ columns, data, title, onAdd, onEdit, onDelete }) => {
                 return 'bg-yellow-100 text-yellow-800';
             case 'Đã chiếu':
             case 'Hết hàng':
+            case 'Không chiếu':
                 return 'bg-red-100 text-red-800';
             default:
                 return 'bg-gray-100 text-gray-800';
         }
+    };
+
+    const renderCell = (item, col) => {
+        if (col.key === 'status') {
+            return (
+                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusClass(item[col.key])}`}>
+                    {item[col.key]}
+                </span>
+            );
+        }
+        if (col.key === 'productImageUrl' || col.key === 'imageUrl') {
+            return item[col.key] ? (
+                <img
+                    src={item[col.key]}
+                    style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6 }}
+                    onError={e => { e.target.style.display = 'none'; }}
+                />
+            ) : 'Không có';
+        }
+        if (col.key === 'trailerUrl') {
+            return item[col.key] ? (
+                <a href={item[col.key]} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                    Xem trailer
+                </a>
+            ) : 'Không có';
+        }
+        
+        if (col.key === 'synopsis') {
+            const text = item[col.key];
+            return text && text.length > 50 ? `${text.substring(0, 50)}...` : text;
+        }
+        return item[col.key];
     };
 
     return (
@@ -30,8 +68,8 @@ const DataTable = ({ columns, data, title, onAdd, onEdit, onDelete }) => {
                     <table className="w-full text-sm text-left text-gray-500">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
-                                {columns.map(col => <th key={col.key} scope="col" className="px-6 py-3">{col.label}</th>)}
-                                <th scope="col" className="px-6 py-3 text-right">Hành động</th>
+                                {columns.map(col => <th key={col.key} scope="col" className="px-10 py-3">{col.label}</th>)}
+                                <th scope="col" className="px-10 py-3 text-right">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,13 +77,7 @@ const DataTable = ({ columns, data, title, onAdd, onEdit, onDelete }) => {
                                 <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
                                     {columns.map(col => (
                                         <td key={col.key} className="px-6 py-4">
-                                            {col.key === 'status' ? (
-                                                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusClass(item[col.key])}`}>
-                                                    {item[col.key]}
-                                                </span>
-                                            ) : (
-                                                item[col.key]
-                                            )}
+                                            {renderCell(item, col)}
                                         </td>
                                     ))}
                                     <td className="px-6 py-4 text-right">
@@ -57,15 +89,31 @@ const DataTable = ({ columns, data, title, onAdd, onEdit, onDelete }) => {
                         </tbody>
                     </table>
                 </div>
+                {data.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                        Không có dữ liệu để hiển thị
+                    </div>
+                )}
                 <div className="flex justify-between items-center mt-4">
                     <span className="text-sm text-gray-700">
                         Hiển thị 1 đến {data.length} của {data.length} mục
                     </span>
                     <div className="inline-flex mt-2 xs:mt-0">
-                        <button className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900">
+                        <button
+                            className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900 disabled:opacity-50"
+                            onClick={onPrevPage}
+                            disabled={page === 0}
+                        >
                             Trước
                         </button>
-                        <button className="px-4 py-2 text-sm font-medium text-white bg-gray-800 border-0 border-l border-gray-700 rounded-r hover:bg-gray-900">
+                        <span className="px-4 py-2 text-sm font-medium text-gray-800 bg-gray-200">
+                            {page + 1} / {totalPages}
+                        </span>
+                        <button
+                            className="px-4 py-2 text-sm font-medium text-white bg-gray-800 border-0 border-l border-gray-700 rounded-r hover:bg-gray-900 disabled:opacity-50"
+                            onClick={onNextPage}
+                            disabled={page >= totalPages - 1}
+                        >
                             Sau
                         </button>
                     </div>

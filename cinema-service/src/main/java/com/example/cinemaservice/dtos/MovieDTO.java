@@ -16,6 +16,7 @@ public class MovieDTO implements Serializable {
     private Integer ageRanging;
     private String status;
     private String imageUrl;
+    private String trailerUrl;
     List<FilmPersonelDTO> personels;
 
 }

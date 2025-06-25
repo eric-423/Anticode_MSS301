@@ -107,6 +107,7 @@ public class MovieService implements MovieServiceImp {
         dto.setAgeRanging(movie.getAgeRanging());
         dto.setImageUrl(movie.getImageUrl());
         dto.setPersonels(filmPersonelDTOS);
+        dto.setTrailerUrl(movie.getTrailerUrl());
 
         dto.setStatus(movie.getStatus().toString());
         return dto;
