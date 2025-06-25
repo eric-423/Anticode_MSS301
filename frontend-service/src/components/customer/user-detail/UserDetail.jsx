@@ -76,7 +76,7 @@ export default function UserDetail({ userData }) {
                                 type="text"
                                 id="fullName"
                                 name="fullName"
-                                defaultValue={userData.name}
+                                defaultValue={userData?.username}
                                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
                             />
                         </div>
@@ -94,7 +94,7 @@ export default function UserDetail({ userData }) {
                                 type="text"
                                 id="birthDate"
                                 name="birthDate"
-                                defaultValue={userData.dateOfBirth}
+                                defaultValue={userData?.dateOfBirth}
                                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
                             />
                         </div>
@@ -112,7 +112,7 @@ export default function UserDetail({ userData }) {
                                 type="email"
                                 id="email"
                                 name="email"
-                                defaultValue={userData.email}
+                                defaultValue={userData?.email}
                                 className="w-full pl-10 pr-24 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
                                 readOnly
                             />
@@ -134,7 +134,7 @@ export default function UserDetail({ userData }) {
                                 type="tel"
                                 id="phone"
                                 name="phone"
-                                defaultValue={userData.phoneNumber}
+                                defaultValue={userData?.phoneNumber}
                                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
                             />
                         </div>
@@ -149,7 +149,7 @@ export default function UserDetail({ userData }) {
                                 type={showPassword ? "text" : "password"}
                                 id="password"
                                 name="password"
-                                defaultValue={userData.password}
+                                defaultValue={userData?.password}
                                 className="w-full pl-10 pr-12 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
                             />
 

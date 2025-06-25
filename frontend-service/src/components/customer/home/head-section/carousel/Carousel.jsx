@@ -51,8 +51,9 @@ const Carousel = () => {
         ref={containerSwipper}
         className="relative flex overflow-x-auto snap-x snap-mandatory w-full h-full scroll scroll-bar-hidden"
       >
-        {images.map((item) => (
-          <div className="w-[1520px] h-[490px] snap-center flex-shrink-0 px-[24px]">
+        {images.map((item, index) => (
+
+          <div key={index} className="w-[1520px] h-[490px] snap-center flex-shrink-0 px-[24px]">
             <img className="w-full h-full object-cover" src={item} />
           </div>
         ))}
