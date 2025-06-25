@@ -5,6 +5,7 @@ import com.example.cinemaservice.payload.ResponseData;
 import com.example.cinemaservice.service.Imp.MovieServiceImp;
 import com.example.cinemaservice.service.Imp.ShowtimeServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class MovieController {
 
         return ResponseEntity.ok(responseData);
     }
-
+    
     @GetMapping("/{id}")
     public ResponseEntity<?> getMovieById(@PathVariable("id") Integer id) {
         ResponseData responseData = new ResponseData();

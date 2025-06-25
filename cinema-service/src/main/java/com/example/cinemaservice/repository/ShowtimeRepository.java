@@ -11,4 +11,5 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Integer> {
     List<Showtime> findByMovieId(int movieId);
 
 
+    List<Showtime> getShowtimesByMovie_Id(int movieId);
 }
