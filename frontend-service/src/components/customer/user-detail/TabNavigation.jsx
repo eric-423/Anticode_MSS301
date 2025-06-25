@@ -1,8 +1,8 @@
 import React from "react";
 
 const tabs = [
-  { key: "history", label: "Lịch Sử Giao Dịch" },
   { key: "profile", label: "Thông Tin Cá Nhân" },
+  { key: "history", label: "Lịch Sử Giao Dịch" },
   { key: "notification", label: "Thông Báo" },
   { key: "gift", label: "Quà Tặng" },
   { key: "policy", label: "Chính Sách" },

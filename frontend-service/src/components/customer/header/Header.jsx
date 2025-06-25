@@ -43,8 +43,9 @@ const Header = () => {
               />
             </a>
             <ul className="flex items-center">
-              {LIST_NAVIGATION.map((item) => (
+              {LIST_NAVIGATION.map((item, index) => (
                 <li
+                  key={index}
                   className="px-[12px] relative font-nunito-sans text-[14px] justify-center items-center flex text-[#4a4a4a] gap-[4px] cursor-pointer hover:text-(--color-elevated-hover-button)"
                   onMouseEnter={() => setItemHover(item)}
                   onMouseLeave={() => setItemHover()}
@@ -84,7 +85,7 @@ const Header = () => {
             </div>
 
             {
-              user != null || user != undefined || user != '' ? (
+              user != null || user != undefined ? (
                 <UserProfileCard user={user} />
               ) : (
                 <>
@@ -114,8 +115,8 @@ const Header = () => {
       {loginPopUp && (
         <LoginPopup
           onClose={() => setLoginPopUp(false)}
-          onLoginSuccess={(u) => {
-            setUser(u);
+          onLoginSuccess={(user) => {
+            setUser(user);
             setLoginPopUp(false);
           }}
         />

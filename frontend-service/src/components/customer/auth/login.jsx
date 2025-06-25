@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import jwtDecode from 'jwt-decode';
-import { login as loginApi } from '../../../utils/api';
+import { login } from '../../../utils/api';
 
 
 const CloseIcon = ({ className = "w-6 h-6" }) => (
@@ -71,7 +71,7 @@ const LoginPopup = ({ onClose, onSwitchToRegister, onLoginSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await loginApi({ email, password });
+            const response = await login({ email, password });
             const token = response.data.data;
             localStorage.setItem('token', token);
             const user = jwtDecode(token);

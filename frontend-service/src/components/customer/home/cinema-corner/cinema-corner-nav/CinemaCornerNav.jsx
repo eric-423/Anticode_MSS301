@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import LIST_TYPE_FILM from "../../../../../utils/list-type-film";
 import LIST_CINEMA_CORNER from "../../../../../utils/list-cinema-corner";
 
 const CinemaCornerNav = () => {

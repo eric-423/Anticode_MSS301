@@ -24,10 +24,11 @@ public class JwtTokenHelper {
     public String generateToken(Users users) {
         SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
         return Jwts.builder()
-                .setIssuer("HAG_WORKSHOP")
+                .setIssuer("AntiCode")
                 .setSubject("JWT Token")
                 .claim("id", users.getId())
                 .claim("email", users.getEmail())
+                .claim("dateOfBirth", users.getDateOfBirth().toString())
                 .claim("role", users.getRole().getName())
                 .claim("username", users.getFullName())
                 .claim("phone", users.getPhoneNumber())

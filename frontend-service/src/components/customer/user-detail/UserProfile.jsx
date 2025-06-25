@@ -1,4 +1,3 @@
-import React from "react";
 
 const UserProfile = ({ user, spending }) => {
   const { year, total, milestones } = spending;
@@ -13,13 +12,14 @@ const UserProfile = ({ user, spending }) => {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
         <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <div style={{ width: 70, height: 70, borderRadius: '50%', background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, marginBottom: 8 }}>
+
+          {/* <div style={{ width: 70, height: 70, borderRadius: '50%', background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, marginBottom: 8 }}>
             {user.avatar ? <img src={user.avatar} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '50%' }} /> : <span role="img" aria-label="avatar">📷</span>}
-          </div>
+          </div> */}
 
           <div>
-            <div style={{ fontWeight: 600, fontSize: 18 }}>{user.name}</div>
-            <div style={{ color: '#888', fontSize: 14, margin: '4px 0' }}>🎖️ {user.stars} Stars</div>
+            <div style={{ fontWeight: 600, fontSize: 18 }}>{user?.username}</div>
+            {/* <div style={{ color: '#888', fontSize: 14, margin: '4px 0' }}>🎖️ {user.stars} Stars</div> */}
           </div>
         </div>
 

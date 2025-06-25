@@ -33,27 +33,27 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 exchange.getResponse().setStatusCode(HttpStatus.OK);
                 return exchange.getResponse().setComplete();
             }
-          if(validator.isSecured.test(exchange.getRequest())){
-              System.out.println(exchange.getRequest().getURI().getPath()+"uri");
-             if(!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
-                 throw new RuntimeException("Missing authorization header");
-             }
-             String authHeader = Objects.requireNonNull(exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION)).getFirst();
-              if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                  authHeader = authHeader.substring(7);
-              }
-              return webClientBuilder.build()
-                      .get()
-                      .uri("http://user-service/auth/validate?token=" + authHeader)
-                      .retrieve()
-                      .bodyToMono(Void.class)
-                      .then(chain.filter(exchange))
-                      .onErrorResume(e -> {
-                          exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                          return exchange.getResponse().setComplete();
-                      });
-          }
-          return chain.filter(exchange);
+            if (validator.isSecured.test(exchange.getRequest())) {
+                System.out.println(exchange.getRequest().getURI().getPath() + "uri");
+                if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+                    throw new RuntimeException("Missing authorization header");
+                }
+                String authHeader = Objects.requireNonNull(exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION)).getFirst();
+                if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                    authHeader = authHeader.substring(7);
+                }
+                return webClientBuilder.build()
+                        .get()
+                        .uri("http://user-service/auth/validate?token=" + authHeader)
+                        .retrieve()
+                        .bodyToMono(Void.class)
+                        .then(chain.filter(exchange))
+                        .onErrorResume(e -> {
+                            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                            return exchange.getResponse().setComplete();
+                        });
+            }
+            return chain.filter(exchange);
         };
     }
 

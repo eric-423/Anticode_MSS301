@@ -5,7 +5,14 @@ const api = axios.create({
 });
 
 export const login = (credentials) =>
-  axios.post('http://localhost:8084/users/login', credentials);
+  axios.post(
+    'http://localhost:8080/account-service/api/users/login', credentials,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 
 // Movie Management APIs
 export const getAllMovies = (params = {}) =>
@@ -45,7 +52,7 @@ export const getConcessionProductDetail = (productId) =>
   api.get(`/cinema-service/concession-products/${productId}`);
 
 export const logout = () =>
-  api.get(`/api/users/logout`);
+  api.get(`/api/users/logout`,);
 
 // Concession Product APIs
 export const getAllProducts = (params = {}) =>

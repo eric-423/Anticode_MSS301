@@ -28,6 +28,8 @@ function UserProfileCard({ user }) {
   const dropdownRef = useRef(null);
   const timeoutRef = useRef(null);
 
+
+
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -43,7 +45,6 @@ function UserProfileCard({ user }) {
 
   const handleDropdownClick = (event) => {
     window.location.href = `/${event}`;
-    console.log(`Redirecting to ${event}`);
   };
 
   const handleLogout = () => {
@@ -82,7 +83,9 @@ function UserProfileCard({ user }) {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center"
+          onClick={() => handleDropdownClick('user-detail')}
+        >
           <UserIcon className="w-6 h-6 text-gray-500" />
         </div>
 
@@ -113,13 +116,6 @@ function UserProfileCard({ user }) {
             >
               <UserIcon className="w-4 h-4 text-gray-500" />
               <span className="text-sm text-gray-700">Tài Khoản</span>
-            </li>
-            <li
-              className="flex items-center space-x-2 hover:bg-orange-50 p-2 rounded cursor-pointer transition-colors duration-200"
-              onClick={() => handleDropdownClick()}
-            >
-              <StarBadgeIcon className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-700">Lịch Sử</span>
             </li>
             <li
               className="flex items-center space-x-2 hover:bg-orange-50 p-2 rounded cursor-pointer transition-colors duration-200"
