@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,19 +30,25 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
-            if (exchange.getRequest().getMethod().name().equals("OPTIONS")) {
-                exchange.getResponse().setStatusCode(HttpStatus.OK);
-                return exchange.getResponse().setComplete();
+            if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
+                return chain.filter(exchange);
             }
+
             if (validator.isSecured.test(exchange.getRequest())) {
-                System.out.println(exchange.getRequest().getURI().getPath() + "uri");
+                System.out.println(exchange.getRequest().getURI().getPath() + " uri");
+
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                     throw new RuntimeException("Missing authorization header");
                 }
-                String authHeader = Objects.requireNonNull(exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION)).getFirst();
+
+                String authHeader = Objects.requireNonNull(
+                        exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION)
+                ).get(0);
+
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
                     authHeader = authHeader.substring(7);
                 }
+
                 return webClientBuilder.build()
                         .get()
                         .uri("http://user-service/auth/validate?token=" + authHeader)
@@ -53,6 +60,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                             return exchange.getResponse().setComplete();
                         });
             }
+
             return chain.filter(exchange);
         };
     }

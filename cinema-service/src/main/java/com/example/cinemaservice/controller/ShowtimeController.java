@@ -1,9 +1,11 @@
 package com.example.cinemaservice.controller;
 
+import com.example.cinemaservice.dtos.ShowTimeDTO;
 import com.example.cinemaservice.entity.Showtime;
 import com.example.cinemaservice.payload.ResponseData;
 import com.example.cinemaservice.service.Imp.ShowtimeServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +16,8 @@ public class ShowtimeController {
     private ShowtimeServiceImp showtimeServiceImp;
 
     @GetMapping
-    public Iterable<Showtime> getAllShowtimes() {
-        return showtimeServiceImp.getAll();
+    public ResponseEntity<?> getAllShowtimes() {
+        return new ResponseEntity<>(showtimeServiceImp.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -56,7 +58,7 @@ public class ShowtimeController {
     public ResponseEntity<?> getShowTimeByDate(@RequestParam String date, @PathVariable Integer movieId) {
         try {
             ResponseData responseData = new ResponseData();
-            responseData.setData(showtimeServiceImp.getShowtimeByDate(date,movieId));
+            responseData.setData(showtimeServiceImp.getShowtimeByDate(date, movieId));
             return ResponseEntity.ok(responseData);
         } catch (Exception e) {
             e.printStackTrace();
