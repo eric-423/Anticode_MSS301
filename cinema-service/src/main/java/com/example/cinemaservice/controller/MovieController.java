@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/movies")
-@CrossOrigin
 public class MovieController {
     @Autowired
     private MovieServiceImp movieServiceImp;
@@ -29,7 +28,7 @@ public class MovieController {
 
         return ResponseEntity.ok(responseData);
     }
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getMovieById(@PathVariable("id") Integer id) {
         ResponseData responseData = new ResponseData();
@@ -39,8 +38,8 @@ public class MovieController {
     }
 
     @GetMapping("/{id}/showtimes")
-    public Iterable<?> getShowtimesByMovie(@PathVariable("id") Integer id) {
-        return showtimeServiceImp.findByMovieId(id);
+    public ResponseEntity<?> getShowtimesByMovie(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(showtimeServiceImp.findByMovieId(id), HttpStatus.OK);
     }
 
     @PostMapping("/create")

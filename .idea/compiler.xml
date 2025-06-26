@@ -12,9 +12,8 @@
         </processorPath>
         <module name="account-service" />
         <module name="gateway-service" />
-        <module name="booking-service" />
       </profile>
-      <profile name="Annotation profile for transaction-service" enabled="true">
+      <profile name="Annotation profile for booking-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -22,6 +21,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
         <module name="transaction-service" />
+        <module name="booking-service" />
         <module name="cinema-service" />
       </profile>
     </annotationProcessing>
