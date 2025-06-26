@@ -17,7 +17,8 @@ public class RouteValidator {
             "/api/users/login",
             "/api/users/verify-code",
             "/swagger-ui/index.html",
-            "/user-service/*",
+            "/swagger-ui.html",
+            "/user-service/**",
             "/cinema-service/**"
     );
 

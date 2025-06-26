@@ -85,4 +85,10 @@ export const updateProduct = (id, data) =>
 export const deleteProduct = (id) =>
   api.delete(`http://localhost:8080/cinema-service/concession-products/${id}`);
 
-export default api;
+export const createBooking = (bookingData) =>
+  api.post('http://localhost:8080/booking-service/booking', bookingData);
+
+export const getShowtimeTicketPrice = (showtimeId, ticketTypeId) =>
+  api.get(`http://localhost:8080/cinema-service/showtime-ticket-prices/showtime/${showtimeId}/ticket-type/${ticketTypeId}`);
+
+

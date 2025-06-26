@@ -14,8 +14,8 @@ const ProgressBar = () => {
                 item.step < stepActive
                   ? "rgba(3,78,162,0.6)"
                   : item.step === stepActive
-                  ? "rgba(3,78,162,1)"
-                  : null,
+                    ? "rgba(3,78,162,1)"
+                    : null,
             }}
             className="cursor-pointer mx-3 text-[#D0D0D0] text-[16px] font-semibold font-nunito-sans"
           >

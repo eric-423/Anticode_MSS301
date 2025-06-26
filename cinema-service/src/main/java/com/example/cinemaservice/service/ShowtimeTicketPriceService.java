@@ -1,5 +1,7 @@
 package com.example.cinemaservice.service;
 
+import com.example.cinemaservice.dtos.ShowTimeDTO;
+import com.example.cinemaservice.dtos.ShowtimeTicketPriceDTO;
 import com.example.cinemaservice.entity.ShowtimeTicketPrice;
 import com.example.cinemaservice.repository.ShowtimeTicketPriceRepository;
 import com.example.cinemaservice.service.Imp.ShowtimeTicketPriceServiceImp;
@@ -42,5 +44,17 @@ public class ShowtimeTicketPriceService implements ShowtimeTicketPriceServiceImp
 
     public void delete(Integer id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public ShowtimeTicketPriceDTO getByShowTimeIdAndTicketType(int  showTimeId, int ticketTypeId) {
+
+
+        ShowtimeTicketPrice showtimeTicketPrice = repository.findByShowtime_IdAndTicketType_Id(showTimeId,ticketTypeId);
+        ShowtimeTicketPriceDTO showtimeTicketPriceDTO = new ShowtimeTicketPriceDTO();
+        showtimeTicketPriceDTO.setId(showtimeTicketPrice.getId());
+        showtimeTicketPriceDTO.setTicketPrice(showtimeTicketPrice.getTicketPrice());
+
+        return showtimeTicketPriceDTO;
     }
 }

@@ -3,9 +3,11 @@ package com.example.cinemaservice.service;
 import com.example.cinemaservice.dtos.CinemaHallsDTO;
 import com.example.cinemaservice.dtos.HallTypeDTO;
 import com.example.cinemaservice.dtos.ShowTimeDTO;
+import com.example.cinemaservice.dtos.ShowtimeTicketPriceDTO;
 import com.example.cinemaservice.entity.CinemaHall;
 import com.example.cinemaservice.entity.HallType;
 import com.example.cinemaservice.entity.Showtime;
+import com.example.cinemaservice.entity.ShowtimeTicketPrice;
 import com.example.cinemaservice.repository.CinemaHallRepository;
 import com.example.cinemaservice.repository.MovieRepository;
 import com.example.cinemaservice.repository.ShowtimeRepository;
@@ -161,6 +163,8 @@ public class ShowtimeService implements ShowtimeServiceImp {
         cinemaHallsDTO.setScrrenType(cinemaHall.getScrrenType());
         cinemaHallsDTO.setHallType(hallTypeDTO);
         showTimeDTO.setCinemaHall(cinemaHallsDTO);
+
+
 
         return showTimeDTO;
     }
