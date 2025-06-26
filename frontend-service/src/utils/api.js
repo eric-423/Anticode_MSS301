@@ -1,4 +1,5 @@
 import axios from 'axios';
+import PaymentMethod from './../components/customer/booking-ticket/choose-seat/payment/payment-method/PaymentMethod';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080',
@@ -86,9 +87,12 @@ export const deleteProduct = (id) =>
   api.delete(`http://localhost:8080/cinema-service/concession-products/${id}`);
 
 export const createBooking = (bookingData) =>
-  api.post('http://localhost:8080/booking-service/booking', bookingData);
+  api.post('http://localhost:8080/booking-service/api/booking', bookingData);
 
 export const getShowtimeTicketPrice = (showtimeId, ticketTypeId) =>
   api.get(`http://localhost:8080/cinema-service/showtime-ticket-prices/showtime/${showtimeId}/ticket-type/${ticketTypeId}`);
+
+export const createPayment = (bookingId, payment) =>
+  api.post(`http://localhost:8080/booking-service/api/payment/create?bookingId=${bookingId}`, payment);
 
 

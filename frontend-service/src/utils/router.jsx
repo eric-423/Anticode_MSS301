@@ -11,6 +11,8 @@ import UserInfoPage from "../components/customer/user-detail/UserInfoPage";
 import ManageDashboardPage from '../pages/manager/ManageDashboardPage'
 
 import ConcessionsPage from "../pages/customer/concessions/ConcessionsPage";
+import BookingSuccess from '../components/customer/booking-status/booking-success'
+import BookingFail from '../components/customer/booking-status/booking-fail'
 
 
 const ROUTER = [
@@ -89,6 +91,20 @@ const ROUTER = [
     path: "/concessions",
     page: <ConcessionsPage />,
     title: "Concessions",
+    subRouter: [],
+  },
+  {
+    name: "booking",
+    path: "/booking-success",
+    page: <BookingSuccess />,
+    title: "Booking Success",
+    subRouter: [],
+  },
+  {
+    name: "booking",
+    path: "/booking-fail",
+    page: <BookingFail />,
+    title: "Booking Fail",
     subRouter: [],
   },
 ];
