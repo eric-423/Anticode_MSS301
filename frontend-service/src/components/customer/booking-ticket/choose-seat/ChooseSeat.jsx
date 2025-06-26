@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ChangeShowTime from "./change-showtimes/ChangeShowTime";
 import SeatContainer from "./seat-container/SeatContainer";
 import { getShowtimeById, getShowtimesByMovieDate } from "../../../../utils/api";
+import { getSelectedSeatsDetail } from "../../../../utils/seatStorage";
 
 const formatDate = (dateStr) => {
   const d = new Date(dateStr);
@@ -31,6 +32,19 @@ const ChooseSeat = ({ movieId, showtimeId }) => {
       .catch((err) => console.error(err));
   }, [movieId, currentShowtimeId]);
 
+  const handleContinue = () => {
+    const currentSeats = getSelectedSeatsDetail().filter(seat => seat.showtimeId === parseInt(currentShowtimeId));
+
+    if (currentSeats.length === 0) {
+      alert('Vui lòng chọn ít nhất một chỗ ngồi trước khi tiếp tục!');
+      return;
+    }
+
+    localStorage.setItem('currentShowtimeId', currentShowtimeId.toString());
+
+    navigate('/concessions');
+  };
+
   return (
     <div className="col-span-2">
       <ChangeShowTime
@@ -41,16 +55,14 @@ const ChooseSeat = ({ movieId, showtimeId }) => {
 
       <SeatContainer showtimeDetail={showtimeDetail} />
 
-      {/* <div className="flex justify-end mt-4">
+      <div className="flex justify-end mt-4 xl:hidden">
         <button
-          className="bg-[#F58020] text-white px-4 py-2 rounded"
-          onClick={() => navigate("/concessions")}
+          className="bg-[#F58020] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#e6731a] transition-colors"
+          onClick={handleContinue}
         >
           Tiếp tục
         </button>
-      </div> */}
-
-
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 package com.example.cinemaservice.service.Imp;
 
+import com.example.cinemaservice.dtos.ShowtimeTicketPriceDTO;
 import com.example.cinemaservice.entity.ShowtimeTicketPrice;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface ShowtimeTicketPriceServiceImp {
     public ShowtimeTicketPrice update(Integer id, ShowtimeTicketPrice entity);
 
     public void delete(Integer id);
+
+    public ShowtimeTicketPriceDTO getByShowTimeIdAndTicketType(int  showTimeId, int ticketTypeId);
 }

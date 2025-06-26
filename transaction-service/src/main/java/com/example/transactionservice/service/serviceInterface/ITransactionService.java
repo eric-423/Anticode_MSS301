@@ -12,6 +12,5 @@ public interface ITransactionService {
     TransactionDTO getTransactionById(int transactionId);
     TransactionDTO getTransactionByBookingId(int bookingId);
     List<TransactionDTO> getAllTransactions();
-    
     TransactionDTO updateTransactionPaymentStatus(int transactionId, PaymentStatus newStatus);
 }

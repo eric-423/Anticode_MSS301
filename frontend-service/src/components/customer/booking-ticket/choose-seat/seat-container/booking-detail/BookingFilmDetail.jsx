@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { getMovieDetail, getShowtimeById } from '../../../../../../utils/api';
+import { getSelectedSeatsDetail } from '../../../../../../utils/seatStorage';
 import PropTypes from 'prop-types';
 
 const BookingFilmDetail = ({ item }) => {
     console.log(item);
+    const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
 
     const url = new URL(window.location.href);
     const pathParts = url.pathname.split('/');
@@ -16,6 +18,7 @@ const BookingFilmDetail = ({ item }) => {
     const showtimeId = url.searchParams.get('showtimeId');
     const [movie, setMovie] = useState(null);
     const [showtime, setShowtime] = useState(null);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     useEffect(() => {
         getMovieDetail(movieId)
@@ -36,6 +39,59 @@ const BookingFilmDetail = ({ item }) => {
             });
     }, [movieId, showtimeId]);
 
+    // Tính tổng tiền cho showtime hiện tại
+    const calculateCurrentShowtimeTotal = () => {
+        if (!showtimeId) return 0;
+
+        const allSeatsDetail = getSelectedSeatsDetail();
+        const currentShowtimeSeats = allSeatsDetail.filter(seat => seat.showtimeId === parseInt(showtimeId));
+        return currentShowtimeSeats.reduce((total, seat) => total + (seat.ticketPrice || 0), 0);
+    };
+
+    // Cập nhật tổng tiền khi localStorage thay đổi
+    useEffect(() => {
+        const updateTotalPrice = () => {
+            const price = calculateCurrentShowtimeTotal();
+            setTotalPrice(price);
+        };
+
+        // Cập nhật ngay lập tức
+        updateTotalPrice();
+
+        // Lắng nghe sự kiện thay đổi localStorage
+        const handleStorageChange = () => {
+            updateTotalPrice();
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        // Tạo custom event để lắng nghe thay đổi từ cùng tab
+        window.addEventListener('seatSelectionChange', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('seatSelectionChange', handleStorageChange);
+        };
+    }, [showtimeId]);
+
+    const handleContinue = () => {
+        const currentSeats = getSelectedSeatsDetail().filter(seat => seat.showtimeId === parseInt(showtimeId));
+        
+        if (currentSeats.length === 0) {
+            alert('Vui lòng chọn ít nhất một chỗ ngồi trước khi tiếp tục!');
+            return;
+        }
+
+        // Lưu showtimeId hiện tại vào localStorage
+        localStorage.setItem('currentShowtimeId', showtimeId);
+
+        navigate('/concessions');
+    };
+
+    // Hàm xử lý khi nhấn nút Quay lại
+    const handleBack = () => {
+        navigate(-1); // Quay lại trang trước đó
+    };
 
     const data = [
         {
@@ -47,7 +103,6 @@ const BookingFilmDetail = ({ item }) => {
             hall: 'RAP 6',
             price: 100000,
         }
-
     ];
 
     return (
@@ -58,7 +113,6 @@ const BookingFilmDetail = ({ item }) => {
                 }}
             ></div>
 
-
             <div className="gap-2 bg-white p-4 rounded-lg shadow-md">
                 <div className='flex item-start gap-2'>
                     <img
@@ -66,7 +120,6 @@ const BookingFilmDetail = ({ item }) => {
                         src={movie ? movie.imageUrl : data[0].posterUrl}
                         alt="Film Poster"
                     />
-
 
                     <div className="flex-1 col-span-2 md:col-span-1 row-span-1 xl:col-span-2" >
                         <h3 className="text-[17px] font-semibold text-[#4A4A4A] mb-2">{movie?.title}</h3>
@@ -107,7 +160,6 @@ const BookingFilmDetail = ({ item }) => {
                             year: 'numeric',
                         })}
                     </p>
-
                 </div>
 
                 <div className="my-5 border-t border-grey-60 border-dashed xl:block hidden"></div>
@@ -119,36 +171,36 @@ const BookingFilmDetail = ({ item }) => {
                             color: 'rgb(245, 128, 32)',
                         }}
                     >
-                        {(data[0].price).toLocaleString()} ₫
-
+                        {totalPrice.toLocaleString('vi-VN')} ₫
                     </span>
                 </div>
-
             </div>
 
             <div className="mt-8 xl:flex hidden justify-between">
-                <button className="w-1/2 mr-2 py-2 text-primary">
+                <button
+                    className="w-1/2 mr-2 py-2 text-primary"
+                    onClick={handleBack}
+                >
                     <span style={{
-                        color:
-                            'rgb(245, 128, 32)',
+                        color: 'rgb(245, 128, 32)',
                         cursor: "pointer",
                     }}>
                         Quay lại
                     </span>
                 </button>
 
-                <button className="w-1/2 ml-2 py-2 text-white border rounded-md"
+                <button
+                    className="w-1/2 ml-2 py-2 text-white border rounded-md"
                     style={{
                         cursor: "pointer",
                         background: "rgb(245, 128, 32)",
-
                     }}
+                    onClick={handleContinue}
                 >
                     <span>Tiếp tục</span>
                 </button>
             </div>
-
-        </div >
+        </div>
     )
 }
 

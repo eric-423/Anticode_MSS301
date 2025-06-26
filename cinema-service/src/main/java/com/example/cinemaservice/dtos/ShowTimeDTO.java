@@ -14,4 +14,5 @@ public class ShowTimeDTO implements Serializable {
     private Date endTime;
 
     private CinemaHallsDTO cinemaHall;
+
 }
