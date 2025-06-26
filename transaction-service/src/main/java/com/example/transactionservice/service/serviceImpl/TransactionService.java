@@ -20,21 +20,21 @@ public class TransactionService implements ITransactionService {
 
     @Override
     public TransactionDTO createTransaction(TransactionDTO transactionDTO) {
-        // Convert TransactionDTO to Transaction entity
         Transaction transaction = new Transaction();
         transaction.setPaymentMethod(transactionDTO.getPaymentMethod());
         transaction.setAmount(transactionDTO.getAmount());
         transaction.setTransactionDate(transactionDTO.getTransactionDate());
         transaction.setBookingId(transactionDTO.getBookingId());
+        transaction.setPaymentId(transactionDTO.getPaymentId());
+        transaction.setOrderCode(transactionDTO.getOrderCode());
+        
         if (transactionDTO.getPaymentMethod() == PaymentMethods.BANK_TRANSFER)
-            transaction.setPaymentStatus(PaymentStatus.PENDING); // Assuming bank transfers are initially pending
+            transaction.setPaymentStatus(PaymentStatus.PENDING);
         else {
-            transaction.setPaymentStatus(PaymentStatus.COMPLETED);
+            transaction.setPaymentStatus(PaymentStatus.PENDING);
         }
-        // Save the transaction entity to the database
         Transaction savedTransaction = transactionRepository.save(transaction);
 
-        // Convert saved Transaction entity back to TransactionDTO
         TransactionDTO savedTransactionDTO = new TransactionDTO();
         savedTransactionDTO.setId(savedTransaction.getId());
         savedTransactionDTO.setPaymentMethod(savedTransaction.getPaymentMethod());
@@ -42,7 +42,8 @@ public class TransactionService implements ITransactionService {
         savedTransactionDTO.setTransactionDate(savedTransaction.getTransactionDate());
         savedTransactionDTO.setPaymentStatus(savedTransaction.getPaymentStatus());
         savedTransactionDTO.setBookingId(savedTransaction.getBookingId());
-
+        savedTransactionDTO.setPaymentId(savedTransaction.getPaymentId());
+        savedTransactionDTO.setOrderCode(savedTransaction.getOrderCode());
 
         return savedTransactionDTO;
     }
@@ -57,16 +58,13 @@ public class TransactionService implements ITransactionService {
         }
 
 
-        // Update the transaction entity with new values
         transaction.setPaymentMethod(transactionDTO.getPaymentMethod());
         transaction.setAmount(transactionDTO.getAmount());
         transaction.setTransactionDate(transactionDTO.getTransactionDate());
         transaction.setPaymentStatus(transactionDTO.getPaymentStatus());
 
-        // Save the updated transaction entity to the database
         Transaction updatedTransaction = transactionRepository.save(transaction);
 
-        // Convert updated Transaction entity back to TransactionDTO
         TransactionDTO updatedTransactionDTO = new TransactionDTO();
         updatedTransactionDTO.setId(updatedTransaction.getId());
         updatedTransactionDTO.setPaymentMethod(updatedTransaction.getPaymentMethod());
@@ -82,9 +80,8 @@ public class TransactionService implements ITransactionService {
         Transaction transaction = transactionRepository.findTransactionById(transactionId);
         if (transaction == null ||
                 (transaction.getPaymentStatus() != PaymentStatus.PENDING)) {
-            return false; // or throw an exception
+            return false;
         }
-        // Delete the transaction entity from the database
         transactionRepository.delete(transaction);
         return true;
     }
@@ -93,7 +90,6 @@ public class TransactionService implements ITransactionService {
     public TransactionDTO getTransactionById(int transactionId) {
         Transaction transaction = transactionRepository.findTransactionById(transactionId);
         if (transaction != null) {
-            // Convert Transaction entity to TransactionDTO
             TransactionDTO transactionDTO = new TransactionDTO();
             transactionDTO.setId(transaction.getId());
             transactionDTO.setPaymentMethod(transaction.getPaymentMethod());
@@ -101,6 +97,25 @@ public class TransactionService implements ITransactionService {
             transactionDTO.setAmount(transaction.getAmount());
             transactionDTO.setTransactionDate(transaction.getTransactionDate());
             transactionDTO.setBookingId(transaction.getBookingId());
+
+            return transactionDTO;
+        }
+        return null;
+    }
+
+    @Override
+    public TransactionDTO getTransactionByBookingId(int bookingId) {
+        Transaction transaction = transactionRepository.findTransactionByBookingId(bookingId);
+        if (transaction != null) {
+            TransactionDTO transactionDTO = new TransactionDTO();
+            transactionDTO.setId(transaction.getId());
+            transactionDTO.setPaymentMethod(transaction.getPaymentMethod());
+            transactionDTO.setPaymentStatus(transaction.getPaymentStatus());
+            transactionDTO.setAmount(transaction.getAmount());
+            transactionDTO.setTransactionDate(transaction.getTransactionDate());
+            transactionDTO.setBookingId(transaction.getBookingId());
+            transactionDTO.setPaymentId(transaction.getPaymentId());
+            transactionDTO.setOrderCode(transaction.getOrderCode());
 
             return transactionDTO;
         }
@@ -126,4 +141,31 @@ public class TransactionService implements ITransactionService {
         }
         return null;
     }
+
+    @Override
+    public TransactionDTO updateTransactionPaymentStatus(int transactionId, PaymentStatus newStatus) {
+        Transaction transaction = transactionRepository.findTransactionById(transactionId);
+        if (transaction == null) {
+            return null;
+        }
+
+        transaction.setPaymentStatus(newStatus);
+        transaction.setTransactionDate(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME));
+
+        Transaction updatedTransaction = transactionRepository.save(transaction);
+
+        TransactionDTO updatedTransactionDTO = new TransactionDTO();
+        updatedTransactionDTO.setId(updatedTransaction.getId());
+        updatedTransactionDTO.setPaymentMethod(updatedTransaction.getPaymentMethod());
+        updatedTransactionDTO.setAmount(updatedTransaction.getAmount());
+        updatedTransactionDTO.setTransactionDate(updatedTransaction.getTransactionDate());
+        updatedTransactionDTO.setPaymentStatus(updatedTransaction.getPaymentStatus());
+        updatedTransactionDTO.setBookingId(updatedTransaction.getBookingId());
+        updatedTransactionDTO.setPaymentId(updatedTransaction.getPaymentId());
+        updatedTransactionDTO.setOrderCode(updatedTransaction.getOrderCode());
+        
+        return updatedTransactionDTO;
+    }
+
+
 }

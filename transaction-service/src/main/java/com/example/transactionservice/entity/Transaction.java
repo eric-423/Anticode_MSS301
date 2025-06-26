@@ -34,4 +34,10 @@ public class Transaction {
 
     @Column(name = "booking_id")
     private int bookingId;
+
+    @Column(name = "payment_id")
+    private String paymentId;
+
+    @Column(name = "order_code")
+    private String orderCode;
 }
