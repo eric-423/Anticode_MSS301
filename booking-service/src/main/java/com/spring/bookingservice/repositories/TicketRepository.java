@@ -14,6 +14,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
     List<Ticket> findByShowtime(int showtime);
 
+    List<Ticket> getTicketsByBooking(Booking booking);
+
     List<Ticket> getTicketsByBooking_Id(int bookingId);
 
     List<Ticket> getTicketsByShowtime(int showtime);

@@ -2,6 +2,7 @@ package com.spring.bookingservice.config;
 
 import com.spring.bookingservice.dtos.BookingDTO;
 import com.spring.bookingservice.dtos.TransactionDTO;
+import com.spring.bookingservice.dtos.PaymentStatusUpdateDTO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -92,6 +93,27 @@ public class KafkaConfig {
             ConsumerFactory<String, TransactionDTO> transactionConsumerFactory) {
         ConcurrentKafkaListenerContainerFactory<String, TransactionDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(transactionConsumerFactory);
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, PaymentStatusUpdateDTO> paymentStatusUpdateConsumerFactory(
+            @Value("${spring.kafka.bootstrap-servers:localhost:9092}") String bootstrapServers) {
+        JsonDeserializer<PaymentStatusUpdateDTO> deserializer = new JsonDeserializer<>(PaymentStatusUpdateDTO.class);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeHeaders(false);
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, PaymentStatusUpdateDTO> paymentStatusUpdateKafkaListenerContainerFactory(
+            ConsumerFactory<String, PaymentStatusUpdateDTO> paymentStatusUpdateConsumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<String, PaymentStatusUpdateDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(paymentStatusUpdateConsumerFactory);
         return factory;
     }
 }
