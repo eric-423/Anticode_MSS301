@@ -1,4 +1,3 @@
-
 import Film from '../pages/customer/film/Film'
 import Home from '../pages/customer/home/Home'
 import TicketPrice from '../pages/customer/ticket-price/TicketPrice'
@@ -9,10 +8,12 @@ import Booking from "../pages/customer/booking/Booking";
 import BookingTickets from "../pages/customer/booking-tickets/BookingTickets";
 import UserInfoPage from "../components/customer/user-detail/UserInfoPage";
 import ManageDashboardPage from '../pages/manager/ManageDashboardPage'
+import BookingHistoryPage from '../pages/customer/BookingHistoryPage'
 
 import ConcessionsPage from "../pages/customer/concessions/ConcessionsPage";
 import BookingSuccess from '../components/customer/booking-status/booking-success'
 import BookingFail from '../components/customer/booking-status/booking-fail'
+import TicketReceiptPage from '../components/customer/ticket-receipt/TicketReceiptPage'
 
 
 const ROUTER = [
@@ -28,6 +29,13 @@ const ROUTER = [
     path: "/user-detail",
     page: <UserInfoPage />,
     title: "User Info",
+    subRouter: [],
+  },
+  {
+    name: "booking-history",
+    path: "/booking-history",
+    page: <BookingHistoryPage />,
+    title: "Booking History",
     subRouter: [],
   },
   {
@@ -105,6 +113,13 @@ const ROUTER = [
     path: "/booking-fail",
     page: <BookingFail />,
     title: "Booking Fail",
+    subRouter: [],
+  },
+  {
+    name: "booking",
+    path: "/ticket-receipt",
+    page: <TicketReceiptPage />,
+    title: "Ticket Receipt",
     subRouter: [],
   },
 ];
