@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Map;
 
 @RestController
@@ -25,13 +26,13 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
-    
+
     @Autowired
     private BookingService bookingService;
-    
+
     @Autowired
     private BookingRepository bookingRepository;
-    
+
     @Autowired
     private PaymentProducer paymentProducer;
 
@@ -39,16 +40,16 @@ public class PaymentController {
     public ResponseEntity<PaymentResponseDTO> createPayment(
             @RequestParam int bookingId,
             @RequestBody PaymentRequestDTO paymentRequest) {
-        
+
         try {
             BookingDTO bookingDTO = bookingService.getBooking(bookingId);
             if (bookingDTO == null) {
                 return ResponseEntity.notFound().build();
             }
-            
+
             PaymentResponseDTO response = paymentService.createPayment(bookingDTO, paymentRequest);
             return ResponseEntity.ok(response);
-            
+
         } catch (Exception e) {
             PaymentResponseDTO errorResponse = new PaymentResponseDTO();
             errorResponse.setStatus("ERROR");
@@ -60,7 +61,7 @@ public class PaymentController {
     @GetMapping("/callback/success")
     public ResponseEntity<String> handlePaymentSuccess(
             @RequestParam(required = false) Integer bookingId) {
-        
+
         try {
             if (bookingId != null) {
                 Booking booking = bookingRepository.getBookingById(bookingId);
@@ -74,14 +75,14 @@ public class PaymentController {
                     transactionDTO.setAmount(booking.getTotalPrice());
                     transactionDTO.setPaymentMethod(com.spring.bookingservice.dtos.enums.PaymentMethods.VIETQR);
                     transactionDTO.setTransactionDate(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME));
-                    
+
                     System.out.println("Sending payment success event for booking: " + bookingId);
                     paymentProducer.publishTransaction(transactionDTO);
                 }
             }
-            
+
             return ResponseEntity.ok("Payment success processed");
-            
+
         } catch (Exception e) {
             System.err.println("Error processing payment success: " + e.getMessage());
             e.printStackTrace();
@@ -94,23 +95,23 @@ public class PaymentController {
     public ResponseEntity<String> handlePaymentCancel(
             @RequestParam(required = false) Integer bookingId,
             @RequestParam(required = false) String paymentId) {
-        
+
         try {
             if (bookingId != null) {
                 Booking booking = bookingRepository.getBookingById(bookingId);
                 if (booking != null) {
                     booking.setBookingStatus(com.spring.bookingservice.dtos.enums.BookingStatus.CANCELLED);
                     bookingRepository.save(booking);
-                    
+
                     com.spring.bookingservice.dtos.TransactionDTO transactionDTO = new com.spring.bookingservice.dtos.TransactionDTO();
                     transactionDTO.setBookingId(bookingId);
                     transactionDTO.setPaymentStatus(PaymentStatus.CANCELLED);
                     paymentProducer.publishTransaction(transactionDTO);
                 }
             }
-            
+
             return ResponseEntity.ok("Payment cancellation processed");
-            
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error processing payment cancellation: " + e.getMessage());
@@ -140,9 +141,9 @@ public class PaymentController {
                     bookingRepository.save(booking);
                 }
             }
-            
+
             return ResponseEntity.ok("Payment status update processed");
-            
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error processing payment status update: " + e.getMessage());

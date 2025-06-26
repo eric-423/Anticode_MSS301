@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getSelectedSeatsDetail } from '../../../../utils/seatStorage';
-import { createBooking } from '../../../../utils/api';
+import { createBooking, createPayment } from '../../../../utils/api';
 import jwtDecode from 'jwt-decode';
 
 const ConcessionsSummary = () => {
@@ -54,25 +54,21 @@ const ConcessionsSummary = () => {
     try {
       setIsLoading(true);
 
-      // Kiểm tra đăng nhập
       const token = localStorage.getItem('token');
       if (!token) {
         alert('Vui lòng đăng nhập để tiếp tục thanh toán!');
         return;
       }
 
-      // Kiểm tra có chọn vé không
       if (selectedSeats.length === 0) {
         alert('Vui lòng chọn ít nhất một vé trước khi thanh toán!');
         return;
       }
 
-      // Decode token để lấy thông tin user
       const decodedToken = jwtDecode(token);
       const userEmail = decodedToken.email;
       const userID = decodedToken.id || decodedToken.userId;
 
-      // Chuẩn bị dữ liệu booking
       const bookingData = {
         guestEmail: userEmail,
         totalPrice: grandTotal,
@@ -91,23 +87,27 @@ const ConcessionsSummary = () => {
         }))
       };
 
-      console.log('Booking data:', bookingData);
-
-      // Gọi API createBooking
       const response = await createBooking(bookingData);
-      console.log('Booking response:', response);
 
-      // Xử lý thành công
-      alert('Đặt vé thành công! Mã đặt vé: ' + (response.data?.data?.bookingId || 'N/A'));
-      
-      // Xóa dữ liệu đã đặt khỏi localStorage
-      localStorage.removeItem('selectedConcessions');
-      localStorage.removeItem('currentShowtimeId');
-      localStorage.removeItem('selectedSeats');
-      localStorage.removeItem('selectedSeatsDetail');
-      
-      // Chuyển về trang chủ
-      window.location.href = '/';
+      const paymentMethod = {
+        "paymentMethod": "VIETQR",
+        "returnUrl": "http://localhost:5173/booking-success",
+        "cancelUrl": "http://localhost:5173/booking-fail"
+      };
+      console.log(response.data.id)
+      await createPayment(response.data.id, paymentMethod)
+        .then(res => {
+          window.location.href = res.data.paymentUrl;
+        })
+        .catch(err => {
+          console.log(err)
+        })
+        .finally(() => {
+          localStorage.removeItem('selectedConcessions');
+          localStorage.removeItem('currentShowtimeId');
+          localStorage.removeItem('selectedSeats');
+          localStorage.removeItem('selectedSeatsDetail');
+        })
 
     } catch (error) {
       console.error('Lỗi khi đặt vé:', error);
