@@ -37,6 +37,14 @@ steps:
   
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/transaction-service:prod' ]
+
+
+   ## frontend-service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/frontend-service:prod','./frontend-service/']
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/frontend-service:prod' ]
   
 options:
   logging: CLOUD_LOGGING_ONLY
