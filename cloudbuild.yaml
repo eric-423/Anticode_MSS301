@@ -46,5 +46,19 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/frontend-service:prod' ]
   
+  - name: 'google/cloud-sdk:latest'
+    entrypoint: 'sh'
+    args:
+      - -xe
+      - -c
+      - |
+        gcloud deploy apply --file deploy/pipeline.yaml --region=asia-southeast1
+        gcloud deploy apply --file deploy/prod.yaml --region=asia-southeast1
+        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/account-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/booking-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/cinema-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/frontend-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/gateway-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/transaction-service.yaml
 options:
   logging: CLOUD_LOGGING_ONLY
