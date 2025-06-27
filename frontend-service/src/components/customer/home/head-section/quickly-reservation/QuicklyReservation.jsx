@@ -38,7 +38,11 @@ const QuicklyReservation = () => {
       return
     }
     getShowtimesByMovie(selectedMovie)
-      .then((res) => setDates(res.data.data || []))
+      .then((res) => {
+        console.log(res.data);
+        const startDates = Array.from(new Set(res.data.map((st) => st.startTime.slice(0, 10))))
+        setDates(startDates || []);
+      })
       .catch((err) => console.error(err))
   }, [selectedMovie])
 
