@@ -3,9 +3,11 @@ package com.example.cinemaservice.service;
 import com.example.cinemaservice.dtos.CinemaHallsDTO;
 import com.example.cinemaservice.dtos.HallTypeDTO;
 import com.example.cinemaservice.dtos.ShowTimeDTO;
+import com.example.cinemaservice.dtos.ShowtimeTicketPriceDTO;
 import com.example.cinemaservice.entity.CinemaHall;
 import com.example.cinemaservice.entity.HallType;
 import com.example.cinemaservice.entity.Showtime;
+import com.example.cinemaservice.entity.ShowtimeTicketPrice;
 import com.example.cinemaservice.repository.CinemaHallRepository;
 import com.example.cinemaservice.repository.MovieRepository;
 import com.example.cinemaservice.repository.ShowtimeRepository;
@@ -19,6 +21,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ShowtimeService implements ShowtimeServiceImp {
@@ -52,13 +55,15 @@ public class ShowtimeService implements ShowtimeServiceImp {
     }
 
     @Override
-    public List<Showtime> getAll() {
-        return repository.findAll();
+    public List<ShowTimeDTO> getAll() {
+        List<Showtime> showtimes = repository.findAll();
+        return showtimes.stream().map(this::convertToDTO).toList();
     }
 
     @Override
-    public List<Showtime> findByMovieId(int movieId) {
-        return repository.findByMovieId(movieId);
+    public List<ShowTimeDTO> findByMovieId(int movieId) {
+        List<Showtime> showTimes = repository.findByMovieId(movieId);
+        return showTimes.stream().map(this::convertToDTO).toList();
     }
 
     @Override
@@ -93,7 +98,7 @@ public class ShowtimeService implements ShowtimeServiceImp {
         cal.add(Calendar.DAY_OF_MONTH, daysUntilSunday);
         Date endDate = cal.getTime();
 
-        for(Showtime showtime : showtimes) {
+        for (Showtime showtime : showtimes) {
             Date showTimeDate = showtime.getStartTime();
             if (showTimeDate.after(startDate) && showTimeDate.before(endDate)) {
                 showTimeDates.add(showTimeDate);
@@ -123,7 +128,7 @@ public class ShowtimeService implements ShowtimeServiceImp {
 
         List<ShowTimeDTO> result = new ArrayList<>();
 
-        for(Showtime showtime : showtimes) {
+        for (Showtime showtime : showtimes) {
             Date showTime = showtime.getStartTime();
             if (showTime.after(startDate) && showTime.before(endDate)) {
                 ShowTimeDTO showTimeDTO = new ShowTimeDTO();
@@ -158,6 +163,8 @@ public class ShowtimeService implements ShowtimeServiceImp {
         cinemaHallsDTO.setScrrenType(cinemaHall.getScrrenType());
         cinemaHallsDTO.setHallType(hallTypeDTO);
         showTimeDTO.setCinemaHall(cinemaHallsDTO);
+
+
 
         return showTimeDTO;
     }

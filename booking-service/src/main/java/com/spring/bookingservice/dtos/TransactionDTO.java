@@ -14,4 +14,6 @@ public class TransactionDTO implements Serializable {
     private String transactionDate;
     private PaymentStatus paymentStatus;
     private int bookingId;
+    private String paymentId;
+    private String orderCode;
 }

@@ -1,8 +1,11 @@
 package com.example.cinemaservice.controller;
 
 import com.example.cinemaservice.entity.ShowtimeTicketPrice;
+import com.example.cinemaservice.payload.ResponseData;
 import com.example.cinemaservice.service.Imp.ShowtimeTicketPriceServiceImp;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,5 +38,19 @@ public class ShowtimeTicketPriceController {
     @DeleteMapping("/{id}")
     public void deleteShowtimeTicketPrice(Integer id) {
         showtimeTicketPriceServiceImp.delete(id);
+    }
+
+    @GetMapping("/showtime/{showTimeId}/ticket-type/{ticketTypeId}")
+    public ResponseEntity<?> getShowtimeTicketPriceByShowTimeIdAndTicketTypeId(
+            @PathVariable int showTimeId,
+            @PathVariable int ticketTypeId) {
+        try {
+            ResponseData responseData = new ResponseData();
+            responseData.setDesc("Showtime Ticket Price retrieved successfully.");
+            responseData.setData(showtimeTicketPriceServiceImp.getByShowTimeIdAndTicketType(showTimeId, ticketTypeId));
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body("Showtime Ticket Price not found for the given Showtime and Ticket Type.");
+        }
     }
 }

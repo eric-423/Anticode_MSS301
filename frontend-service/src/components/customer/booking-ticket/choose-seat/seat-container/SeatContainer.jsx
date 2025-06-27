@@ -1,33 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SignSeat from "./sign-seat/SignSeat";
 import Screen from "./screen/Screen";
+import SeatCounter from "./SeatCounter";
+import { useSeatSelection } from "../../../../../utils/useSeatSelection";
 
 const SeatContainer = ({ showtimeDetail }) => {
   const col = showtimeDetail?.cinemaHall?.hallType?.column || 0;
   const row = showtimeDetail?.cinemaHall?.hallType?.roll || 0;
 
+  const [seatBooked] = useState(["A1", "A2", "B1", "B2", "C1"]);
 
-  const [seatBooked, setSeatBooked] = useState(["A1", "A2", "B1", "B2", "C1"]);
-
-
-  const [selectedSeats, setSelectedSeats] = useState(() => {
-    const saved = localStorage.getItem("selectedSeats")
-    return saved ? JSON.parse(saved) : []
-  })
-
-  useEffect(() => {
-    localStorage.setItem("selectedSeats", JSON.stringify(selectedSeats))
-  }, [selectedSeats])
-
-  const toggleSeat = (seat) => {
-    setSelectedSeats((prev) =>
-      prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat]
-    )
-  }
+  // Sử dụng custom hook để quản lý chọn chỗ ngồi
+  const { selectedSeats, toggleSeat, isLoading } = useSeatSelection(showtimeDetail);
 
   return (
     <div className="bg-white py-4 px-2 rounded-[.375rem] w-full mb-10">
       <SignSeat />
+
+      {/* Loading indicator */}
+      {isLoading && (
+        <div className="mt-4 p-2 bg-blue-50 rounded-lg text-center">
+          <p className="text-sm text-blue-600">Đang lấy thông tin giá vé...</p>
+        </div>
+      )}
+
+      {/* Hiển thị số lượng chỗ đã chọn cho showtime hiện tại */}
+      <SeatCounter showtimeId={showtimeDetail?.id} />
+
       <div className="flex mt-4">
         <Screen />
       </div>
@@ -53,7 +52,7 @@ const SeatContainer = ({ showtimeDetail }) => {
                     key={colIndex}
                     className="w-[30px] h-[30px] rounded-[.375rem] flex justify-center items-center"
                     onClick={() => {
-                      if (!isBooked) toggleSeat(seatLabel);
+                      if (!isBooked && !isLoading) toggleSeat(seatLabel);
                     }}
                     style={{
                       backgroundColor: isBooked
@@ -62,8 +61,8 @@ const SeatContainer = ({ showtimeDetail }) => {
                           ? "#F58020"
                           : "#dfdfdf",
                       color: isBooked || isSelected ? "#ffffff" : "#4A4A4A",
-                      cursor: isBooked ? "not-allowed" : "pointer",
-                      pointerEvents: isBooked ? "none" : "auto", // chặn click chuột
+                      cursor: isBooked || isLoading ? "not-allowed" : "pointer",
+                      pointerEvents: isBooked || isLoading ? "none" : "auto",
                     }}
                   >
                     <span className="text-[12px] font-bold">{seatLabel}</span>

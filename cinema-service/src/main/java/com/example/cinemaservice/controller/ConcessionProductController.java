@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/concession-products")
-@CrossOrigin
+
 public class ConcessionProductController {
 
     @Autowired

@@ -46,6 +46,16 @@ public class TransactionController {
         }
     }
 
+    @GetMapping("/booking/{bookingId}")
+    public ResponseEntity<?> getTransactionByBookingId(@PathVariable int bookingId) {
+        TransactionDTO transactionDTO = transactionService.getTransactionByBookingId(bookingId);
+        if (transactionDTO != null) {
+            return ResponseEntity.ok(transactionDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping
     public ResponseEntity<?> deleteTransaction(int id) {
         boolean isDeleted = transactionService.deleteTransaction(id);
@@ -63,6 +73,34 @@ public class TransactionController {
             return ResponseEntity.ok(transactions);
         } else {
             return ResponseEntity.noContent().build();
+        }
+    }
+
+    @PutMapping("/{id}/payment-id")
+    public ResponseEntity<?> updateTransactionPaymentId(
+            @PathVariable int id, 
+            @RequestParam String paymentId,
+            @RequestParam(required = false) String orderCode) {
+        
+        try {
+            TransactionDTO transactionDTO = transactionService.getTransactionById(id);
+            if (transactionDTO == null) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            transactionDTO.setPaymentId(paymentId);
+            if (orderCode != null) {
+                transactionDTO.setOrderCode(orderCode);
+            }
+            
+            TransactionDTO updatedTransaction = transactionService.updateTransaction(transactionDTO);
+            if (updatedTransaction != null) {
+                return ResponseEntity.ok(updatedTransaction);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error updating payment ID: " + e.getMessage());
         }
     }
 }

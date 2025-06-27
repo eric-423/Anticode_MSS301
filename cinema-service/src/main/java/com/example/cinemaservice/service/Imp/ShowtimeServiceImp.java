@@ -12,9 +12,9 @@ public interface ShowtimeServiceImp {
 
     public ShowTimeDTO getById(Integer id);
 
-    public List<Showtime> getAll();
+    public List<ShowTimeDTO> getAll();
 
-    List<Showtime> findByMovieId(int movieId);
+    List<ShowTimeDTO> findByMovieId(int movieId);
 
     public Showtime update(Integer id, Showtime entity);
 

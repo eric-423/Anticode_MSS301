@@ -2,6 +2,7 @@ package com.spring.bookingservice.services.Impl;
 
 import com.spring.bookingservice.dtos.BookingConcessionDTO;
 import com.spring.bookingservice.dtos.BookingDTO;
+import com.spring.bookingservice.dtos.ConcessionProductDTO;
 import com.spring.bookingservice.dtos.TicketDTO;
 import com.spring.bookingservice.dtos.enums.BookingStatus;
 import com.spring.bookingservice.kafka.BookingProducer;
@@ -56,21 +57,25 @@ public class BookingServiceImpl implements BookingService {
         BeanUtils.copyProperties(bookingDTO, booking);
         booking.setBookingStatus(BookingStatus.PENDING);
         List<BookingConcession> bookingConcessions = new ArrayList<>();
-        bookingDTO.getBookingConcessionList().forEach(bookingConcessionDTO -> {
+
+        for(BookingConcessionDTO bookingConcessionDTO : bookingDTO.getBookingConcessionList()) {
             BookingConcession bookingConcession = new BookingConcession();
             BeanUtils.copyProperties(bookingConcessionDTO, bookingConcession);
             bookingConcession.setBooking(booking);
             bookingConcessions.add(bookingConcession);
-        });
+        }
+
         booking.setBookingConcessionList(bookingConcessions);
 
         List<Ticket> tickets = new ArrayList<>();
-        bookingDTO.getBookingSeatList().forEach(bookingSeatDTO -> {
+
+        for(TicketDTO bookingSeatDTO : bookingDTO.getBookingSeatList()) {
             Ticket ticket = new Ticket();
             BeanUtils.copyProperties(bookingSeatDTO, ticket);
             ticket.setBooking(booking);
             tickets.add(ticket);
-        });
+        }
+
         booking.setBookingSeatList(tickets);
 
         BookingDTO saved = convertBookingToBookingDTO(bookingRepository.save(booking));
