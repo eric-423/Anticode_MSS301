@@ -3,6 +3,7 @@ package com.example.transactionservice.kafka;
 import com.example.transactionservice.dto.BookingDTO;
 import com.example.transactionservice.dto.TransactionDTO;
 import com.example.transactionservice.dto.enums.PaymentMethods;
+import com.example.transactionservice.dto.enums.PaymentStatus;
 import com.example.transactionservice.service.serviceImpl.TransactionService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,16 @@ public class BookingConsumer {
     @KafkaListener(topics = "${app.kafka.booking-topic:booking-events}", groupId = "transaction-service",containerFactory = "bookingKafkaListenerContainerFactory")
     public void handleBookingEvent(BookingDTO bookingDTO) {
         TransactionDTO transactionDTO = new TransactionDTO();
-        transactionDTO.setPaymentMethod(PaymentMethods.CASH);
+        transactionDTO.setPaymentMethod(PaymentMethods.BANK_TRANSFER);
         transactionDTO.setAmount(bookingDTO.getTotalPrice());
         transactionDTO.setTransactionDate(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
         transactionDTO.setBookingId(bookingDTO.getId());
+        transactionDTO.setPaymentStatus(PaymentStatus.PENDING);
+        
+        String currentTimeString = String.valueOf(System.currentTimeMillis());
+        long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
+        transactionDTO.setOrderCode(String.valueOf(orderCode));
+        
         TransactionDTO saved = transactionService.createTransaction(transactionDTO);
         paymentProducer.publishTransaction(saved);
     }

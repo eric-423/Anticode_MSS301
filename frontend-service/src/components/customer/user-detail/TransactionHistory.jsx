@@ -1,15 +1,10 @@
 import React from "react";
+import BookingHistory from "./BookingHistory";
 
 const TransactionHistory = ({ transactions }) => {
-  if (!transactions || transactions.length === 0) {
-    return (
-      <div style={{ textAlign: 'center', color: '#888', marginTop: 30 }}>
-        Lưu ý: chỉ hiển thị 20 giao dịch gần nhất
-      </div>
-    );
-  }
   return (
     <div>
+      <BookingHistory bookings={transactions} />
     </div>
   );
 };

@@ -1,11 +1,21 @@
-import React from "react";
+import React, { use } from "react";
 import IMAGES from "../../../../../../utils/images";
+import { useNavigate } from "react-router-dom";
 
 const MovieItem = ({ item }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    console.log("MovieItem clicked:", item.id);
+    
+    if(item?.id) {
+      navigate(`/booking/${item.id}`);
+    }
+  };
   return (
     <div className="w-max-full">
       <div
         className="relative h-[220px] rounded-[.375rem] overflow-hidden cursor-pointer"
+        onClick={handleClick}
       >
         <img
           className="w-[50%] h-full object-cover items-center mx-auto"
@@ -14,7 +24,12 @@ const MovieItem = ({ item }) => {
           alt=""
         />
         <div className="bg-[#00000080] w-full h-full absolute top-0 left-0 flex justify-center items-center transition-all duration-300 ease-in-out opacity-0 hover:opacity-100">
-          <div className="text-white bg-[#f26b38] cursor-pointer w-[120px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center">
+          <div className="text-white bg-[#f26b38] cursor-pointer w-[120px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center"
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent the click from bubbling up to the parent div
+              handleClick();
+            }}
+          >
             <img className="mr-2" src={IMAGES.ticketHover} />
             <span className="font-nunito-sans">Mua Vé</span>
           </div>

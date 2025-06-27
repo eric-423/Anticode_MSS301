@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/booking")
+@RequestMapping("/api/booking")
 public class BookingController {
 
     @Autowired

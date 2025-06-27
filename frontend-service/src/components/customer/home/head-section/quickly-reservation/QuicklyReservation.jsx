@@ -38,7 +38,18 @@ const QuicklyReservation = () => {
       return
     }
     getShowtimesByMovie(selectedMovie)
-      .then((res) => setDates(res.data.data || []))
+      .then((res) => {
+        console.log(res.data);
+        const startDates = Array.from(new Set(res.data.map((st) => st.startTime.slice(0, 10))))
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const filteredDates = startDates.filter(dateStr => {
+          const date = new Date(dateStr);
+          date.setHours(0, 0, 0, 0);
+          return date >= today;
+        });
+        setDates(filteredDates || []);
+      })
       .catch((err) => console.error(err))
   }, [selectedMovie])
 

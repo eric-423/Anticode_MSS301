@@ -51,7 +51,7 @@ public class DashboardServiceImpl implements DashboardService {
                 .toLocalDate();
         TicketSoldDTO result = new TicketSoldDTO();
         result.setDate(date);
-        result.setNumber( bookingRepository
+        result.setNumber(bookingRepository
                 .countTotalTicketsForDay(localDate.atStartOfDay(), localDate.atTime(23, 59, 59, 999999999)));
         return result;
     }
@@ -69,12 +69,12 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public List<TicketRevenueDTO> getMonthlyTicketRevenue(Date date) {
-        List<TicketRevenueDTO> result  = new ArrayList<TicketRevenueDTO>();
+        List<TicketRevenueDTO> result = new ArrayList<TicketRevenueDTO>();
         int year = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear();
         IntStream.range(0, 12).forEach(month -> {
-            LocalDate firstDayOfMonth = LocalDate.of(year,month,1);
+            LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
             TicketRevenueDTO ticketRevenueDTO = new TicketRevenueDTO();
-            ticketRevenueDTO.setRevenue(getRevenueTicketByMonth(firstDayOfMonth,firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth())));
+            ticketRevenueDTO.setRevenue(getRevenueTicketByMonth(firstDayOfMonth, firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth())));
             result.add(ticketRevenueDTO);
         });
         return result;
@@ -84,10 +84,10 @@ public class DashboardServiceImpl implements DashboardService {
     public List<ProductRevenueDTO> getMonthlyProductRevenue(Date date) {
         int year = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear();
         IntStream.range(0, 12).forEach(month -> {
-            LocalDate firstDayOfMonth = LocalDate.of(year,month,1);
+            LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
             ProductRevenueDTO productRevenueDTO = new ProductRevenueDTO();
             productRevenueDTO.setMonth(month);
-            productRevenueDTO.setRevenue(getRevenueProductByMonth(firstDayOfMonth,firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth())));
+            productRevenueDTO.setRevenue(getRevenueProductByMonth(firstDayOfMonth, firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth())));
         });
         return List.of();
     }
@@ -100,7 +100,7 @@ public class DashboardServiceImpl implements DashboardService {
             MovieRevenueDTO movieRevenueDTO = new MovieRevenueDTO();
             movieRevenueDTO.setMovieName(movieDashboardDTO.getMovieName());
             movieRevenueDTO.setMovieID(movieDashboardDTO.getMovieID());
-            movieRevenueDTO.setRevenue( movieDashboardDTO.getShowTimesIDs().stream()
+            movieRevenueDTO.setRevenue(movieDashboardDTO.getShowTimesIDs().stream()
                     .mapToDouble(showTime ->
                             ticketRepository.getTicketsByShowtime(showTime).stream().mapToDouble(Ticket::getPrice).sum())
                     .sum());
@@ -120,12 +120,12 @@ public class DashboardServiceImpl implements DashboardService {
                 Date.from(startOfDayFirstMonth.atZone(ZoneId.systemDefault()).toInstant()),
                 Date.from(endOfDayLastMonth.atZone(ZoneId.systemDefault()).toInstant()));
 
-     return bookings.stream()
-             .flatMap(booking -> bookingConcessionRepository.getBookingConcessionsByBooking_Id(booking.getId()).stream())
-             .mapToDouble(bookingConcession -> {
-                 ConcessionProductDTO concessionProductDTO = concessionProductService.getConcessionProductById(bookingConcession.getConcessionProductID());
-                 return concessionProductDTO.getPrice();
-             }).sum();
+        return bookings.stream()
+                .flatMap(booking -> bookingConcessionRepository.getBookingConcessionsByBooking_Id(booking.getId()).stream())
+                .mapToDouble(bookingConcession -> {
+                    ConcessionProductDTO concessionProductDTO = concessionProductService.getConcessionProductById(bookingConcession.getConcessionProductID());
+                    return concessionProductDTO.getPrice();
+                }).sum();
     }
 
     private double getRevenueTicketByMonth(LocalDate firstDayOfMonth, LocalDate lastDayOfMonth) {
