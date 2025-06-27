@@ -1,7 +1,7 @@
 import { User, Film, Video, ShoppingBag, BarChart2 } from 'lucide-react';
 import React from 'react';
 
-const Sidebar = ({ activeView, setActiveView }) => {
+const SideBar = ({ activeView, setActiveView }) => {
     const navItems = [
         { id: 'dashboard', icon: BarChart2, label: 'Tổng quan' },
         { id: 'movies', icon: Film, label: 'Quản lý Phim' },
@@ -54,4 +54,4 @@ const Sidebar = ({ activeView, setActiveView }) => {
         </div>
     );
 };
-export default Sidebar;
+export default SideBar;

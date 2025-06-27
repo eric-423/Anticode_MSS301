@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Sidebar from "./Sidebar";
+import SideBar from "./SideBar";
 import Header from "./Header";
 import Dashboard from "./Dashboard";
 import Movies from "./Movies";
@@ -36,7 +36,7 @@ const ManageDashboard = () => {
 
     return (
         <div className="flex bg-gray-100 font-sans">
-            <Sidebar activeView={activeView} setActiveView={setActiveView} />
+            <SideBar activeView={activeView} setActiveView={setActiveView} />
             <main className="flex-1">
                 <Header title={getTitle()} />
                 <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 88px)' }}>
