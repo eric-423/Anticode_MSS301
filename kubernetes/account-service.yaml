@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: account-service
+  template:
+    metadata:
+      labels:
+        app: account-service
+    spec:
+      containers:
+        - name: account-service-container
+          image: asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/account-service:prod
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8084
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-service
+spec:
+  selector:
+    app: account-service
+  ports:
+    - protocol: TCP
+      port: 8084
+      targetPort: 8084
+  type: LoadBalancer

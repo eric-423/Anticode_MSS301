@@ -1,0 +1,10 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: prod
+  annotations: {}
+  labels: {}
+description: prod
+#requireApproval: true
+gke:
+  cluster: projects/mss301-462709/locations/asia-southeast1/clusters/mss301-cluster
