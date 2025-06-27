@@ -90,9 +90,7 @@ const ConcessionsSummary = () => {
       const response = await createBooking(bookingData);
 
       const paymentMethod = {
-        "paymentMethod": "VIETQR",
-        "returnUrl": "http://localhost:5173/booking-success",
-        "cancelUrl": "http://localhost:5173/booking-fail"
+        "paymentMethod": "VIETQR"
       };
       console.log(response.data.id)
       await createPayment(response.data.id, paymentMethod)

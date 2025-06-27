@@ -6,6 +6,4 @@ import lombok.Data;
 @Data
 public class PaymentRequestDTO {
     private PaymentMethods paymentMethod;
-    private String returnUrl;
-    private String cancelUrl;
 } 

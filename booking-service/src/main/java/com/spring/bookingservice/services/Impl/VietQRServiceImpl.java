@@ -27,6 +27,9 @@ public class VietQRServiceImpl implements VietQRService {
     @Value("${app.payment.base-url:http://localhost:8081}")
     private String baseUrl;
 
+    private final static String SUCCESS_URL = "http://localhost:8080/booking-service/api/payment/callback/success";
+    private final static String CANCEL_URL = "http://localhost:8080/booking-service/api/payment/callback/cancel";
+
     @Override
     public PaymentResponseDTO createVietQRPayment(BookingDTO bookingDTO, PaymentRequestDTO paymentRequest) {
         PaymentResponseDTO response = new PaymentResponseDTO();
@@ -34,13 +37,9 @@ public class VietQRServiceImpl implements VietQRService {
         try {
             PayOS payOS = new PayOS(clientId, apiKey, checksumKey);
 
-            String returnUrl = paymentRequest.getReturnUrl() != null ? 
-                paymentRequest.getReturnUrl() : 
-                baseUrl + "/api/payment/callback/success?bookingId=" + bookingDTO.getId();
+            String returnUrl = SUCCESS_URL + "?bookingId=" + bookingDTO.getId();
                 
-            String cancelUrl = paymentRequest.getCancelUrl() != null ? 
-                paymentRequest.getCancelUrl() : 
-                baseUrl + "/api/payment/callback/cancel?bookingId=" + bookingDTO.getId();
+            String cancelUrl = CANCEL_URL + "?bookingId=" + bookingDTO.getId();
 
             String currentTimeString = String.valueOf(new Date().getTime());
             long orderCode = Long.parseLong(currentTimeString.substring(currentTimeString.length() - 6));
