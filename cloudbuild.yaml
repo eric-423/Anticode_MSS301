@@ -54,11 +54,11 @@ steps:
       - |
         gcloud deploy apply --file deploy/pipeline.yaml --region=asia-southeast1
         gcloud deploy apply --file deploy/prod.yaml --region=asia-southeast1
-        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/account-service.yaml
-        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/booking-service.yaml
-        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/cinema-service.yaml
-        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/frontend-service.yaml
-        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/gateway-service.yaml
-        gcloud deploy releases create 'app-release-${SHORT_SHA}' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/transaction-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}1' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/account-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}2' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/booking-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}3' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/cinema-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}4' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/frontend-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}5' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/gateway-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}6' --delivery-pipeline=mss301-cd --region=asia-southeast1 --from-k8s-manifest=./kubernetes/transaction-service.yaml
 options:
   logging: CLOUD_LOGGING_ONLY
