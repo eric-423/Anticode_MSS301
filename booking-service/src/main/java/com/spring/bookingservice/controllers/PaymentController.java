@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Map;
 
@@ -59,10 +60,9 @@ public class PaymentController {
     }
 
     @GetMapping("/callback/success")
-    public ResponseEntity<String> handlePaymentSuccess(
+    public RedirectView handlePaymentSuccess(
             @RequestParam(required = false) Integer bookingId) {
 
-        try {
             if (bookingId != null) {
                 Booking booking = bookingRepository.getBookingById(bookingId);
                 if (booking != null) {
@@ -80,42 +80,27 @@ public class PaymentController {
                     paymentProducer.publishTransaction(transactionDTO);
                 }
             }
-
-            return ResponseEntity.ok("Payment success processed");
-
-        } catch (Exception e) {
-            System.err.println("Error processing payment success: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error processing payment success: " + e.getMessage());
-        }
+        return new RedirectView("http://localhost:5173/booking-success");
     }
 
     @PostMapping("/callback/cancel")
-    public ResponseEntity<String> handlePaymentCancel(
+    public RedirectView handlePaymentCancel(
             @RequestParam(required = false) Integer bookingId,
             @RequestParam(required = false) String paymentId) {
 
-        try {
-            if (bookingId != null) {
-                Booking booking = bookingRepository.getBookingById(bookingId);
-                if (booking != null) {
-                    booking.setBookingStatus(com.spring.bookingservice.dtos.enums.BookingStatus.CANCELLED);
-                    bookingRepository.save(booking);
+        if (bookingId != null) {
+            Booking booking = bookingRepository.getBookingById(bookingId);
+            if (booking != null) {
+                booking.setBookingStatus(com.spring.bookingservice.dtos.enums.BookingStatus.CANCELLED);
+                bookingRepository.save(booking);
 
-                    com.spring.bookingservice.dtos.TransactionDTO transactionDTO = new com.spring.bookingservice.dtos.TransactionDTO();
-                    transactionDTO.setBookingId(bookingId);
-                    transactionDTO.setPaymentStatus(PaymentStatus.CANCELLED);
-                    paymentProducer.publishTransaction(transactionDTO);
-                }
+                com.spring.bookingservice.dtos.TransactionDTO transactionDTO = new com.spring.bookingservice.dtos.TransactionDTO();
+                transactionDTO.setBookingId(bookingId);
+                transactionDTO.setPaymentStatus(PaymentStatus.CANCELLED);
+                paymentProducer.publishTransaction(transactionDTO);
             }
-
-            return ResponseEntity.ok("Payment cancellation processed");
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error processing payment cancellation: " + e.getMessage());
         }
+        return new RedirectView("http://localhost:5173/booking-fail");
     }
 
 
