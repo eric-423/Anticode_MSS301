@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { getMovieDetail, getShowtimeById } from '../../../../../../utils/api';
-import { getSeatsByShowtime } from '../../../../../../utils/seatStorage';
+import { getSeatNamesByShowtime, getSeatsByShowtime } from '../../../../../../utils/seatStorage';
 import PropTypes from 'prop-types';
 
 const BookingFilmDetail = ({ item }) => {
@@ -19,12 +19,32 @@ const BookingFilmDetail = ({ item }) => {
     const [movie, setMovie] = useState(null);
     const [showtime, setShowtime] = useState(null);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [isUploadEnabled, setIsUploadEnabled] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const [currentShowtimeSeats, setCurrentShowtimeSeats] = useState([]);
+
+    useEffect(() => {
+        setCurrentShowtimeSeats(getSeatNamesByShowtime(parseInt(showtimeId)));
+    }, [showtimeId]);
+
+    useEffect(() => {
+        const handleSeatChange = () => {
+            setCurrentShowtimeSeats(getSeatNamesByShowtime(parseInt(showtimeId)));
+        };
+
+        window.addEventListener('seatSelectionChange', handleSeatChange);
+
+        return () => {
+            window.removeEventListener('seatSelectionChange', handleSeatChange);
+        };
+    }, [showtimeId]);
+
 
     useEffect(() => {
         getMovieDetail(movieId)
             .then((res) => {
                 setMovie(res.data.data);
-                console.log(res.data);
             })
             .catch((err) => {
                 console.error(err);
@@ -47,24 +67,20 @@ const BookingFilmDetail = ({ item }) => {
         return currentShowtimeSeats.reduce((total, seat) => total + (seat.price || 0), 0);
     };
 
-    // Cập nhật tổng tiền khi localStorage thay đổi
     useEffect(() => {
         const updateTotalPrice = () => {
             const price = calculateCurrentShowtimeTotal();
             setTotalPrice(price);
         };
 
-        // Cập nhật ngay lập tức
         updateTotalPrice();
 
-        // Lắng nghe sự kiện thay đổi localStorage
         const handleStorageChange = () => {
             updateTotalPrice();
         };
 
         window.addEventListener('storage', handleStorageChange);
 
-        // Tạo custom event để lắng nghe thay đổi từ cùng tab
         window.addEventListener('seatSelectionChange', handleStorageChange);
 
         return () => {
@@ -73,23 +89,26 @@ const BookingFilmDetail = ({ item }) => {
         };
     }, [showtimeId]);
 
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        setSelectedImage(URL.createObjectURL(file));
+    };
+
     const handleContinue = () => {
         const currentSeats = getSeatsByShowtime(parseInt(showtimeId));
-        
+
         if (currentSeats.length === 0) {
             alert('Vui lòng chọn ít nhất một chỗ ngồi trước khi tiếp tục!');
             return;
         }
 
-        // Lưu showtimeId hiện tại vào localStorage
         localStorage.setItem('currentShowtimeId', showtimeId);
 
         navigate('/concessions');
     };
 
-    // Hàm xử lý khi nhấn nút Quay lại
     const handleBack = () => {
-        navigate(-1); // Quay lại trang trước đó
+        navigate(-1);
     };
 
     const data = [
@@ -160,6 +179,52 @@ const BookingFilmDetail = ({ item }) => {
                         })}
                     </p>
                 </div>
+
+                <div className="xl:mt-2 text-sm xl:text-base flex gap-2 align-center" >
+                    <p>Ghế Đã Chọn: </p>
+                    <p className='font-semibold text-orange-600'>
+                        {currentShowtimeSeats.join(', ')}
+                    </p>
+                </div>
+
+
+
+                <div className="xl:mt-4 flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            id="enableUpload"
+                            className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded "
+                            onChange={(e) => setIsUploadEnabled(e.target.checked)}
+                        />
+                        <label htmlFor="enableUpload" className="text-sm font-medium text-[#4A4A4A]">
+                            Ưu Đãi Sinh Viên
+                        </label>
+                    </div>
+
+                    <div className={`transition-all duration-300 flex-1 ${isUploadEnabled ? 'opacity-100' : 'opacity-50'}`}>
+                        <input
+                            type="file"
+                            id="imageUpload"
+                            accept="image/*"
+                            className={`block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 ${!isUploadEnabled ? 'pointer-events-none' : ''}`}
+                            onChange={handleImageUpload}
+                            disabled={!isUploadEnabled}
+                        />
+                        {selectedImage && (
+                            <div className="mt-2">
+                                <img
+                                    src={selectedImage}
+                                    alt="Preview"
+                                    className="w-20 h-20 object-cover rounded-lg border"
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+
+
 
                 <div className="my-5 border-t border-grey-60 border-dashed xl:block hidden"></div>
 
