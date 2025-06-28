@@ -63,23 +63,23 @@ public class PaymentController {
     public RedirectView handlePaymentSuccess(
             @RequestParam(required = false) Integer bookingId) {
 
-            if (bookingId != null) {
-                Booking booking = bookingRepository.getBookingById(bookingId);
-                if (booking != null) {
-                    booking.setBookingStatus(BookingStatus.CONFIRMED);
-                    bookingRepository.save(booking);
+        if (bookingId != null) {
+            Booking booking = bookingRepository.getBookingById(bookingId);
+            if (booking != null) {
+                booking.setBookingStatus(BookingStatus.CONFIRMED);
+                bookingRepository.save(booking);
 
-                    com.spring.bookingservice.dtos.TransactionDTO transactionDTO = new com.spring.bookingservice.dtos.TransactionDTO();
-                    transactionDTO.setBookingId(bookingId);
-                    transactionDTO.setPaymentStatus(PaymentStatus.COMPLETED);
-                    transactionDTO.setAmount(booking.getTotalPrice());
-                    transactionDTO.setPaymentMethod(com.spring.bookingservice.dtos.enums.PaymentMethods.VIETQR);
-                    transactionDTO.setTransactionDate(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME));
+                com.spring.bookingservice.dtos.TransactionDTO transactionDTO = new com.spring.bookingservice.dtos.TransactionDTO();
+                transactionDTO.setBookingId(bookingId);
+                transactionDTO.setPaymentStatus(PaymentStatus.COMPLETED);
+                transactionDTO.setAmount(booking.getTotalPrice());
+                transactionDTO.setPaymentMethod(com.spring.bookingservice.dtos.enums.PaymentMethods.VIETQR);
+                transactionDTO.setTransactionDate(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME));
 
-                    System.out.println("Sending payment success event for booking: " + bookingId);
-                    paymentProducer.publishTransaction(transactionDTO);
-                }
+                System.out.println("Sending payment success event for booking: " + bookingId);
+                paymentProducer.publishTransaction(transactionDTO);
             }
+        }
         return new RedirectView("http://localhost:5173/booking-success");
     }
 

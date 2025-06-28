@@ -1,33 +1,53 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getShowtimeTicketPrice } from './api';
-import { 
+import {
   getSelectedSeatsDetail,
-  addSeat, 
-  removeSeat 
+  addSeat,
+  removeSeat
 } from './seatStorage';
 
 export const useSeatSelection = (showtimeDetail) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Lấy chỗ ngồi đã chọn cho showtime hiện tại
   const getCurrentShowtimeSeats = () => {
     if (!showtimeDetail?.id) return [];
-    
+
     const allSeatsDetail = getSelectedSeatsDetail();
     const currentShowtimeSeats = allSeatsDetail
-      .filter(seat => seat.showtimeId === showtimeDetail.id)
-      .map(seat => seat.seatLabel);
-    
+      .filter(seat => seat.showtime === showtimeDetail.id)
+      .map(seat => seat.seatName);
+
     return currentShowtimeSeats;
   };
 
-  // Cập nhật state khi showtime thay đổi hoặc localStorage thay đổi
+  const isLastRow = (seatName) => {
+    const row = showtimeDetail?.cinemaHall?.hallType?.roll || 0;
+    const seatRow = seatName.charCodeAt(0) - 65;
+    return seatRow === row - 1;
+  };
+
+  const getAdjacentSeat = (seatName) => {
+    const row = seatName.charAt(0);
+    const col = parseInt(seatName.slice(1));
+    const totalCols = showtimeDetail?.cinemaHall?.hallType?.column || 0;
+
+    if (col % 2 === 0) {
+      return col > 1 ? `${row}${col - 1}` : null;
+    } else {
+      return col < totalCols ? `${row}${col + 1}` : null;
+    }
+  };
+
+  const isSeatAvailable = (seatName) => {
+    const bookedSeats = ["A1", "A2", "B1", "B2", "C1"];
+    return !bookedSeats.includes(seatName);
+  };
+
   useEffect(() => {
     setSelectedSeats(getCurrentShowtimeSeats());
   }, [showtimeDetail?.id]);
 
-  // Lắng nghe thay đổi localStorage
   useEffect(() => {
     const handleStorageChange = () => {
       setSelectedSeats(getCurrentShowtimeSeats());
@@ -39,53 +59,77 @@ export const useSeatSelection = (showtimeDetail) => {
     };
   }, [showtimeDetail?.id]);
 
-  // Hàm chọn/bỏ chọn chỗ ngồi
   const toggleSeat = useCallback(async (seat) => {
     if (selectedSeats.includes(seat)) {
-      // Bỏ chọn chỗ
-      removeSeat(seat);
+      removeSeat(seat, showtimeDetail.id);
+
+      if (isLastRow(seat)) {
+        const adjacentSeat = getAdjacentSeat(seat);
+        if (adjacentSeat && selectedSeats.includes(adjacentSeat)) {
+          removeSeat(adjacentSeat, showtimeDetail.id);
+        }
+      }
+
       setSelectedSeats(getCurrentShowtimeSeats());
     } else {
-      // Chọn chỗ mới
       setIsLoading(true);
       try {
-        // Gọi API để lấy giá vé (giả sử ticketTypeId = 1 cho người lớn)
         const response = await getShowtimeTicketPrice(showtimeDetail.id, 1);
-        const ticketPrice = response.data.data.ticketPrice;
-        
-        // Thêm thông tin chỗ ngồi mới
+        const price = response.data.data.ticketPrice;
+
         const newSeatDetail = {
-          seatLabel: seat,
-          showtimeId: showtimeDetail.id,
-          ticketTypeId: 1, // Giả sử là vé người lớn
-          ticketPrice: ticketPrice,
+          seatName: seat,
+          showtime: showtimeDetail.id,
+          ticketType: 1,
+          price: price,
           movieId: showtimeDetail.movie?.id,
           movieName: showtimeDetail.movie?.title,
-          showtime: showtimeDetail.startTime,
           cinemaName: showtimeDetail.cinemaHall?.cinema?.name,
           hallName: showtimeDetail.cinemaHall?.name
         };
-        
+
         const success = addSeat(newSeatDetail);
+
+        if (success && isLastRow(seat)) {
+          const adjacentSeat = getAdjacentSeat(seat);
+          if (adjacentSeat && !selectedSeats.includes(adjacentSeat) && isSeatAvailable(adjacentSeat)) {
+            const adjacentSeatDetail = {
+              ...newSeatDetail,
+              seatName: adjacentSeat
+            };
+            addSeat(adjacentSeatDetail);
+          }
+        }
+
         if (success) {
           setSelectedSeats(getCurrentShowtimeSeats());
         }
       } catch (error) {
         console.error("Lỗi khi lấy giá vé:", error);
-        // Nếu lỗi, vẫn thêm chỗ nhưng không có giá
         const newSeatDetail = {
-          seatLabel: seat,
-          showtimeId: showtimeDetail.id,
-          ticketTypeId: 1,
-          ticketPrice: 0,
+          seatName: seat,
+          showtime: showtimeDetail.id,
+          ticketType: 1,
+          price: 0,
           movieId: showtimeDetail.movie?.id,
           movieName: showtimeDetail.movie?.title,
-          showtime: showtimeDetail.startTime,
           cinemaName: showtimeDetail.cinemaHall?.cinema?.name,
           hallName: showtimeDetail.cinemaHall?.name
         };
-        
+
         const success = addSeat(newSeatDetail);
+
+        if (success && isLastRow(seat)) {
+          const adjacentSeat = getAdjacentSeat(seat);
+          if (adjacentSeat && !selectedSeats.includes(adjacentSeat) && isSeatAvailable(adjacentSeat)) {
+            const adjacentSeatDetail = {
+              ...newSeatDetail,
+              seatName: adjacentSeat
+            };
+            addSeat(adjacentSeatDetail);
+          }
+        }
+
         if (success) {
           setSelectedSeats(getCurrentShowtimeSeats());
         }
@@ -98,6 +142,7 @@ export const useSeatSelection = (showtimeDetail) => {
   return {
     selectedSeats,
     toggleSeat,
-    isLoading
+    isLoading,
+    isLastRow
   };
 }; 

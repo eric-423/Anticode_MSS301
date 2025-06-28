@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { getMovieDetail, getShowtimeById } from '../../../../../../utils/api';
-import { getSelectedSeatsDetail } from '../../../../../../utils/seatStorage';
+import { getSeatsByShowtime } from '../../../../../../utils/seatStorage';
 import PropTypes from 'prop-types';
 
 const BookingFilmDetail = ({ item }) => {
@@ -43,9 +43,8 @@ const BookingFilmDetail = ({ item }) => {
     const calculateCurrentShowtimeTotal = () => {
         if (!showtimeId) return 0;
 
-        const allSeatsDetail = getSelectedSeatsDetail();
-        const currentShowtimeSeats = allSeatsDetail.filter(seat => seat.showtimeId === parseInt(showtimeId));
-        return currentShowtimeSeats.reduce((total, seat) => total + (seat.ticketPrice || 0), 0);
+        const currentShowtimeSeats = getSeatsByShowtime(parseInt(showtimeId));
+        return currentShowtimeSeats.reduce((total, seat) => total + (seat.price || 0), 0);
     };
 
     // Cập nhật tổng tiền khi localStorage thay đổi
@@ -75,7 +74,7 @@ const BookingFilmDetail = ({ item }) => {
     }, [showtimeId]);
 
     const handleContinue = () => {
-        const currentSeats = getSelectedSeatsDetail().filter(seat => seat.showtimeId === parseInt(showtimeId));
+        const currentSeats = getSeatsByShowtime(parseInt(showtimeId));
         
         if (currentSeats.length === 0) {
             alert('Vui lòng chọn ít nhất một chỗ ngồi trước khi tiếp tục!');

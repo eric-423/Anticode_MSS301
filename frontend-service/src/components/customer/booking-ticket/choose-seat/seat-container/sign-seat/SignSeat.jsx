@@ -27,6 +27,13 @@ const SignSeat = () => {
           ></div>
           <span>Đã bán</span>
         </div>
+        <div className="flex items-center gap-2">
+          <div className="flex">
+            <div className="w-[15px] h-[20px] bg-[#DFDFDF] rounded-l-[.375rem] border-r-0"></div>
+            <div className="w-[15px] h-[20px] bg-[#DFDFDF] rounded-r-[.375rem] border-l-0"></div>
+          </div>
+          <span>Ghế đôi liền kề</span>
+        </div>
       </div>
     </div>
   )

@@ -17,11 +17,11 @@ const BookingSummary = () => {
         {selectedSeatsDetail.map((seat, index) => (
           <div key={index} className="flex justify-between items-center text-sm">
             <div>
-              <span className="font-medium">{seat.seatLabel}</span>
+              <span className="font-medium">{seat.seatName}</span>
               <span className="text-gray-500 ml-2">- {seat.movieName}</span>
             </div>
             <span className="font-bold text-orange-600">
-              {seat.ticketPrice.toLocaleString('vi-VN')} VNĐ
+              {seat.price.toLocaleString('vi-VN')} VNĐ
             </span>
           </div>
         ))}
@@ -39,7 +39,7 @@ const BookingSummary = () => {
       <div className="mt-3 text-xs text-gray-500">
         <p>Rạp: {selectedSeatsDetail[0]?.cinemaName}</p>
         <p>Phòng: {selectedSeatsDetail[0]?.hallName}</p>
-        <p>Suất chiếu: {new Date(selectedSeatsDetail[0]?.showtime).toLocaleString('vi-VN')}</p>
+        <p>Suất chiếu: {selectedSeatsDetail[0]?.showtime}</p>
       </div>
     </div>
   );
