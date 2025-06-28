@@ -85,8 +85,8 @@ const BookingHistory = ({ bookings }) => {
           <button
             onClick={() => setFilterStatus('all')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filterStatus === 'all'
-                ? 'bg-orange-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-orange-500 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
           >
             Tất cả
@@ -94,8 +94,8 @@ const BookingHistory = ({ bookings }) => {
           <button
             onClick={() => setFilterStatus('upcoming')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filterStatus === 'upcoming'
-                ? 'bg-orange-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-orange-500 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
           >
             Sắp tới
@@ -103,8 +103,8 @@ const BookingHistory = ({ bookings }) => {
           <button
             onClick={() => setFilterStatus('completed')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filterStatus === 'completed'
-                ? 'bg-orange-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-orange-500 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
           >
             Đã hoàn thành
@@ -112,8 +112,8 @@ const BookingHistory = ({ bookings }) => {
           <button
             onClick={() => setFilterStatus('cancelled')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filterStatus === 'cancelled'
-                ? 'bg-orange-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-orange-500 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
           >
             Đã hủy

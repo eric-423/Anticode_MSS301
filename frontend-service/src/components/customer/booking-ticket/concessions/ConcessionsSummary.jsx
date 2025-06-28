@@ -52,7 +52,6 @@ const ConcessionsSummary = () => {
   const handlePayment = async () => {
     try {
       setIsLoading(true);
-
       const token = localStorage.getItem('token');
       if (!token) {
         alert('Vui lòng đăng nhập để tiếp tục thanh toán!');
