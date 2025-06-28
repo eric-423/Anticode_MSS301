@@ -89,8 +89,8 @@ export const deleteProduct = (id) =>
 export const createBooking = (bookingData) =>
   api.post('http://localhost:8080/booking-service/api/booking', bookingData);
 
-export const getShowtimeTicketPrice = (showtimeId, ticketTypeId) =>
-  api.get(`http://localhost:8080/cinema-service/showtime-ticket-prices/showtime/${showtimeId}/ticket-type/${ticketTypeId}`);
+export const getShowtimeTicketPrice = (showtimeId, ticketType) =>
+  api.get(`http://localhost:8080/cinema-service/showtime-ticket-prices/showtime/${showtimeId}/ticket-type/${ticketType}`);
 
 export const createPayment = (bookingId, payment) =>
   api.post(`http://localhost:8080/booking-service/api/payment/create?bookingId=${bookingId}`, payment);

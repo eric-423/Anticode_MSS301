@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ChangeShowTime from "./change-showtimes/ChangeShowTime";
 import SeatContainer from "./seat-container/SeatContainer";
 import { getShowtimeById, getShowtimesByMovieDate } from "../../../../utils/api";
-import { getSelectedSeatsDetail } from "../../../../utils/seatStorage";
+import { getSeatsByShowtime } from "../../../../utils/seatStorage";
 
 const formatDate = (dateStr) => {
   const d = new Date(dateStr);
@@ -33,7 +33,7 @@ const ChooseSeat = ({ movieId, showtimeId }) => {
   }, [movieId, currentShowtimeId]);
 
   const handleContinue = () => {
-    const currentSeats = getSelectedSeatsDetail().filter(seat => seat.showtimeId === parseInt(currentShowtimeId));
+    const currentSeats = getSeatsByShowtime(parseInt(currentShowtimeId));
 
     if (currentSeats.length === 0) {
       alert('Vui lòng chọn ít nhất một chỗ ngồi trước khi tiếp tục!');
@@ -56,12 +56,15 @@ const ChooseSeat = ({ movieId, showtimeId }) => {
       <SeatContainer showtimeDetail={showtimeDetail} />
 
       <div className="flex justify-end mt-4 xl:hidden">
+
         <button
           className="bg-[#F58020] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#e6731a] transition-colors"
           onClick={handleContinue}
         >
           Tiếp tục
         </button>
+
+
       </div>
     </div>
   );

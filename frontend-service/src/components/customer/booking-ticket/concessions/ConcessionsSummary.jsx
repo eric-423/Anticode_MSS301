@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getSelectedSeatsDetail } from '../../../../utils/seatStorage';
+import { getSeatsByShowtime } from '../../../../utils/seatStorage';
 import { createBooking, createPayment } from '../../../../utils/api';
 import jwtDecode from 'jwt-decode';
 
@@ -17,9 +17,8 @@ const ConcessionsSummary = () => {
 
   useEffect(() => {
     const updateSummary = () => {
-      const seatsDetail = getSelectedSeatsDetail();
       const currentShowtimeSeats = currentShowtimeId
-        ? seatsDetail.filter(seat => seat.showtimeId === currentShowtimeId)
+        ? getSeatsByShowtime(currentShowtimeId)
         : [];
       setSelectedSeats(currentShowtimeSeats);
 
@@ -47,7 +46,7 @@ const ConcessionsSummary = () => {
     };
   }, [currentShowtimeId]);
 
-  const ticketsTotal = selectedSeats.reduce((total, seat) => total + (seat.ticketPrice || 0), 0);
+  const ticketsTotal = selectedSeats.reduce((total, seat) => total + (seat.price || 0), 0);
   const grandTotal = ticketsTotal + concessionsTotal;
 
   const handlePayment = async () => {
@@ -80,10 +79,10 @@ const ConcessionsSummary = () => {
           price: item.price
         })),
         bookingSeatList: selectedSeats.map(seat => ({
-          seatLabel: seat.seatLabel,
-          showtimeId: seat.showtimeId,
-          ticketTypeId: seat.ticketTypeId,
-          ticketPrice: seat.ticketPrice
+          seatName: seat.seatName,
+          showtime: seat.showtime,
+          ticketType: seat.ticketType,
+          price: seat.price
         }))
       };
 
@@ -103,7 +102,6 @@ const ConcessionsSummary = () => {
         .finally(() => {
           localStorage.removeItem('selectedConcessions');
           localStorage.removeItem('currentShowtimeId');
-          localStorage.removeItem('selectedSeats');
           localStorage.removeItem('selectedSeatsDetail');
         })
 
@@ -131,10 +129,10 @@ const ConcessionsSummary = () => {
                 {selectedSeats.map((seat, index) => (
                   <div key={index} className="flex justify-between items-center text-[14px]">
                     <span className="text-[#777777]">
-                      {seat.seatLabel} - {seat.movieName}
+                      {seat.seatName} - {seat.movieName}
                     </span>
                     <span className="font-medium">
-                      {seat.ticketPrice?.toLocaleString('vi-VN')} ₫
+                      {seat.price?.toLocaleString('vi-VN')} ₫
                     </span>
                   </div>
                 ))}
