@@ -1,16 +1,15 @@
 package com.spring.bookingservice.services.Impl;
 
-import com.spring.bookingservice.dtos.BookingConcessionDTO;
-import com.spring.bookingservice.dtos.BookingDTO;
-import com.spring.bookingservice.dtos.ConcessionProductDTO;
-import com.spring.bookingservice.dtos.TicketDTO;
+import com.spring.bookingservice.dtos.*;
 import com.spring.bookingservice.dtos.enums.BookingStatus;
 import com.spring.bookingservice.kafka.BookingProducer;
 import com.spring.bookingservice.pojos.Booking;
 import com.spring.bookingservice.pojos.BookingConcession;
 import com.spring.bookingservice.pojos.Ticket;
 import com.spring.bookingservice.repositories.BookingRepository;
+import com.spring.bookingservice.repositories.TicketRepository;
 import com.spring.bookingservice.services.BookingService;
+import com.spring.bookingservice.services.RedisHoldingSeatService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +25,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private BookingProducer bookingProducer;
+
+    @Autowired
+    private RedisHoldingSeatService redisHoldingSeatService;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @Override
     public BookingDTO getBooking(int id) {
@@ -76,7 +81,13 @@ public class BookingServiceImpl implements BookingService {
             tickets.add(ticket);
         }
 
+
         booking.setBookingSeatList(tickets);
+
+
+        for(Ticket ticket : booking.getBookingSeatList()) {
+            redisHoldingSeatService.holdSeat(new SeatHoldInfo(ticket.getShowtime()+"", ticket.getSeatName()));
+        }
 
         BookingDTO saved = convertBookingToBookingDTO(bookingRepository.save(booking));
         bookingProducer.publishBookingCreated(saved);
