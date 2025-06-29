@@ -126,4 +126,11 @@ public class MovieService implements MovieServiceImp {
     public void delete(Integer id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public MovieDTO getByTicketId(Integer bookingId) {
+    Movie movie = repository.findByShowtimeList_Id(bookingId);
+
+    return convertToDTO(movie);
+    }
 }

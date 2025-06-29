@@ -29,5 +29,8 @@ public interface BookingRepository  extends JpaRepository<Booking, Integer> {
     Integer countTotalConcessionsProductsForDay(@Param("startOfDay") LocalDateTime startOfDay,
                                                 @Param("endOfDay") LocalDateTime endOfDay);
 
+    List<Booking> findByUserID(int userID);
+
+
     List<Booking> getBookingByBookDateBetween(Date bookDateAfter, Date bookDateBefore);
 }
