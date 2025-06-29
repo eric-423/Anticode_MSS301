@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { getMovieDetail, getShowtimeById } from '../../../../../../utils/api';
-import { getSeatNamesByShowtime, getSeatsByShowtime } from '../../../../../../utils/seatStorage';
+import { checkStudentDiscount, getMovieDetail, getShowtimeById } from '../../../../../../utils/api';
+import { getSeatNamesByShowtime, getSeatsByShowtime, getSelectedSeatsDetail, saveSelectedSeatsDetail, clearAllSeats } from '../../../../../../utils/seatStorage';
+import { useStudentContext } from './useStudentContext';
 import PropTypes from 'prop-types';
+import './loading-file.css';
 
-const BookingFilmDetail = ({ item }) => {
-    console.log(item);
+const BookingFilmDetail = () => {
     const navigate = useNavigate();
+    const { isStudent, setIsStudent } = useStudentContext();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -20,7 +22,9 @@ const BookingFilmDetail = ({ item }) => {
     const [showtime, setShowtime] = useState(null);
     const [totalPrice, setTotalPrice] = useState(0);
     const [isUploadEnabled, setIsUploadEnabled] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showSeatSelectionModal, setShowSeatSelectionModal] = useState(false);
+    const [selectedSeatsForStudent, setSelectedSeatsForStudent] = useState([]);
 
     const [currentShowtimeSeats, setCurrentShowtimeSeats] = useState([]);
 
@@ -40,7 +44,6 @@ const BookingFilmDetail = ({ item }) => {
         };
     }, [showtimeId]);
 
-
     useEffect(() => {
         getMovieDetail(movieId)
             .then((res) => {
@@ -59,7 +62,71 @@ const BookingFilmDetail = ({ item }) => {
             });
     }, [movieId, showtimeId]);
 
-    // Tính tổng tiền cho showtime hiện tại
+    const handleApplyDiscount = async (e) => {
+        try {
+            const file = e.target.files[0];
+            setIsLoading(true);
+            const formData = new FormData();
+            formData.append('image', file);
+            const response = await checkStudentDiscount(formData);
+            setIsStudent(response.data);
+
+            if (response.data) {
+                const currentSeats = getSeatsByShowtime(parseInt(showtimeId));
+                if (currentSeats.length > 0) {
+                    setSelectedSeatsForStudent(currentSeats);
+                    setShowSeatSelectionModal(true);
+                } else {
+                    alert('Đã áp dụng ưu đãi học sinh. Vui lòng chọn ít nhất 1 chỗ ngồi để áp dụng ưu đãi.');
+                }
+            }
+
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
+
+    }
+
+    const handleUploadToggle = (e) => {
+        const isEnabled = e.target.checked;
+        setIsUploadEnabled(isEnabled);
+
+        if (!isEnabled) {
+            setIsStudent(false);
+            setShowSeatSelectionModal(false);
+            const fileInput = document.getElementById('imageUpload');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+            
+            // Xóa tất cả ghế khi tắt checkbox
+            clearAllSeats();
+        }
+    }
+
+    const handleSelectSeatForStudent = (selectedSeat) => {
+        const allSeatsDetail = getSelectedSeatsDetail();
+
+        const updatedSeatsDetail = allSeatsDetail.map(seat => {
+            if (seat.seatName === selectedSeat && seat.showtime === parseInt(showtimeId)) {
+                return {
+                    ...seat,
+                    ticketType: 3,
+                    price: 45000
+                };
+            }
+            return seat;
+        });
+
+        saveSelectedSeatsDetail(updatedSeatsDetail);
+        setShowSeatSelectionModal(false);
+        
+        window.dispatchEvent(new CustomEvent('seatSelectionChange'));
+    }
+
+
     const calculateCurrentShowtimeTotal = () => {
         if (!showtimeId) return 0;
 
@@ -88,11 +155,6 @@ const BookingFilmDetail = ({ item }) => {
             window.removeEventListener('seatSelectionChange', handleStorageChange);
         };
     }, [showtimeId]);
-
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        setSelectedImage(URL.createObjectURL(file));
-    };
 
     const handleContinue = () => {
         const currentSeats = getSeatsByShowtime(parseInt(showtimeId));
@@ -187,15 +249,13 @@ const BookingFilmDetail = ({ item }) => {
                     </p>
                 </div>
 
-
-
                 <div className="xl:mt-4 flex items-center gap-4">
                     <div className="flex items-center gap-2">
                         <input
                             type="checkbox"
                             id="enableUpload"
                             className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded "
-                            onChange={(e) => setIsUploadEnabled(e.target.checked)}
+                            onChange={(e) => handleUploadToggle(e)}
                         />
                         <label htmlFor="enableUpload" className="text-sm font-medium text-[#4A4A4A]">
                             Ưu Đãi Sinh Viên
@@ -208,22 +268,29 @@ const BookingFilmDetail = ({ item }) => {
                             id="imageUpload"
                             accept="image/*"
                             className={`block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 ${!isUploadEnabled ? 'pointer-events-none' : ''}`}
-                            onChange={handleImageUpload}
+                            onChange={(e) => handleApplyDiscount(e)}
                             disabled={!isUploadEnabled}
                         />
-                        {selectedImage && (
-                            <div className="mt-2">
-                                <img
-                                    src={selectedImage}
-                                    alt="Preview"
-                                    className="w-20 h-20 object-cover rounded-lg border"
-                                />
-                            </div>
-                        )}
+
                     </div>
+
                 </div>
 
-
+                {
+                    isUploadEnabled && (
+                        isStudent ? (
+                            <div className='text-sm'>
+                                <span className='text-green-500'>
+                                    Đã áp dụng ưu đãi sinh viên
+                                </span>
+                            </div>
+                        ) : (
+                            <span className='text-sm text-red-500'>
+                                Thẻ học sinh sinh viên không hợp lệ
+                            </span>
+                        )
+                    )
+                }
 
 
                 <div className="my-5 border-t border-grey-60 border-dashed xl:block hidden"></div>
@@ -264,7 +331,50 @@ const BookingFilmDetail = ({ item }) => {
                     <span>Tiếp tục</span>
                 </button>
             </div>
-        </div>
+
+            {
+                isLoading && (
+                    <div className="fixed inset-0 bg-[#0001000] bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="loading-dots"></div>
+                    </div>
+                )
+            }
+
+            {
+                showSeatSelectionModal && (
+                    <div className="fixed inset-0 bg-[#00000080] bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="bg-white p-6 rounded-lg shadow-md max-w-md w-full mx-4">
+                            <h2 className="text-xl font-semibold mb-4 text-center">Chọn ghế áp dụng ưu đãi học sinh</h2>
+                            <p className="text-sm text-gray-600 mb-4 text-center">
+                                Bạn đã chọn {selectedSeatsForStudent.length} ghế. Vui lòng chọn 1 ghế để áp dụng ưu đãi học sinh (giảm 20% giá vé):
+                            </p>
+                            <div className="grid grid-cols-3 gap-3 mb-6">
+                                {selectedSeatsForStudent.map((seat) => (
+                                    <button
+                                        key={seat.seatName}
+                                        className="w-full py-3 text-center border-2 border-orange-300 rounded-md hover:bg-orange-100 font-semibold transition-colors"
+                                        onClick={() => handleSelectSeatForStudent(seat.seatName)}
+                                    >
+                                        {seat.seatName}
+                                    </button>
+                                ))}
+                            </div>
+                            <button
+                                className="w-full py-3 text-white border rounded-md font-semibold"
+                                style={{
+                                    cursor: "pointer",
+                                    background: "rgb(245, 128, 32)",
+                                }}
+                                onClick={() => setShowSeatSelectionModal(false)}
+                            >
+                                Hủy
+                            </button>
+                        </div>
+                    </div>
+                )
+            }
+
+        </div >
     )
 }
 

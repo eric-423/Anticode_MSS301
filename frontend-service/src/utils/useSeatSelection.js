@@ -5,10 +5,12 @@ import {
   addSeat,
   removeSeat
 } from './seatStorage';
+import { useStudentContext } from '../components/customer/booking-ticket/choose-seat/seat-container/booking-detail/useStudentContext';
 
 export const useSeatSelection = (showtimeDetail) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { isStudent } = useStudentContext();
 
   const getCurrentShowtimeSeats = () => {
     if (!showtimeDetail?.id) return [];
@@ -40,7 +42,7 @@ export const useSeatSelection = (showtimeDetail) => {
   };
 
   const isSeatAvailable = (seatName) => {
-    const bookedSeats = ["A1", "A2", "B1", "B2", "C1"];
+    const bookedSeats = [""];
     return !bookedSeats.includes(seatName);
   };
 
@@ -80,7 +82,7 @@ export const useSeatSelection = (showtimeDetail) => {
         const newSeatDetail = {
           seatName: seat,
           showtime: showtimeDetail.id,
-          ticketType: 1,
+          ticketType: isLastRow(seat) ? 2 : 1,
           price: price,
           movieId: showtimeDetail.movie?.id,
           movieName: showtimeDetail.movie?.title,
@@ -90,12 +92,14 @@ export const useSeatSelection = (showtimeDetail) => {
 
         const success = addSeat(newSeatDetail);
 
-        if (success && isLastRow(seat)) {
+        // Nếu là học sinh, không cho phép chọn ghế kề tự động
+        if (success && isLastRow(seat) && !isStudent) {
           const adjacentSeat = getAdjacentSeat(seat);
           if (adjacentSeat && !selectedSeats.includes(adjacentSeat) && isSeatAvailable(adjacentSeat)) {
             const adjacentSeatDetail = {
               ...newSeatDetail,
-              seatName: adjacentSeat
+              seatName: adjacentSeat,
+              ticketType: 2
             };
             addSeat(adjacentSeatDetail);
           }
@@ -109,7 +113,7 @@ export const useSeatSelection = (showtimeDetail) => {
         const newSeatDetail = {
           seatName: seat,
           showtime: showtimeDetail.id,
-          ticketType: 1,
+          ticketType: isLastRow(seat) ? 2 : 1,
           price: 0,
           movieId: showtimeDetail.movie?.id,
           movieName: showtimeDetail.movie?.title,
@@ -119,12 +123,14 @@ export const useSeatSelection = (showtimeDetail) => {
 
         const success = addSeat(newSeatDetail);
 
-        if (success && isLastRow(seat)) {
+        // Nếu là học sinh, không cho phép chọn ghế kề tự động
+        if (success && isLastRow(seat) && !isStudent) {
           const adjacentSeat = getAdjacentSeat(seat);
           if (adjacentSeat && !selectedSeats.includes(adjacentSeat) && isSeatAvailable(adjacentSeat)) {
             const adjacentSeatDetail = {
               ...newSeatDetail,
-              seatName: adjacentSeat
+              seatName: adjacentSeat,
+              ticketType: 2
             };
             addSeat(adjacentSeatDetail);
           }
@@ -137,7 +143,7 @@ export const useSeatSelection = (showtimeDetail) => {
         setIsLoading(false);
       }
     }
-  }, [selectedSeats, showtimeDetail]);
+  }, [selectedSeats, showtimeDetail, isStudent]);
 
   return {
     selectedSeats,
