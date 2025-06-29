@@ -1,5 +1,6 @@
 package com.spring.bookingservice.repositories;
 
+import com.spring.bookingservice.dtos.enums.TicketStatus;
 import com.spring.bookingservice.pojos.Booking;
 import com.spring.bookingservice.pojos.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,9 +15,13 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
     List<Ticket> findByShowtime(int showtime);
 
+    List<Ticket> findByShowtimeAndStatus(int showtime, TicketStatus status);
+
+
     List<Ticket> getTicketsByBooking(Booking booking);
 
     List<Ticket> getTicketsByBooking_Id(int bookingId);
 
     List<Ticket> getTicketsByShowtime(int showtime);
+
 }
