@@ -1,9 +1,6 @@
 import React from 'react'
 import ProgressBar from './progress-bar/ProgressBar'
-import TicketInfor from './ticket-infor/TicketInfor'
 import ChooseSeat from './choose-seat/ChooseSeat'
-import Concessions from './concessions/Concessions'
-import Payment from './choose-seat/payment/Payment'
 import BookingFilmDetail from './choose-seat/seat-container/booking-detail/BookingFilmDetail'
 import { StudentProvider } from './choose-seat/seat-container/booking-detail/StudentContext'
 
