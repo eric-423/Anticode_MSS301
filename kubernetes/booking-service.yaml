@@ -15,7 +15,21 @@ spec:
     spec:
       containers:
         - name: booking-service-container
-          image: asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/booking-service:prod
+          image: asia-southeast1-docker.pkg.dev/just-metric-464414-c6/mss301-registry-artifact/booking-service:prod
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booking-service
+spec:
+  selector:
+    app: booking-service
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+  type: LoadBalancer
+

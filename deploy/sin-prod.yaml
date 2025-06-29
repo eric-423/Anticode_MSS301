@@ -1,0 +1,10 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: sin
+  annotations: {}
+  labels: {}
+description: sin
+#requireApproval: true
+gke:
+  cluster: projects/just-metric-464414-c6/locations/asia-southeast1/clusters/mss301-cluster-sin
