@@ -15,7 +15,20 @@ spec:
     spec:
       containers:
         - name: transaction-service-container
-          image: asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/transaction-service:prod
+          image: asia-southeast1-docker.pkg.dev/just-metric-464414-c6/mss301-registry-artifact/transaction-service:prod
           imagePullPolicy: Always
           ports:
             - containerPort: 8083
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transaction-service
+spec:
+  selector:
+    app: transaction-service
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083
+  type: LoadBalancer
