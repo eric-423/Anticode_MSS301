@@ -1,4 +1,3 @@
-import React from "react";
 import BookingHistory from "./BookingHistory";
 
 const TransactionHistory = ({ transactions }) => {

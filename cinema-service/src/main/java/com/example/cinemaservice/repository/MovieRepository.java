@@ -12,4 +12,8 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     List<Movie> findByStatus(MovieStatus status);
 
     List<Movie> getMoviesByStatus(MovieStatus status);
+
+    Movie findByShowtimeList_Id(int id);
+
+
 }

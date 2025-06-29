@@ -42,26 +42,25 @@ public class RedisHoldingSeatServiceImpl implements RedisHoldingSeatService {
     }
 
     @Override
-    public List<SeatHoldInfo> getSeatsByShowTime(String showTimeId) {
+    public List<String> getSeatsByShowTime(String showTimeId) {
         Set<String> keys = redisTemplate.keys("seat_hold:" + showTimeId + ":*");
-
+        List<String> result = new ArrayList<>();
         if (keys == null || keys.isEmpty()) return List.of();
 
-        List<SeatHoldInfo> seatHolds = new ArrayList<>();
 
         for (String key : keys) {
             Object jsonObj = redisTemplate.opsForValue().get(key);
             if (jsonObj instanceof String json) {
                 try {
                     SeatHoldInfo info = objectMapper.readValue(json, SeatHoldInfo.class);
-                    seatHolds.add(info);
+                    result.add(info.getSeatName());
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        return seatHolds;
+        return result;
     }
 
 

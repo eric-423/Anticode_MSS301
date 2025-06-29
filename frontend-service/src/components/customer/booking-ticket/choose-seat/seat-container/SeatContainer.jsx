@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SignSeat from "./sign-seat/SignSeat";
 import Screen from "./screen/Screen";
 import SeatCounter from "./SeatCounter";
 import { useSeatSelection } from "../../../../../utils/useSeatSelection";
+import { getSeatsByShowtime } from "../../../../../utils/api";
 
 const SeatContainer = ({ showtimeDetail }) => {
   const col = showtimeDetail?.cinemaHall?.hallType?.column || 0;
   const row = showtimeDetail?.cinemaHall?.hallType?.roll || 0;
+  const [seatBooked, setSeatBooked] = useState([]);
 
-  const [seatBooked] = useState(["A1", "A2", "B1", "B2", "C1"]);
+  useEffect(() => {
+    const fetchSeats = async () => {
+      await getSeatsByShowtime(parseInt(showtimeDetail?.id))
+        .then(res => {
+          if (res.data) {
+            setSeatBooked(res.data);
+          }
+        });
+    };
+    fetchSeats();
+  }, [showtimeDetail?.id]);
+
+
 
   const { selectedSeats, toggleSeat, isLoading } = useSeatSelection(showtimeDetail);
 
   return (
     <div className="bg-white py-4 px-2 rounded-[.375rem] w-full mb-10">
       <SignSeat />
-
-      {/* {isLoading && (
-        <div className="mt-4 p-2 bg-blue-50 rounded-lg text-center">
-          <p className="text-sm text-blue-600">Đang lấy thông tin giá vé...</p>
-        </div>
-      )} */}
-
-      {/* <SeatCounter showtimeId={showtimeDetail?.id} showtimeDetail={showtimeDetail} /> */}
 
       <div className="flex mt-4">
         <Screen />

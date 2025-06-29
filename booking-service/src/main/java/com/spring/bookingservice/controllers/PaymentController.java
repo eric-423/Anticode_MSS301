@@ -84,7 +84,7 @@ public class PaymentController {
         return new RedirectView("http://localhost:5173/booking-success");
     }
 
-    @PostMapping("/callback/cancel")
+    @GetMapping("/callback/cancel")
     public RedirectView handlePaymentCancel(
             @RequestParam(required = false) Integer bookingId,
             @RequestParam(required = false) String paymentId) {

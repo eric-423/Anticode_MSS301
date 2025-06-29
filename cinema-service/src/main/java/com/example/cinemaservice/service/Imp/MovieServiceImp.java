@@ -19,4 +19,6 @@ public interface MovieServiceImp {
     public Movie update(Integer id, Movie entity);
 
     public void delete(Integer id);
+
+    MovieDTO getByTicketId(Integer ticketId);
 }
