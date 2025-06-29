@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,7 +33,7 @@ public class Transaction {
     private PaymentStatus paymentStatus;
 
     @Column(name = "transaction_date", nullable = false)
-    private String transactionDate;
+    private LocalDateTime transactionDate;
 
     @Column(name = "booking_id")
     private int bookingId;

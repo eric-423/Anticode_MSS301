@@ -17,14 +17,10 @@ public class DashboardService implements IDashboardService {
     private ITransactionRepository transactionRepository;
 
     @Override
-    public RevenueDTO getDailyRevenue(Date date) {
-        LocalDate localDate = date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+    public RevenueDTO getDailyRevenue(LocalDate date) {
         Double revenue = transactionRepository
-                .sumRevenueBetweenDates(localDate.atStartOfDay(), localDate.atTime(23, 59, 59, 999999999));
+                .sumRevenueBetweenDates(date.atStartOfDay(), date.atTime(23, 59, 59, 999999999));
         RevenueDTO revenueDTO = new RevenueDTO();
-        revenueDTO.setDate(date);
         revenueDTO.setRevenue(revenue);
         return revenueDTO;
     }

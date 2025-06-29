@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 public interface ITransactionRepository extends JpaRepository<Transaction, Integer> {
     Transaction findTransactionById(int id);
     
-    Transaction findTransactionByPaymentId(String paymentId);
-    
     Transaction findTransactionByBookingId(int bookingId);
 
     @Query("SELECT COALESCE(SUM(t.amount), 0.0) FROM Transaction t WHERE t.transactionDate BETWEEN :startOfDay AND :endOfDay")

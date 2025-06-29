@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -74,7 +75,7 @@ public class PaymentController {
                 transactionDTO.setPaymentStatus(PaymentStatus.COMPLETED);
                 transactionDTO.setAmount(booking.getTotalPrice());
                 transactionDTO.setPaymentMethod(com.spring.bookingservice.dtos.enums.PaymentMethods.VIETQR);
-                transactionDTO.setTransactionDate(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME));
+                transactionDTO.setTransactionDate(LocalDateTime.parse(LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME)));
 
                 System.out.println("Sending payment success event for booking: " + bookingId);
                 paymentProducer.publishTransaction(transactionDTO);

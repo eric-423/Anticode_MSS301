@@ -27,7 +27,7 @@ public class BookingConsumer {
         TransactionDTO transactionDTO = new TransactionDTO();
         transactionDTO.setPaymentMethod(PaymentMethods.BANK_TRANSFER);
         transactionDTO.setAmount(bookingDTO.getTotalPrice());
-        transactionDTO.setTransactionDate(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        transactionDTO.setTransactionDate(LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
         transactionDTO.setBookingId(bookingDTO.getId());
         transactionDTO.setPaymentStatus(PaymentStatus.PENDING);
         
