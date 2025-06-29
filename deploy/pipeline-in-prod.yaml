@@ -7,4 +7,4 @@ metadata:
 description: cicd delivery pipeline
 serialPipeline:
   stages:
-    - targetId: sin
+    - targetId: in
