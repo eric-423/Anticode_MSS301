@@ -2,6 +2,7 @@ package com.spring.bookingservice.services.Impl;
 
 import com.spring.bookingservice.dtos.*;
 import com.spring.bookingservice.dtos.enums.BookingStatus;
+import com.spring.bookingservice.dtos.enums.TicketStatus;
 import com.spring.bookingservice.kafka.BookingProducer;
 import com.spring.bookingservice.pojos.Booking;
 import com.spring.bookingservice.pojos.BookingConcession;
@@ -78,6 +79,7 @@ public class BookingServiceImpl implements BookingService {
             Ticket ticket = new Ticket();
             BeanUtils.copyProperties(bookingSeatDTO, ticket);
             ticket.setBooking(booking);
+            ticket.setStatus(TicketStatus.PENDING);
             tickets.add(ticket);
         }
 
