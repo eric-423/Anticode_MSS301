@@ -27,6 +27,11 @@ public class ShowtimeController {
         return ResponseEntity.ok(responseData);
     }
 
+    @GetMapping("/transfer/{id}")
+    public ResponseEntity<ShowTimeDTO> getShowtimeByIdTransfer(@PathVariable int id) {
+        return ResponseEntity.ok(showtimeServiceImp.getById(id));
+    }
+
     @PostMapping
     public Showtime createShowtime(Showtime showtime) {
         return showtimeServiceImp.create(showtime);
