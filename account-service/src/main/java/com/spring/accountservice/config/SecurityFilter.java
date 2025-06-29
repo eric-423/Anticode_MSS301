@@ -40,7 +40,9 @@ public class SecurityFilter {
             "/api/users/login",
             "/api/users/verify-code",
             "/swagger-ui/index.html",
-            "/user-service/*"
+            "/account-service/*",
+            "/account-service/v3/api-docs",
+            "/dashboard/weekly-customer-registration"
     };
 
     @Bean
@@ -56,8 +58,7 @@ public class SecurityFilter {
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtCustom, UsernamePasswordAuthenticationFilter.class);
+                );
 
         return http.build();
     }

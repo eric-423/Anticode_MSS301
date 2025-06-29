@@ -71,9 +71,10 @@ public class DashboardServiceImpl implements DashboardService {
     public List<TicketRevenueDTO> getMonthlyTicketRevenue(Date date) {
         List<TicketRevenueDTO> result = new ArrayList<TicketRevenueDTO>();
         int year = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear();
-        IntStream.range(0, 12).forEach(month -> {
+        IntStream.range(1, 13).forEach(month -> {
             LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
             TicketRevenueDTO ticketRevenueDTO = new TicketRevenueDTO();
+            ticketRevenueDTO.setMonth(month);
             ticketRevenueDTO.setRevenue(getRevenueTicketByMonth(firstDayOfMonth, firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth())));
             result.add(ticketRevenueDTO);
         });
@@ -82,14 +83,16 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public List<ProductRevenueDTO> getMonthlyProductRevenue(Date date) {
+        List<ProductRevenueDTO> result = new ArrayList<>();
         int year = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear();
-        IntStream.range(0, 12).forEach(month -> {
+        IntStream.range(1, 13).forEach(month -> {
             LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
             ProductRevenueDTO productRevenueDTO = new ProductRevenueDTO();
             productRevenueDTO.setMonth(month);
             productRevenueDTO.setRevenue(getRevenueProductByMonth(firstDayOfMonth, firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth())));
+            result.add(productRevenueDTO);
         });
-        return List.of();
+        return result;
     }
 
     @Override
@@ -104,7 +107,7 @@ public class DashboardServiceImpl implements DashboardService {
                     .mapToDouble(showTime ->
                             ticketRepository.getTicketsByShowtime(showTime).stream().mapToDouble(Ticket::getPrice).sum())
                     .sum());
-            movieRevenueDTOS.add(movieRevenueDTO);
+            if(movieRevenueDTO.getRevenue() > 0) movieRevenueDTOS.add(movieRevenueDTO);
         });
         return movieRevenueDTOS.stream()
                 .sorted(Comparator.comparingDouble(MovieRevenueDTO::getRevenue).reversed())
@@ -121,7 +124,9 @@ public class DashboardServiceImpl implements DashboardService {
                 Date.from(endOfDayLastMonth.atZone(ZoneId.systemDefault()).toInstant()));
 
         return bookings.stream()
-                .flatMap(booking -> bookingConcessionRepository.getBookingConcessionsByBooking_Id(booking.getId()).stream())
+                .flatMap(booking ->
+                    bookingConcessionRepository.getBookingConcessionsByBooking_Id(booking.getId()).stream()
+                )
                 .mapToDouble(bookingConcession -> {
                     ConcessionProductDTO concessionProductDTO = concessionProductService.getConcessionProductById(bookingConcession.getConcessionProductID());
                     return concessionProductDTO.getPrice();
@@ -135,10 +140,11 @@ public class DashboardServiceImpl implements DashboardService {
         List<Booking> bookings = bookingRepository.getBookingByBookDateBetween(
                 Date.from(startOfDayFirstMonth.atZone(ZoneId.systemDefault()).toInstant()),
                 Date.from(endOfDayLastMonth.atZone(ZoneId.systemDefault()).toInstant()));
-
         return bookings.stream()
                 .flatMap(booking -> ticketRepository.getTicketsByBooking_Id(booking.getId()).stream())
-                .mapToDouble(Ticket::getPrice)
+                .mapToDouble(
+                      Ticket::getPrice
+                )
                 .sum();
     }
 

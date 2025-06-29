@@ -103,3 +103,4 @@ export const checkStudentDiscount = (image) =>
 
 export const getHistoryBooking = (userId) =>
   api.get(`http://localhost:8080/booking-service/api/booking/customer/${userId}`);
+

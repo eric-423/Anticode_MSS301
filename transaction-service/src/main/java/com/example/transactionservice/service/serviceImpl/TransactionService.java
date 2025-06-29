@@ -9,6 +9,7 @@ import com.example.transactionservice.service.serviceInterface.ITransactionServi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,7 +151,7 @@ public class TransactionService implements ITransactionService {
         }
 
         transaction.setPaymentStatus(newStatus);
-        transaction.setTransactionDate(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME));
+        transaction.setTransactionDate(LocalDateTime.parse(LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME)));
 
         Transaction updatedTransaction = transactionRepository.save(transaction);
 

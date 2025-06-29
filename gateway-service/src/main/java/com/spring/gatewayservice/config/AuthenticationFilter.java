@@ -51,7 +51,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                 return webClientBuilder.build()
                         .get()
-                        .uri("http://user-service/auth/validate?token=" + authHeader)
+                        .uri("http://account-service/auth/validate?token=" + authHeader)
                         .retrieve()
                         .bodyToMono(Void.class)
                         .then(chain.filter(exchange))

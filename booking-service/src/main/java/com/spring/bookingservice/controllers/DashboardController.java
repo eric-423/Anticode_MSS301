@@ -3,6 +3,7 @@ package com.spring.bookingservice.controllers;
 import com.spring.bookingservice.dtos.*;
 import com.spring.bookingservice.services.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,22 +22,22 @@ public class DashboardController {
     private DashboardService dashboardService;
 
     @GetMapping("/daily-tickets-sold")
-    public ResponseEntity<TicketSoldDTO> getDailyTicketsSold(@RequestParam Date date) {
+    public ResponseEntity<TicketSoldDTO> getDailyTicketsSold(@RequestParam  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return new ResponseEntity<>(dashboardService.getDailyTicketsSold(date), HttpStatus.OK);
     }
 
     @GetMapping("/daily-product-sold")
-    public ResponseEntity<ProductSoldDTO> getDailyProductsSold(@RequestParam Date date) {
+    public ResponseEntity<ProductSoldDTO> getDailyProductsSold(@RequestParam  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return new ResponseEntity<>(dashboardService.getDailyProductsSold(date), HttpStatus.OK);
     }
 
     @GetMapping("/monthly-ticket-revenue")
-    public ResponseEntity<List<TicketRevenueDTO>> getMonthlyTicketRevenue(@RequestParam Date date) {
+    public ResponseEntity<List<TicketRevenueDTO>> getMonthlyTicketRevenue(@RequestParam  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return new ResponseEntity<>(dashboardService.getMonthlyTicketRevenue(date), HttpStatus.OK);
     }
 
-    @GetMapping("monthly-product-revenue")
-    public ResponseEntity<List<ProductRevenueDTO>> getMonthlyProductRevenue(@RequestParam Date date) {
+    @GetMapping("/monthly-product-revenue")
+    public ResponseEntity<List<ProductRevenueDTO>> getMonthlyProductRevenue(@RequestParam  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return new ResponseEntity<>(dashboardService.getMonthlyProductRevenue(date), HttpStatus.OK);
     }
 

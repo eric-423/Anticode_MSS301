@@ -3,6 +3,7 @@ package com.spring.accountservice.controller;
 import com.spring.accountservice.dto.CustomerNewDTO;
 import com.spring.accountservice.service.Imp.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ public class DashboardController {
     private DashboardService dashboardService;
 
     @GetMapping("/weekly-customer-registration")
-    public ResponseEntity<CustomerNewDTO> getWeeklyCustomerRegistration(@RequestParam Date date) {
+    public ResponseEntity<CustomerNewDTO> getWeeklyCustomerRegistration(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return new ResponseEntity<>(dashboardService.getWeeklyCustomerRegister(date), HttpStatus.OK);
     }
 }

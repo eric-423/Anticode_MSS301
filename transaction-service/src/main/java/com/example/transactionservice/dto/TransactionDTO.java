@@ -5,13 +5,14 @@ import com.example.transactionservice.dto.enums.PaymentStatus;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 public class TransactionDTO implements Serializable {
     private int id;
     private PaymentMethods paymentMethod;
     private double amount;
-    private String transactionDate;
+    private LocalDateTime transactionDate;
     private PaymentStatus paymentStatus;
     private int bookingId;
     private String paymentId;
