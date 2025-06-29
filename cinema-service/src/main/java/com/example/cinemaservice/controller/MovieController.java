@@ -1,5 +1,6 @@
 package com.example.cinemaservice.controller;
 
+import com.example.cinemaservice.dtos.MovieDTO;
 import com.example.cinemaservice.entity.Movie;
 import com.example.cinemaservice.payload.ResponseData;
 import com.example.cinemaservice.service.Imp.MovieServiceImp;
@@ -35,6 +36,11 @@ public class MovieController {
         responseData.setData(movieServiceImp.getById(id));
 
         return ResponseEntity.ok(responseData);
+    }
+
+    @GetMapping("/get/{ticketId}")
+    public ResponseEntity<MovieDTO> getMovieByTicket(@PathVariable("ticketId") Integer ticketId) {
+        return ResponseEntity.ok(movieServiceImp.getByTicketId(ticketId));
     }
 
     @GetMapping("/{id}/showtimes")

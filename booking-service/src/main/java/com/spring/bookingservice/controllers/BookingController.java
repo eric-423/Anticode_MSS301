@@ -1,5 +1,6 @@
 package com.spring.bookingservice.controllers;
 
+import com.spring.bookingservice.dtos.BookingCustomerDTO;
 import com.spring.bookingservice.dtos.BookingDTO;
 import com.spring.bookingservice.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,15 @@ public class BookingController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteBooking(@PathVariable int id) {
         return new ResponseEntity<>(bookingService.deleteBooking(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<BookingCustomerDTO>> getBookingsByCustomerId(@PathVariable int customerId) {
+        return new ResponseEntity<>(bookingService.getBookingsByCustomerId(customerId), HttpStatus.OK);
+    }
+
+    @GetMapping("/customer/booking/{id}")
+    public ResponseEntity<BookingCustomerDTO> getBookingByIdForCustomer(@PathVariable int id) {
+        return new ResponseEntity<>(bookingService.getBookingByIdForCustomer(id), HttpStatus.OK);
     }
 }
