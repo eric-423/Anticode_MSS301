@@ -19,5 +19,6 @@ public class BookingCustomerDTO {
     private List<String> seatNumbers;
     private Double totalPrice;
     private String cinemaName;
+    private String imageUrl;
 
 }

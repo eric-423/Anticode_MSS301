@@ -84,6 +84,7 @@ export const useSeatSelection = (showtimeDetail) => {
           showtime: showtimeDetail.id,
           ticketType: isLastRow(seat) ? 2 : 1,
           price: price,
+          originalPrice: price,
           movieId: showtimeDetail.movie?.id,
           movieName: showtimeDetail.movie?.title,
           cinemaName: showtimeDetail.cinemaHall?.cinema?.name,
@@ -92,8 +93,8 @@ export const useSeatSelection = (showtimeDetail) => {
 
         const success = addSeat(newSeatDetail);
 
-        // Nếu là học sinh, không cho phép chọn ghế kề tự động
-        if (success && isLastRow(seat) && !isStudent) {
+        // Cho phép chọn ghế kề tự động cho tất cả người dùng (bao gồm sinh viên)
+        if (success && isLastRow(seat)) {
           const adjacentSeat = getAdjacentSeat(seat);
           if (adjacentSeat && !selectedSeats.includes(adjacentSeat) && isSeatAvailable(adjacentSeat)) {
             const adjacentSeatDetail = {
@@ -115,6 +116,7 @@ export const useSeatSelection = (showtimeDetail) => {
           showtime: showtimeDetail.id,
           ticketType: isLastRow(seat) ? 2 : 1,
           price: 0,
+          originalPrice: 0,
           movieId: showtimeDetail.movie?.id,
           movieName: showtimeDetail.movie?.title,
           cinemaName: showtimeDetail.cinemaHall?.cinema?.name,
@@ -123,8 +125,8 @@ export const useSeatSelection = (showtimeDetail) => {
 
         const success = addSeat(newSeatDetail);
 
-        // Nếu là học sinh, không cho phép chọn ghế kề tự động
-        if (success && isLastRow(seat) && !isStudent) {
+        // Cho phép chọn ghế kề tự động cho tất cả người dùng (bao gồm sinh viên)
+        if (success && isLastRow(seat)) {
           const adjacentSeat = getAdjacentSeat(seat);
           if (adjacentSeat && !selectedSeats.includes(adjacentSeat) && isSeatAvailable(adjacentSeat)) {
             const adjacentSeatDetail = {

@@ -29,7 +29,7 @@ const SeatCounter = ({ showtimeId, showtimeDetail }) => {
     <div className="mt-4 p-2 bg-orange-50 rounded-lg text-center">
       <p className="text-sm text-orange-700">
         Đã chọn {currentShowtimeSeats.length} chỗ: {currentShowtimeSeats.join(", ")}
-        {isLastRowSelected && !isStudent && (
+        {isLastRowSelected && (
           <span className="block text-xs text-orange-600 mt-1">
             ⭐ Hàng cuối: Ghế đôi liền kề (tự động chọn 2 ghế liền nhau)
           </span>

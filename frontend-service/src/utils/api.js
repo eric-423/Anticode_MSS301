@@ -100,3 +100,6 @@ export const getSeatsByShowtime = (showtimeId) =>
 
 export const checkStudentDiscount = (image) =>
   api.post(`http://localhost:8080/booking-service/ai/vertex/check-image`, image);
+
+export const getHistoryBooking = (userId) =>
+  api.get(`http://localhost:8080/booking-service/api/booking/customer/${userId}`);

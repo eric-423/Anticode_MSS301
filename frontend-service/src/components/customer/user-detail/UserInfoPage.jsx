@@ -6,10 +6,13 @@ import TransactionHistory from "./TransactionHistory";
 import Header from "../header/Header";
 import UserDetail from "./UserDetail";
 import jwtDecode from "jwt-decode";
+import { getHistoryBooking } from "../../../utils/api";
 
 const UserInfoPage = () => {
   const [tab, setTab] = useState("profile");
   const [user, setUser] = useState(null);
+  const [historyBooking, setHistoryBooking] = useState([]);
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -17,6 +20,16 @@ const UserInfoPage = () => {
     if (decodeUser) {
       setUser(decodeUser);
     }
+  }, []);
+
+
+  useEffect(() => {
+    const fetchHistoryBooking = async () => {
+      const response = await getHistoryBooking(jwtDecode(localStorage.getItem("token")).id);
+      setHistoryBooking(response.data);
+      console.log(response.data);
+    };
+    fetchHistoryBooking();
   }, []);
 
   return (
@@ -30,7 +43,7 @@ const UserInfoPage = () => {
         <div style={{ flex: 1, maxWidth: 900, borderRadius: 16, padding: 32, paddingTop: 0 }}>
           <TabNavigation tab={tab} setTab={setTab} />
           {tab === "profile" && <UserDetail userData={user ? user : null} />}
-          {tab === "history" && <TransactionHistory transactions={transactionHistory} />}
+          {tab === "history" && <TransactionHistory transactions={historyBooking} />}
         </div>
 
       </div>

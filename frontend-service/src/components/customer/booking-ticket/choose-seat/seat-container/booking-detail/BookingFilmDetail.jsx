@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { checkStudentDiscount, getMovieDetail, getShowtimeById } from '../../../../../../utils/api';
-import { getSeatNamesByShowtime, getSeatsByShowtime, getSelectedSeatsDetail, saveSelectedSeatsDetail, clearAllSeats } from '../../../../../../utils/seatStorage';
+import { getSeatNamesByShowtime, getSeatsByShowtime, getSelectedSeatsDetail, saveSelectedSeatsDetail } from '../../../../../../utils/seatStorage';
 import { useStudentContext } from './useStudentContext';
 import PropTypes from 'prop-types';
 import './loading-file.css';
@@ -73,6 +73,8 @@ const BookingFilmDetail = () => {
 
             if (response.data) {
                 const currentSeats = getSeatsByShowtime(parseInt(showtimeId));
+                console.log('Tất cả ghế đã chọn:', currentSeats);
+
                 if (currentSeats.length > 0) {
                     setSelectedSeatsForStudent(currentSeats);
                     setShowSeatSelectionModal(true);
@@ -100,9 +102,24 @@ const BookingFilmDetail = () => {
             if (fileInput) {
                 fileInput.value = '';
             }
-            
-            // Xóa tất cả ghế khi tắt checkbox
-            clearAllSeats();
+
+            // Reset lại giá vé về bình thường thay vì xóa tất cả ghế
+            const allSeatsDetail = getSelectedSeatsDetail();
+            const updatedSeatsDetail = allSeatsDetail.map(seat => {
+                if (seat.showtime === parseInt(showtimeId)) {
+                    // Reset về ticketType 1 hoặc 2 (tùy theo hàng ghế)
+                    const isLastRow = seat.seatName.charCodeAt(0) - 65 === (showtime?.cinemaHall?.hallType?.roll || 0) - 1;
+                    return {
+                        ...seat,
+                        ticketType: isLastRow ? 2 : 1,
+                        price: seat.originalPrice || seat.price // Sử dụng giá gốc đã lưu
+                    };
+                }
+                return seat;
+            });
+
+            saveSelectedSeatsDetail(updatedSeatsDetail);
+            window.dispatchEvent(new CustomEvent('seatSelectionChange'));
         }
     }
 
@@ -114,6 +131,7 @@ const BookingFilmDetail = () => {
                 return {
                     ...seat,
                     ticketType: 3,
+                    originalPrice: seat.price,
                     price: 45000
                 };
             }
@@ -122,7 +140,7 @@ const BookingFilmDetail = () => {
 
         saveSelectedSeatsDetail(updatedSeatsDetail);
         setShowSeatSelectionModal(false);
-        
+
         window.dispatchEvent(new CustomEvent('seatSelectionChange'));
     }
 

@@ -174,6 +174,7 @@ public class BookingServiceImpl implements BookingService {
         MovieDTO movieDTO = movieService.getMovieByTicket(booking.getBookingSeatList().get(0).getId());
         bookingCustomerDTO.setBookingId(booking.getId());
         bookingCustomerDTO.setMovieName(movieDTO.getTitle());
+        bookingCustomerDTO.setImageUrl(movieDTO.getImageUrl());
         bookingCustomerDTO.setBookingStatus(booking.getBookingStatus().toString());
         bookingCustomerDTO.setBookingDate(booking.getBookDate());
 
