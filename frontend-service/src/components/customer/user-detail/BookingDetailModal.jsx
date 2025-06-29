@@ -22,11 +22,11 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'completed':
+      case 'PENDING':
         return 'bg-green-100 text-green-800';
-      case 'upcoming':
+      case 'CONFIRMED':
         return 'bg-blue-100 text-blue-800';
-      case 'cancelled':
+      case 'CANCELLED':
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -35,11 +35,11 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'completed':
+      case 'PENDING':
+        return 'Đang chờ';
+      case 'CONFIRMED':
         return 'Đã hoàn thành';
-      case 'upcoming':
-        return 'Sắp tới';
-      case 'cancelled':
+      case 'CANCELLED':
         return 'Đã hủy';
       default:
         return 'Không xác định';
@@ -68,7 +68,7 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
             {/* Movie Poster */}
             <div className="w-32 h-48 flex-shrink-0">
               <img
-                src={booking.poster}
+                src={booking.imageUrl}
                 alt={booking.movieName}
                 className="w-full h-full object-cover rounded-lg"
                 onError={(e) => {
@@ -85,20 +85,20 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center">
                   <span className="text-gray-500 w-24">Rạp:</span>
-                  <span className="font-medium">{booking.cinema}</span>
+                  <span className="font-medium">Galaxy Cinema - NhA Van Hoa</span>
                 </div>
                 <div className="flex items-center">
                   <span className="text-gray-500 w-24">Ngày xem:</span>
-                  <span className="font-medium">{formatDate(booking.date)}</span>
+                  <span className="font-medium">{formatDate(booking.bookingDate)}</span>
                 </div>
                 <div className="flex items-center">
                   <span className="text-gray-500 w-24">Giờ chiếu:</span>
-                  <span className="font-medium">{booking.time}</span>
+                  <span className="font-medium">{booking.showTime.substring(11, 16)}</span>
                 </div>
                 <div className="flex items-center">
                   <span className="text-gray-500 w-24">Trạng thái:</span>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
-                    {getStatusText(booking.status)}
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(booking.bookingStatus)}`}>
+                    {getStatusText(booking.bookingStatus)}
                   </span>
                 </div>
               </div>
@@ -110,16 +110,12 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
             <h4 className="font-semibold text-gray-900 mb-3">Thông tin đặt vé</h4>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-gray-500">Mã đặt vé:</span>
-                <p className="font-medium text-gray-900">{booking.bookingCode}</p>
-              </div>
-              <div>
                 <span className="text-gray-500">Ngày đặt vé:</span>
                 <p className="font-medium text-gray-900">{formatDate(booking.bookingDate)}</p>
               </div>
               <div>
                 <span className="text-gray-500">Ghế:</span>
-                <p className="font-medium text-gray-900">{booking.seats.join(', ')}</p>
+                <p className="font-medium text-gray-900">{booking.seatNumbers.join(', ')}</p>
               </div>
               <div>
                 <span className="text-gray-500">Tổng tiền:</span>
@@ -136,7 +132,7 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
                 <li>• Vui lòng đến rạp trước giờ chiếu 15 phút</li>
                 <li>• Mang theo mã đặt vé hoặc CMND/CCCD để nhận vé</li>
                 <li>• Không được hoàn vé sau khi đã thanh toán</li>
-                {booking.status === 'upcoming' && (
+                {booking.bookingStatus === 'upcoming' && (
                   <li>• Có thể hủy vé trước giờ chiếu 2 tiếng</li>
                 )}
               </ul>
@@ -146,7 +142,7 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
 
         {/* Footer */}
         <div className="flex justify-end space-x-3 p-6 border-t border-gray-200">
-          {booking.status === 'upcoming' && (
+          {booking.bookingStatus === 'upcoming' && (
             <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
               Hủy vé
             </button>

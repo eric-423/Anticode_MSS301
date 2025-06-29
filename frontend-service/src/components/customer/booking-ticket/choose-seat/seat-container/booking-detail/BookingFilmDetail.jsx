@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { checkStudentDiscount, getMovieDetail, getShowtimeById } from '../../../../../../utils/api';
-import { getSeatNamesByShowtime, getSeatsByShowtime, getSelectedSeatsDetail, saveSelectedSeatsDetail, clearAllSeats } from '../../../../../../utils/seatStorage';
+import { getSeatNamesByShowtime, getSeatsByShowtime, getSelectedSeatsDetail, saveSelectedSeatsDetail } from '../../../../../../utils/seatStorage';
 import { useStudentContext } from './useStudentContext';
 import PropTypes from 'prop-types';
 import './loading-file.css';
@@ -73,11 +73,38 @@ const BookingFilmDetail = () => {
 
             if (response.data) {
                 const currentSeats = getSeatsByShowtime(parseInt(showtimeId));
-                if (currentSeats.length > 0) {
-                    setSelectedSeatsForStudent(currentSeats);
+                console.log('Tất cả ghế đã chọn:', currentSeats);
+                
+                // Lọc bỏ ghế hàng cuối khỏi danh sách có thể áp dụng ưu đãi sinh viên
+                const availableSeatsForStudent = currentSeats.filter(seat => {
+                    const totalRows = showtime?.cinemaHall?.hallType?.roll || 0;
+                    const seatRow = seat.seatName.charCodeAt(0) - 65; // A=0, B=1, C=2, ...
+                    const isLastRow = seatRow === totalRows - 1;
+                    
+                    console.log(`Ghế ${seat.seatName}: hàng ${seatRow}, tổng hàng ${totalRows}, là hàng cuối: ${isLastRow}`);
+                    return !isLastRow; // Loại bỏ hàng cuối
+                });
+                
+                console.log('Ghế có thể áp dụng ưu đãi sinh viên:', availableSeatsForStudent);
+                
+                if (availableSeatsForStudent.length > 0) {
+                    setSelectedSeatsForStudent(availableSeatsForStudent);
                     setShowSeatSelectionModal(true);
                 } else {
-                    alert('Đã áp dụng ưu đãi học sinh. Vui lòng chọn ít nhất 1 chỗ ngồi để áp dụng ưu đãi.');
+                    // Kiểm tra xem có phải chỉ chọn ghế hàng cuối không
+                    const lastRowSeats = currentSeats.filter(seat => {
+                        const totalRows = showtime?.cinemaHall?.hallType?.roll || 0;
+                        const seatRow = seat.seatName.charCodeAt(0) - 65;
+                        return seatRow === totalRows - 1;
+                    });
+                    
+                    console.log('Ghế hàng cuối:', lastRowSeats);
+                    
+                    if (lastRowSeats.length > 0 && currentSeats.length === lastRowSeats.length) {
+                        alert('Ưu đãi sinh viên không áp dụng cho ghế hàng cuối. Vui lòng chọn thêm ghế khác để áp dụng ưu đãi.');
+                    } else {
+                        alert('Đã áp dụng ưu đãi học sinh. Vui lòng chọn ít nhất 1 chỗ ngồi (không phải hàng cuối) để áp dụng ưu đãi.');
+                    }
                 }
             }
 
@@ -100,9 +127,24 @@ const BookingFilmDetail = () => {
             if (fileInput) {
                 fileInput.value = '';
             }
-            
-            // Xóa tất cả ghế khi tắt checkbox
-            clearAllSeats();
+
+            // Reset lại giá vé về bình thường thay vì xóa tất cả ghế
+            const allSeatsDetail = getSelectedSeatsDetail();
+            const updatedSeatsDetail = allSeatsDetail.map(seat => {
+                if (seat.showtime === parseInt(showtimeId)) {
+                    // Reset về ticketType 1 hoặc 2 (tùy theo hàng ghế)
+                    const isLastRow = seat.seatName.charCodeAt(0) - 65 === (showtime?.cinemaHall?.hallType?.roll || 0) - 1;
+                    return {
+                        ...seat,
+                        ticketType: isLastRow ? 2 : 1,
+                        price: seat.originalPrice || seat.price // Sử dụng giá gốc đã lưu
+                    };
+                }
+                return seat;
+            });
+
+            saveSelectedSeatsDetail(updatedSeatsDetail);
+            window.dispatchEvent(new CustomEvent('seatSelectionChange'));
         }
     }
 
@@ -114,6 +156,7 @@ const BookingFilmDetail = () => {
                 return {
                     ...seat,
                     ticketType: 3,
+                    originalPrice: seat.price,
                     price: 45000
                 };
             }
@@ -122,7 +165,7 @@ const BookingFilmDetail = () => {
 
         saveSelectedSeatsDetail(updatedSeatsDetail);
         setShowSeatSelectionModal(false);
-        
+
         window.dispatchEvent(new CustomEvent('seatSelectionChange'));
     }
 
@@ -346,7 +389,7 @@ const BookingFilmDetail = () => {
                         <div className="bg-white p-6 rounded-lg shadow-md max-w-md w-full mx-4">
                             <h2 className="text-xl font-semibold mb-4 text-center">Chọn ghế áp dụng ưu đãi học sinh</h2>
                             <p className="text-sm text-gray-600 mb-4 text-center">
-                                Bạn đã chọn {selectedSeatsForStudent.length} ghế. Vui lòng chọn 1 ghế để áp dụng ưu đãi học sinh (giảm 20% giá vé):
+                                Bạn đã chọn {selectedSeatsForStudent.length} ghế (không bao gồm ghế hàng cuối). Vui lòng chọn 1 ghế để áp dụng ưu đãi học sinh (giảm 20% giá vé):
                             </p>
                             <div className="grid grid-cols-3 gap-3 mb-6">
                                 {selectedSeatsForStudent.map((seat) => (

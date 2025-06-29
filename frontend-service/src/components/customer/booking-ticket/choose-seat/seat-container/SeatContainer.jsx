@@ -30,14 +30,6 @@ const SeatContainer = ({ showtimeDetail }) => {
     <div className="bg-white py-4 px-2 rounded-[.375rem] w-full mb-10">
       <SignSeat />
 
-      {/* {isLoading && (
-        <div className="mt-4 p-2 bg-blue-50 rounded-lg text-center">
-          <p className="text-sm text-blue-600">Đang lấy thông tin giá vé...</p>
-        </div>
-      )} */}
-
-      {/* <SeatCounter showtimeId={showtimeDetail?.id} showtimeDetail={showtimeDetail} /> */}
-
       <div className="flex mt-4">
         <Screen />
       </div>
