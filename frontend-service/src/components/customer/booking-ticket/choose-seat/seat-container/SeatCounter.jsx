@@ -36,7 +36,7 @@ const SeatCounter = ({ showtimeId, showtimeDetail }) => {
         )}
         {isStudent && studentSeats.length === 0 && (
           <span className="block text-xs text-green-600 mt-1">
-            🎓 Ưu đãi học sinh: Upload thẻ để áp dụng ưu đãi cho 1 ghế
+            🎓 Ưu đãi học sinh: Upload thẻ để áp dụng ưu đãi cho 1 ghế (không áp dụng cho ghế hàng cuối)
           </span>
         )}
         {studentSeats.length > 0 && (
