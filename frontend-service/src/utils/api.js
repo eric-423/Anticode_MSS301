@@ -94,5 +94,4 @@ export const getShowtimeTicketPrice = (showtimeId, ticketType) =>
 
 export const createPayment = (bookingId, payment) =>
   api.post(`http://localhost:8080/booking-service/api/payment/create?bookingId=${bookingId}`, payment);
-
-
+ 

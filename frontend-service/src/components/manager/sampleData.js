@@ -1,17 +1,3 @@
-const revenueData = [
-    { name: 'T1', 'Vé': 4000, 'Sản phẩm': 2400 },
-    { name: 'T2', 'Vé': 3000, 'Sản phẩm': 1398 },
-    { name: 'T3', 'Vé': 2000, 'Sản phẩm': 9800 },
-    { name: 'T4', 'Vé': 2780, 'Sản phẩm': 3908 },
-    { name: 'T5', 'Vé': 1890, 'Sản phẩm': 4800 },
-    { name: 'T6', 'Vé': 2390, 'Sản phẩm': 3800 },
-    { name: 'T7', 'Vé': 3490, 'Sản phẩm': 4300 },
-    { name: 'T8', 'Vé': 3650, 'Sản phẩm': 4100 },
-    { name: 'T9', 'Vé': 3890, 'Sản phẩm': 4500 },
-    { name: 'T10', 'Vé': 4120, 'Sản phẩm': 4200 },
-    { name: 'T11', 'Vé': 4580, 'Sản phẩm': 4800 },
-    { name: 'T12', 'Vé': 4900, 'Sản phẩm': 5100 },
-];
 
 const topMoviesData = [
     { name: 'Lật Mặt 7', value: 400 },
@@ -45,7 +31,6 @@ const productsData = [
 ];
 
 export default {
-    revenueData,
     topMoviesData,
     COLORS,
     moviesData,
