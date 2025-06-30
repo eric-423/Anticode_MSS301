@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: gateway-service-container
-          image: asia-southeast1-docker.pkg.dev/just-metric-464414-c6/mss301-registry-artifact/gateway-service:prod
+          image: asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/gateway-service:prod
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

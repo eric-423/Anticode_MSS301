@@ -1,4 +1,19 @@
 steps:
+   ## account-service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/account-service:prod','./account-service/']
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/account-service:prod' ]
+
+    ## gateway-service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/gateway-service:prod','./gateway-service/']
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/gateway-service:prod' ]
+  
+
    ## frontend-service
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/frontend-service:prod','./frontend-service/']
@@ -15,5 +30,7 @@ steps:
         gcloud deploy apply --file deploy/pipeline-fe.yaml --region=asia-southeast1
         gcloud deploy apply --file deploy/fe-prod.yaml --region=asia-southeast1
         gcloud deploy releases create 'app-release-${SHORT_SHA}1' --delivery-pipeline=mss301-cd-fe --region=asia-southeast1 --from-k8s-manifest=./kubernetes/frontend-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}2' --delivery-pipeline=mss301-cd-fe --region=asia-southeast1 --from-k8s-manifest=./kubernetes/gateway-service.yaml
+        gcloud deploy releases create 'app-release-${SHORT_SHA}3' --delivery-pipeline=mss301-cd-fe --region=asia-southeast1 --from-k8s-manifest=./kubernetes/account-service.yaml
 options:
   logging: CLOUD_LOGGING_ONLY
