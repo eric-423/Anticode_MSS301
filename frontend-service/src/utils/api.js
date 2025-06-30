@@ -2,7 +2,7 @@ import axios from 'axios';
 import PaymentMethod from './../components/customer/booking-ticket/choose-seat/payment/payment-method/PaymentMethod';
 
 const api = axios.create({
-  baseURL: 'http://gateway-service',
+  baseURL: 'http://gateway-service:8080',
 });
 
 export const login = (credentials) =>
