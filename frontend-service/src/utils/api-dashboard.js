@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://35.197.147.244:8080'
+    baseURL: 'http://35.247.155.58:8080'
 });
 
 export const getDailyRevenue = (date) => 
