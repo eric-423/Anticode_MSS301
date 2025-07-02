@@ -1,25 +1,25 @@
 steps:
    ## account-service
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/account-service:prod','./account-service/']
+    args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-464710/mss301-repository/account-service:prod','./account-service/']
   
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/account-service:prod' ]
+    args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-464710/mss301-repository/account-service:prod' ]
 
     ## gateway-service
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/gateway-service:prod','./gateway-service/']
+    args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-464710/mss301-repository/gateway-service:prod','./gateway-service/']
   
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/gateway-service:prod' ]
+    args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-464710/mss301-repository/gateway-service:prod' ]
   
 
    ## frontend-service
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/frontend-service:prod','./frontend-service/']
+    args: ['build','-t','asia-southeast1-docker.pkg.dev/mss301-464710/mss301-repository/frontend-service:prod','./frontend-service/']
   
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/frontend-service:prod' ]
+    args: [ 'push', 'asia-southeast1-docker.pkg.dev/mss301-464710/mss301-repository/frontend-service:prod' ]
   
   - name: 'google/cloud-sdk:latest'
     entrypoint: 'sh'

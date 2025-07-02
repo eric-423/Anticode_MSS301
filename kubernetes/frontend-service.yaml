@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend-service-container
-          image: asia-southeast1-docker.pkg.dev/mss301-462709/mss301-docker-artifact-registry/frontend-service:prod
+          image: asia-southeast1-docker.pkg.dev/mss301-464710/mss301-repository/frontend-service:prod
           imagePullPolicy: Always
           ports:
             - containerPort: 80
