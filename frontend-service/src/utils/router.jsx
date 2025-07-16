@@ -14,6 +14,7 @@ import ConcessionsPage from "../pages/customer/concessions/ConcessionsPage";
 import BookingSuccess from '../components/customer/booking-status/booking-success'
 import BookingFail from '../components/customer/booking-status/booking-fail'
 import TicketReceiptPage from '../components/customer/ticket-receipt/TicketReceiptPage'
+import AdminDashboardPage from '../pages/admin/AdminDashboardPage';
 
 
 const ROUTER = [
@@ -120,6 +121,13 @@ const ROUTER = [
     path: "/ticket-receipt",
     page: <TicketReceiptPage />,
     title: "Ticket Receipt",
+    subRouter: [],
+  },
+  {
+    name: "admin",
+    path: "/admin",
+    page: <AdminDashboardPage />,
+    title: "Admin Dashboard",
     subRouter: [],
   },
 ];

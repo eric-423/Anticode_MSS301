@@ -16,4 +16,5 @@ public interface UserService {
 
     void resetPassword(String token, String newPassword);
 
+    ResponseData getListAccount();
 }
