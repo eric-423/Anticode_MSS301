@@ -1,0 +1,56 @@
+package com.spring.gatewayservice.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import reactor.core.publisher.Flux;
+
+import java.util.List;
+import static com.spring.gatewayservice.configs.WhiteList.PUBLIC_PATHS;
+
+@Configuration
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(PUBLIC_PATHS.toArray(new String[0])).permitAll()
+                        .pathMatchers("/account-service/api/system-account/view/*").hasAuthority("ADMIN")
+                        .pathMatchers("/game-service/api/v1/games/update/*").hasAnyAuthority("ADMIN")
+                        .anyExchange().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(grantedAuthoritiesExtractor())
+                        )
+                )
+                .build();
+    }
+
+    @Bean
+    public ReactiveJwtAuthenticationConverter grantedAuthoritiesExtractor() {
+        ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            String role = jwt.getClaimAsString("role");
+            List<SimpleGrantedAuthority> granted = List.of(new SimpleGrantedAuthority(role.toUpperCase()));
+            return Flux.fromIterable(granted);
+        });
+        return converter;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
