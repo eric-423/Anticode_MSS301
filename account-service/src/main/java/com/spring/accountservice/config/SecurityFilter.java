@@ -22,15 +22,12 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityFilter {
 
-    private final JwtCustom jwtCustom;
-
     private final UserDetailService userDetailService;
 
     @Autowired
-    public SecurityFilter(JwtCustom jwtCustom,
-                          UserDetailService userDetailService) {
+    public SecurityFilter(
+            UserDetailService userDetailService) {
         this.userDetailService = userDetailService;
-        this.jwtCustom = jwtCustom;
     }
 
     public static final String[] PUBLIC_URLS = {
@@ -49,8 +46,6 @@ public class SecurityFilter {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .cors(cors -> cors
-//                        .configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .userDetailsService(userDetailService)
@@ -61,25 +56,5 @@ public class SecurityFilter {
                 );
 
         return http.build();
-    }
-
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
-//        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080", "http://localhost:8081", "http://localhost:8082", "http://localhost:5173"));
-//        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        configuration.setAllowCredentials(true);
-//        configuration.setMaxAge(3600L);
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

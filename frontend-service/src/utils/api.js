@@ -1,9 +1,26 @@
 import axios from 'axios';
-import PaymentMethod from './../components/customer/booking-ticket/choose-seat/payment/payment-method/PaymentMethod';
 
 const api = axios.create({
   baseURL: 'http://35.247.155.58:8080',
 });
+
+export const register = (credentials) =>
+  api.post('http://35.247.155.58:8080/account-service/api/users/register', credentials,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+export const verifyOTP = (otp) =>
+  api.post('http://35.247.155.58:8080/account-service/api/users/verify-code', otp,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 
 export const login = (credentials) =>
   axios.post(

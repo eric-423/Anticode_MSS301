@@ -78,30 +78,30 @@ public class UserServiceImp implements UserService {
 
     @Override
     public ResponseData login(LoginRequest loginRequest) {
-    ResponseData data = new ResponseData();
+        ResponseData data = new ResponseData();
 
-    Users users = userRepository.findByEmail(loginRequest.getEmail());
-    if (users == null) {
-        data.setDesc("Email không tồn tại.");
+        Users users = userRepository.findByEmail(loginRequest.getEmail());
+        if (users == null) {
+            data.setDesc("Email không tồn tại.");
+            return data;
+        }
+
+        if (!users.isEmailVerified()) {
+            data.setDesc("Email chưa được xác minh. Vui lòng kiểm tra email để xác minh tài khoản.");
+            return data;
+        }
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), users.getPassword())) {
+            data.setDesc("Mật khẩu không chính xác!");
+            return data;
+        }
+
+        String jwt = jwtTokenHelpers.generateToken(users);
+
+        data.setData(jwt);
+        data.setDesc("Đăng nhập thành công.");
         return data;
     }
-
-    if (!users.isEmailVerified()) {
-        data.setDesc("Email chưa được xác minh. Vui lòng kiểm tra email để xác minh tài khoản.");
-        return data;
-    }
-
-    if (!passwordEncoder.matches(loginRequest.getPassword(), users.getPassword())) {
-        data.setDesc("Mật khẩu không chính xác.");
-        return data;
-    }
-
-    String jwt = jwtTokenHelpers.generateToken(users);
-
-    data.setData(jwt);
-    data.setDesc("Đăng nhập thành công.");
-    return data;
-}
 
     @Override
     public ResponseData register(RegisterRequest registerRequest) throws Exception {

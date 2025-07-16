@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import jwtDecode from 'jwt-decode';
-import { login } from '../../../utils/api';
+import { login, register, verifyOTP } from '../../../utils/api';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const CloseIcon = ({ className = "w-6 h-6" }) => (
@@ -70,18 +72,18 @@ const LoginPopup = ({ onClose, onSwitchToRegister, onLoginSuccess }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await login({ email, password });
-            const token = response.data.data;
-            localStorage.setItem('token', token);
-            const user = jwtDecode(token);
-            onLoginSuccess && onLoginSuccess(user);
-            onClose();
-        } catch (err) {
-            console.error(err);
-            alert('Đăng nhập thất bại');
-        }
-    };
+        await login({ email, password })
+            .then((response) => {
+                const token = response.data.data;
+                localStorage.setItem('token', token);
+                const user = jwtDecode(token);
+                onLoginSuccess && onLoginSuccess(user);
+                onClose();
+            })
+            .catch(() => {
+                toast.error('Đăng nhập thất bại');
+            })
+    }
 
     return (
         <div className="fixed inset-0 flex justify-center items-center z-50 p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
@@ -119,17 +121,132 @@ const LoginPopup = ({ onClose, onSwitchToRegister, onLoginSuccess }) => {
     );
 };
 
-const RegisterPopup = ({ onClose, onSwitchToLogin }) => {
+const OTPPopup = ({ onClose, onSubmitOTP }) => {
+    const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+    const inputs = [];
+
+    const handleChange = (e, idx) => {
+        const value = e.target.value.replace(/\D/g, "");
+        if (value.length > 1) return;
+        const newOtp = [...otp];
+        newOtp[idx] = value;
+        setOtp(newOtp);
+        if (value && idx < 5) {
+            inputs[idx + 1]?.focus();
+        }
+    };
+
+    const handleKeyDown = (e, idx) => {
+        if (e.key === "Backspace" && !otp[idx] && idx > 0) {
+            inputs[idx - 1]?.focus();
+        }
+    };
+
+    const handlePaste = (e) => {
+        const paste = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+        if (paste.length === 6) {
+            setOtp(paste.split(""));
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        const otpCode = otp.join("");
+        await verifyOTP({ token: otpCode })
+            .then(() => {
+                toast.success(" Đăng ký thành công ");
+                onSubmitOTP && onSubmitOTP(otpCode);
+            })
+            .catch(() => {
+                toast.error("Xác thực OTP thất bại. Vui lòng kiểm tra lại mã OTP.");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+
+    };
+
+    return (
+        <div className="fixed inset-0 flex justify-center items-center z-50 p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
+            <div className="relative bg-white rounded-xl shadow-2xl p-5 md:p-5 w-full max-w-[420px] mx-auto">
+                <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition" aria-label="Đóng"><CloseIcon /></button>
+                <div className="flex flex-col items-center">
+                    <img src="https://www.galaxycine.vn/_next/static/media/icon-login.fbbf1b2d.svg" alt="[Hình minh hoạ OTP]" className="w-40 h-auto mb-4" onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/150x100/e0e0e0/999999?text=Image+Error'; }} />
+                    <h2 className="text-2xl font-bold text-gray-800 mb-3">Nhập mã OTP</h2>
+                    <p className="text-sm text-gray-600 mb-4 text-center">Vui lòng nhập mã OTP gồm 6 số đã gửi về email hoặc số điện thoại của bạn.</p>
+                    <form onSubmit={handleSubmit} className="w-full flex flex-col items-center space-y-6">
+                        <div className="flex space-x-2 justify-center">
+                            {otp.map((digit, idx) => (
+                                <input
+                                    key={idx}
+                                    ref={el => inputs[idx] = el}
+                                    type="text"
+                                    inputMode="numeric"
+                                    maxLength={1}
+                                    value={digit}
+                                    onChange={e => handleChange(e, idx)}
+                                    onKeyDown={e => handleKeyDown(e, idx)}
+                                    onPaste={handlePaste}
+                                    className="w-10 h-12 text-center border border-gray-300 rounded-lg text-xl focus:ring-orange-500 focus:border-orange-500 transition"
+                                    required
+                                />
+                            ))}
+                        </div>
+                        <Button type="submit" variant="primary" disabled={loading}>{loading ? "Đang xác thực..." : "XÁC NHẬN"}</Button>
+                        {message && <div className={`text-sm mt-2 ${message.includes('thành công') ? 'text-green-600' : 'text-red-600'}`}>{message}</div>}
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const RegisterPopup = ({ onClose, onSwitchToLogin, onRegisterSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [fullName, setFullName] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [phone, setPhone] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({ email, password, fullName, phoneNumber });
-        onClose();
+        if (!email) {
+            toast.error("Vui lòng nhập email hợp lệ !");
+            return;
+        }
+        if (!email.includes('@gmail.com')) {
+            toast.error('Email phải là địa chỉ gmail hợp lệ!');
+            return;
+        }
+        if (!fullName) {
+            toast.error("Vui lòng nhập họ tên!");
+            return;
+        }
+        if (!phone) {
+            toast.error("Vui lòng nhập số điện thoại!");
+            return;
+        }
+        if (!password) {
+            toast.error("Vui lòng nhập mật khẩu!");
+            return;
+        }
+        if (password.length < 8) {
+            toast.error("Mật khẩu phải có ít nhất 8 ký tự!");
+            return;
+        }
+
+        await register({ email, password, fullName, phone })
+            .then(() => {
+                onRegisterSuccess && onRegisterSuccess();
+            })
+            .catch((error) => {
+                const msg = error.response.data;
+                if (msg.includes('Duplicate entry')) toast.error("Tài khoản này đã tồn tại")
+            })
     };
 
     return (
@@ -142,7 +259,7 @@ const RegisterPopup = ({ onClose, onSwitchToLogin }) => {
                     <form onSubmit={handleSubmit} className="w-full space-y-5">
                         <InputField label="Email" type="email" placeholder="Nhập Email của bạn" value={email} onChange={(e) => setEmail(e.target.value)} />
                         <InputField label="Họ và tên" type="text" placeholder="Nhập tên của bạn" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-                        <InputField label="Số Điện Thoại" type="text" placeholder="Nhập số điện thoại của bạn" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                        <InputField label="Số Điện Thoại" type="text" placeholder="Nhập số điện thoại của bạn" value={phone} onChange={(e) => setPhone(e.target.value)} />
 
                         <InputField label="Mật khẩu" type={showPassword ? 'text' : 'password'} placeholder="Tạo mật khẩu" value={password} onChange={(e) => setPassword(e.target.value)}>
                             <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-400 hover:text-gray-600" aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}>
@@ -167,9 +284,19 @@ const RegisterPopup = ({ onClose, onSwitchToLogin }) => {
     );
 };
 
+
 export default function Login({ onLoginSuccess }) {
 
     const [activePopup, setActivePopup] = useState('login');
+
+    const handleRegisterSuccess = () => {
+        setActivePopup('otp');
+    };
+
+    //  xác nhận OTP
+    const handleSubmitOTP = (otp) => {
+        setActivePopup('login');
+    };
 
     return (
         <div>
@@ -185,8 +312,17 @@ export default function Login({ onLoginSuccess }) {
                 <RegisterPopup
                     onClose={() => setActivePopup(null)}
                     onSwitchToLogin={() => setActivePopup('login')}
+                    onRegisterSuccess={handleRegisterSuccess}
                 />
             )}
+
+            {activePopup === 'otp' && (
+                <OTPPopup
+                    onClose={() => setActivePopup(null)}
+                    onSubmitOTP={handleSubmitOTP}
+                />
+            )}
+            <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
         </div>
     );
 }
