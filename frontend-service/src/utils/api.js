@@ -5,6 +5,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+
 });
 
 export const register = (credentials) =>
@@ -74,7 +75,12 @@ export const deleteProduct = (id) =>
   api.delete(`/cinema-service/concession-products/${id}`);
 
 export const createBooking = (bookingData) =>
-  api.post('/booking-service/api/booking', bookingData);
+  api.post('/booking-service/api/booking', bookingData, {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  }
+  );
 
 export const getShowtimeTicketPrice = (showtimeId, ticketType) =>
   api.get(`/cinema-service/showtime-ticket-prices/showtime/${showtimeId}/ticket-type/${ticketType}`);
