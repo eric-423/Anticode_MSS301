@@ -87,12 +87,4 @@ public class JwtTokenHelper {
         }
         return null;
     }
-
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-
 }

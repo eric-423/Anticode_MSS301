@@ -124,7 +124,6 @@ const LoginPopup = ({ onClose, onSwitchToRegister, onLoginSuccess }) => {
 const OTPPopup = ({ onClose, onSubmitOTP }) => {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
     const inputs = [];
 
     const handleChange = (e, idx) => {
@@ -197,7 +196,6 @@ const OTPPopup = ({ onClose, onSubmitOTP }) => {
                             ))}
                         </div>
                         <Button type="submit" variant="primary" disabled={loading}>{loading ? "Đang xác thực..." : "XÁC NHẬN"}</Button>
-                        {message && <div className={`text-sm mt-2 ${message.includes('thành công') ? 'text-green-600' : 'text-red-600'}`}>{message}</div>}
                     </form>
                 </div>
             </div>
