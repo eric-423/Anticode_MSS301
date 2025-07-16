@@ -23,6 +23,10 @@ public class JwtTokenHelper {
     @Value("${jwt.secretkey}")
     private String key;
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     public String generateToken(Users users) {
         SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));

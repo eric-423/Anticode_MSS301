@@ -22,15 +22,12 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityFilter {
 
-    private final JwtCustom jwtCustom;
-
     private final UserDetailService userDetailService;
 
     @Autowired
-    public SecurityFilter(JwtCustom jwtCustom,
-                          UserDetailService userDetailService) {
+    public SecurityFilter(
+            UserDetailService userDetailService) {
         this.userDetailService = userDetailService;
-        this.jwtCustom = jwtCustom;
     }
 
     public static final String[] PUBLIC_URLS = {
@@ -49,8 +46,6 @@ public class SecurityFilter {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .cors(cors -> cors
-//                        .configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .userDetailsService(userDetailService)
@@ -60,5 +55,4 @@ public class SecurityFilter {
 
         return http.build();
     }
-
 }
