@@ -8,9 +8,19 @@ public class WhiteList {
             "/cinema-service/v3/api-docs",
             "/transaction-service/v3/api-docs",
             "/account-service/v3/api-docs",
+            "/account-service/api/users/login",
             "/swagger-ui",
             "/swagger-ui.html",
             "/v3/api-docs/**",
-            "/webjars/**"
+            "/webjars/**",
+            "/api/users/forgot-password",
+            "/api/users/reset-password",
+            "/api/users/register",
+            "/api/users/login",
+            "/api/users/verify-code",
+            "/swagger-ui/index.html",
+            "/account-service/**",
+            "/account-service/v3/api-docs",
+            "/dashboard/weekly-customer-registration"
     );
 }

@@ -30,17 +30,6 @@ public class SecurityFilter {
         this.userDetailService = userDetailService;
     }
 
-    public static final String[] PUBLIC_URLS = {
-            "/api/users/forgot-password",
-            "/api/users/reset-password",
-            "/api/users/register",
-            "/api/users/login",
-            "/api/users/verify-code",
-            "/swagger-ui/index.html",
-            "/account-service/*",
-            "/account-service/v3/api-docs",
-            "/dashboard/weekly-customer-registration"
-    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

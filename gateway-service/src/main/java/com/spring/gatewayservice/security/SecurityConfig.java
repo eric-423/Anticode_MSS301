@@ -13,6 +13,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+
 import static com.spring.gatewayservice.configs.WhiteList.PUBLIC_PATHS;
 
 @Configuration
