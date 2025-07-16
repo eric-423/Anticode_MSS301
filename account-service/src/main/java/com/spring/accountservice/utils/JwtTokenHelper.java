@@ -89,4 +89,10 @@ public class JwtTokenHelper {
     }
 
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
 }
