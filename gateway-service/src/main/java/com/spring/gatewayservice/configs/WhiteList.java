@@ -6,6 +6,7 @@ public class WhiteList {
     public static final List<String> PUBLIC_PATHS = List.of(
             "/booking-service/v3/api-docs",
             "/cinema-service/v3/api-docs",
+            "cinema-service/**",
             "/transaction-service/v3/api-docs",
             "/account-service/v3/api-docs",
             "/account-service/api/users/login",
