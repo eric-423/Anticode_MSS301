@@ -2,6 +2,7 @@ package com.spring.accountservice.utils;
 
 import com.spring.accountservice.entity.Users;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -30,17 +31,22 @@ public class JwtTokenHelper {
 
     public String generateToken(Users users) {
         SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
-        return Jwts.builder()
+        JwtBuilder builder = Jwts.builder()
                 .setIssuer("AntiCode")
                 .setSubject("JWT Token")
                 .claim("id", users.getId())
                 .claim("email", users.getEmail())
-                .claim("dateOfBirth", users.getDateOfBirth().toString())
                 .claim("role", users.getRole().getName())
                 .claim("username", users.getFullName())
                 .claim("phone", users.getPhoneNumber())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date().getTime()) + 28800000))
+                .setExpiration(new Date((new Date().getTime()) + 28800000));
+
+        if (users.getDateOfBirth() != null) {
+            builder.claim("dateOfBirth", users.getDateOfBirth().toString());
+        }
+
+        return builder
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
