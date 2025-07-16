@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import DataTable from '../manager/DataTable';
+import AdminDataTable from './AdminDataTable';
 import sampleData from './sampleData';
 import { getAllAccounts } from '../../utils/api';
 
@@ -41,7 +41,6 @@ const AccountManager = () => {
     alert(`Xóa tài khoản: ${account.username}`);
   };
 
-  // Pagination logic
   const totalPages = Math.ceil(data.length / PAGE_SIZE);
   const paginatedData = data.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   const handlePrevPage = () => {
@@ -53,7 +52,7 @@ const AccountManager = () => {
 
   return (
     <>
-      <DataTable
+      <AdminDataTable
         columns={columns}
         data={paginatedData}
         title="Quản lý tài khoản"
