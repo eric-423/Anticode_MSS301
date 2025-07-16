@@ -19,6 +19,9 @@ export const login = (credentials) =>
 export const logout = () =>
   api.get(`/api/users/logout`);
 
+export const getAllAccounts = () =>
+  api.get('/api/users/list');
+
 // Movie Management APIs
 export const getAllMovies = (params = {}) =>
   api.get('/cinema-service/movies', { params });
@@ -96,4 +99,3 @@ export const checkStudentDiscount = (image) =>
 
 export const getHistoryBooking = (userId) =>
   api.get(`/booking-service/api/booking/customer/${userId}`);
-

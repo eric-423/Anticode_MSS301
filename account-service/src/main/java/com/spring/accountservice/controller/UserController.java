@@ -109,4 +109,9 @@ public class UserController {
         userService.resetPassword(request.getToken(), request.getNewPassword());
         return ResponseEntity.ok("Password reset successfully");
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getListAccount() {
+        return ResponseEntity.ok(userService.getListAccount());
+    }
 }

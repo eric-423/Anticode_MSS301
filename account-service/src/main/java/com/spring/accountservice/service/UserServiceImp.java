@@ -3,6 +3,7 @@ package com.spring.accountservice.service;
 
 import com.spring.accountservice.dto.LoginRequest;
 import com.spring.accountservice.dto.RegisterRequest;
+import com.spring.accountservice.dto.UserDTO;
 import com.spring.accountservice.entity.Users;
 import com.spring.accountservice.entity.VerifyToken;
 import com.spring.accountservice.payload.ResponseData;
@@ -18,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -216,5 +215,30 @@ public class UserServiceImp implements UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         tokenRepository.delete(resetToken);
+    }
+
+    @Override
+    public ResponseData getListAccount() {
+        ResponseData responseData = new ResponseData();
+        try {
+            List<Users> users = userRepository.findAll();
+            List<UserDTO> result = new ArrayList<>();
+            for(Users user : users) {
+                UserDTO userDTO = new UserDTO();
+                userDTO.setId(user.getId());
+                userDTO.setFullName(user.getFullName());
+                userDTO.setEmail(user.getEmail());
+                userDTO.setPhoneNumber(user.getPhoneNumber());
+                userDTO.setRoleName(user.getRole().getName());
+                result.add(userDTO);
+            }
+            responseData.setData(result);
+            responseData.setDesc("Danh sách tài khoản được lấy thành công.");
+            responseData.setStatus(200);
+        } catch (Exception e) {
+            responseData.setDesc("Có lỗi xảy ra khi lấy danh sách tài khoản.");
+            responseData.setStatus(500);
+        }
+        return responseData;
     }
 }
