@@ -32,8 +32,9 @@ public class SecurityConfig {
                         .pathMatchers(PUBLIC_PATHS.toArray(new String[0])).permitAll()
                         .pathMatchers("/account-service/api/system-account/view/*").hasAuthority("ADMIN")
                         .pathMatchers("/game-service/api/v1/games/update/*").hasAnyAuthority("ADMIN")
-                        .pathMatchers("/transaction-service/dashboard/**","/booking-service/dashboard/*","/account-service/dashboard/**")
-                        .hasAnyAuthority("MANAGER")
+                        .pathMatchers("/booking-service/dashboard/*").hasAuthority("MANAGER")
+                        .pathMatchers("/transaction-service/dashboard/*").hasAuthority("MANAGER")
+                        .pathMatchers("/account-service/dashboard/*").hasAuthority("MANAGER")
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -63,6 +64,7 @@ public class SecurityConfig {
         ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             String role = jwt.getClaimAsString("role");
+            System.out.println("role: " + role);
             List<SimpleGrantedAuthority> granted = List.of(new SimpleGrantedAuthority(role.toUpperCase()));
             return Flux.fromIterable(granted);
         });
