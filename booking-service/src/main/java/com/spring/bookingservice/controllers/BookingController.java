@@ -44,8 +44,14 @@ public class BookingController {
     }
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<BookingCustomerDTO>> getBookingsByCustomerId(@PathVariable int customerId) {
-        return new ResponseEntity<>(bookingService.getBookingsByCustomerId(customerId), HttpStatus.OK);
+    public ResponseEntity<?> getBookingsByCustomerId(@PathVariable int customerId,
+                                                     @RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "10") int size) {
+        try {
+            return new ResponseEntity<>(bookingService.getBookingsByCustomerId(customerId, page, size), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/customer/booking/{id}")

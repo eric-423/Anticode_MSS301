@@ -15,6 +15,7 @@ import reactor.core.publisher.Flux;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
 import java.util.List;
 
 import static com.spring.gatewayservice.configs.WhiteList.PUBLIC_PATHS;
@@ -36,13 +37,13 @@ public class SecurityConfig {
                         .pathMatchers("/booking-service/dashboard/*").hasAuthority("MANAGER")
                         .pathMatchers("/transaction-service/dashboard/*").hasAuthority("MANAGER")
                         .pathMatchers("/account-service/dashboard/*").hasAuthority("MANAGER")
-                        .pathMatchers("/booking-service/ai/vertex/**").hasAnyAuthority("CUSTOMER","ADMIN","MANAGER")
-                        .pathMatchers(HttpMethod.POST,"/booking-service/api/booking/").hasAnyAuthority("CUSTOMER")
-                        .pathMatchers(HttpMethod.GET,"/booking-service/api/booking/customer/**").hasAnyAuthority("CUSTOMER","ADMIN","MANAGER")
-                        .pathMatchers("/booking-service/api/payment/**").hasAnyAuthority("CUSTOMER","ADMIN","MANAGER")
-                        .pathMatchers("/booking-service/ticket/**").hasAnyAuthority("ADMIN","MANAGER", "CUSTOMER")
-                        .pathMatchers("/transaction-service/api/payment-status/**").hasAnyAuthority("ADMIN","MANAGER", "CUSTOMER")
-                        .pathMatchers("/transaction-service/**").hasAnyAuthority("ADMIN","MANAGER", "CUSTOMER")
+                        .pathMatchers("/booking-service/ai/vertex/**").hasAnyAuthority("USER", "ADMIN", "MANAGER")
+                        .pathMatchers(HttpMethod.POST, "/booking-service/api/booking/").hasAnyAuthority("USER")
+                        .pathMatchers(HttpMethod.GET, "/booking-service/api/booking/customer/**").hasAnyAuthority("USER", "ADMIN", "MANAGER")
+                        .pathMatchers("/booking-service/api/payment/**").hasAnyAuthority("USER", "ADMIN", "MANAGER")
+                        .pathMatchers("/booking-service/ticket/**").hasAnyAuthority("ADMIN", "MANAGER", "USER")
+                        .pathMatchers("/transaction-service/api/payment-status/**").hasAnyAuthority("ADMIN", "MANAGER", "USER")
+                        .pathMatchers("/transaction-service/**").hasAnyAuthority("ADMIN", "MANAGER", "USER")
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -56,7 +57,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173","http://34.126.66.29"));
+        config.setAllowedOrigins(List.of("http://localhost:5173", "http://34.126.66.29"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

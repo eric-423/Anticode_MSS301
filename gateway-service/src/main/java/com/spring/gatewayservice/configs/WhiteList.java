@@ -44,6 +44,7 @@ public class WhiteList {
             "/booking-service/showtimes",
             "/booking-service/showtimes/**",
             "/booking-service/booking-concession",
-            "/booking-service/booking-concession/**"
+            "/booking-service/booking-concession/**",
+            "/booking-service/**"
     );
 }

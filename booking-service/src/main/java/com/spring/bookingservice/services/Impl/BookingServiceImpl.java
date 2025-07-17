@@ -15,6 +15,9 @@ import com.spring.bookingservice.services.RedisHoldingSeatService;
 import com.spring.bookingservice.services.ShowTimeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -140,20 +143,25 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public List<BookingCustomerDTO> getBookingsByCustomerId(int customerId) {
+    public Page<BookingCustomerDTO> getBookingsByCustomerId(int customerId, int page, int size) {
         try {
             List<Booking> bookings = bookingRepository.findByUserID(customerId);
-            List<BookingCustomerDTO> bookingCustomerDTOs = new ArrayList<>();
+            bookings.sort((b1, b2) -> b2.getBookDate().compareTo(b1.getBookDate()));
 
-            for (Booking booking : bookings) {
-                bookingCustomerDTOs.add(convertBookingToBookingCustomerDTO(booking));
+            int start = page * size;
+            int end = Math.min(start + size, bookings.size());
+
+            if (start >= bookings.size()) {
+                return Page.empty();
             }
 
-            return bookingCustomerDTOs;
+            List<BookingCustomerDTO> pagedList = bookings.subList(start, end).stream().map(this::convertBookingToBookingCustomerDTO).toList();
+
+            return new PageImpl<>(pagedList, PageRequest.of(page, size), bookings.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return List.of();
+        return Page.empty();
     }
 
     @Override
@@ -181,7 +189,7 @@ public class BookingServiceImpl implements BookingService {
         List<Ticket> tickets = booking.getBookingSeatList();
         List<String> seatNumbers = new ArrayList<>();
 
-        for(Ticket ticket : tickets) {
+        for (Ticket ticket : tickets) {
             seatNumbers.add(ticket.getSeatName());
         }
         int showTimeId = tickets.get(0).getShowtime();
