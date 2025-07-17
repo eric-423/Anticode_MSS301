@@ -52,5 +52,7 @@ public class Users {
     @JoinColumn(name = "membership_id", nullable = true)
     private MemberShip memberShip;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 
 }

@@ -29,6 +29,7 @@ const MovieManager = () => {
         setError(null);
         try {
             const response = await getAllMovies({ page: pageParam, size: sizeParam });
+            console.log('Movies fetched:', response);
             const movies = response.data.data?.content || response.data.data || [];
             setData(movies);
             setTotalPages(response.data.data?.totalPages || 1);
