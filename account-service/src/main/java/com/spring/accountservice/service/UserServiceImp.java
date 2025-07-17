@@ -251,7 +251,7 @@ public class UserServiceImp implements UserService {
         if (user == null) {
             throw new Exception("User not found");
         }
-        if(user.getRole().getName().equals("admin")) {
+        if(user.getRole().getName().equalsIgnoreCase("admin")) {
             throw new Exception("Cannot delete admin account");
         }
         if(!user.isActive()){
