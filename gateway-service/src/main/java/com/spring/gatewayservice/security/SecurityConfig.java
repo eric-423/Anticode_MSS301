@@ -64,7 +64,6 @@ public class SecurityConfig {
         ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             String role = jwt.getClaimAsString("role");
-            System.out.println("role: " + role);
             List<SimpleGrantedAuthority> granted = List.of(new SimpleGrantedAuthority(role.toUpperCase()));
             return Flux.fromIterable(granted);
         });
