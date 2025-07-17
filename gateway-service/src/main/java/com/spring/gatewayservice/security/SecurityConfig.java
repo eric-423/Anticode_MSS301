@@ -32,6 +32,8 @@ public class SecurityConfig {
                         .pathMatchers(PUBLIC_PATHS.toArray(new String[0])).permitAll()
                         .pathMatchers("/account-service/api/system-account/view/*").hasAuthority("ADMIN")
                         .pathMatchers("/game-service/api/v1/games/update/*").hasAnyAuthority("ADMIN")
+                        .pathMatchers("/transaction-service/dashboard/**","/booking-service/dashboard/*","/account-service/dashboard/**")
+                        .hasAnyAuthority("MANAGER")
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
