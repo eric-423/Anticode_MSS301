@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import AdminDataTable from './AdminDataTable';
 import sampleData from './sampleData';
-import { getAllAccounts } from '../../utils/api';
+import { getAllAccounts, softDeleteAccount, reactivateAccount } from '../../utils/api';
 
 const columns = [
   { key: 'id', label: 'ID' },
-  { key: 'username', label: 'Tên' },
+  { key: 'fullName', label: 'Tên' },
   { key: 'email', label: 'Email' },
-  { key: 'role', label: 'Vai trò' },
-  { key: 'status', label: 'Trạng thái' },
+  { key: 'phoneNumber', label: 'Số điện thoại' },
+  { key: 'roleName', label: 'Vai trò' },
+  { key: 'active', label: 'Trạng thái' },
 ];
 
 const PAGE_SIZE = 10;
@@ -23,9 +24,11 @@ const AccountManager = () => {
     setLoading(true);
     setError(null);
     try {
-      // const response = await getAllAccounts();
-      // setData(response.data.data || response.data || []);
-      setData(sampleData.accountsData);
+      const response = await getAllAccounts();
+      console.log('response', response);
+      
+      setData(response.data.data || response.data || []);
+      // setData(sampleData.accountsData);
     } catch (error) {
       setError('Không thể tải danh sách tài khoản');
     } finally {
@@ -37,8 +40,19 @@ const AccountManager = () => {
     fetchAccounts();
   }, []);
 
-  const handleDelete = (account) => {
-    alert(`Xóa tài khoản: ${account.username}`);
+  const handleAction = async (account) => {
+    console.log('account', account);
+    
+    try {
+      if (account.active) {
+        await softDeleteAccount(account.id);
+      } else {
+        await reactivateAccount(account.id);
+      }
+      fetchAccounts();
+    } catch (error) {
+      setError('Thao tác thất bại');
+    }
   };
 
   const totalPages = Math.ceil(data.length / PAGE_SIZE);
@@ -56,7 +70,7 @@ const AccountManager = () => {
         columns={columns}
         data={paginatedData}
         title="Quản lý tài khoản"
-        onDelete={handleDelete}
+        onAction={handleAction}
         page={page}
         totalPages={totalPages}
         onPrevPage={handlePrevPage}

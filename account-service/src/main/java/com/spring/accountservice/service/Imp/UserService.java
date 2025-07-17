@@ -17,4 +17,8 @@ public interface UserService {
     void resetPassword(String token, String newPassword);
 
     ResponseData getListAccount();
+
+    void softDeleteAccount(int userId) throws Exception;
+
+    void reactivateAccount(int userId) throws Exception;
 }

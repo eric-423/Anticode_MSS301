@@ -243,4 +243,34 @@ public class UserServiceImp implements UserService {
         }
         return responseData;
     }
+
+    @Override
+    public void softDeleteAccount(int userId) throws Exception {
+        Users user = userRepository.findById(userId).orElse(null);
+        System.out.println("User ID: " + userId);
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+        if(user.getRole().getName().equals("admin")) {
+            throw new Exception("Cannot delete admin account");
+        }
+        if(!user.isActive()){
+            throw new Exception("User account is already deleted");
+        }
+        user.setActive(false);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void reactivateAccount(int userId) throws Exception {
+        Users user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+        if(user.isActive()){
+            throw new Exception("User account is already active");
+        }
+        user.setActive(true);
+        userRepository.save(user);
+    }
 }
