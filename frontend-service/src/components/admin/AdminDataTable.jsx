@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 const AdminDataTable = ({
-    columns, data, title, onDelete,
+    columns, data, title, onAction,
     page = 0, totalPages = 1, onPrevPage, onNextPage
 }) => {
     const getStatusClass = (status) => {
@@ -16,14 +16,22 @@ const AdminDataTable = ({
     };
 
     const renderCell = (item, col) => {
-        if (col.key === 'status') {
+        const value = col.key.split('.').reduce((acc, part) => acc && acc[part], item);
+
+        if (col.key === 'active') {
+            const statusText = value ? 'Hoạt động' : 'Bị khóa';
             return (
-                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusClass(item[col.key])}`}>
-                    {item[col.key]}
+                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusClass(statusText)}`}>
+                    {statusText}
                 </span>
             );
         }
-        return item[col.key];
+
+        if (typeof value === 'object' && value !== null) {
+            return JSON.stringify(value);
+        }
+
+        return value;
     };
 
     return (
@@ -54,8 +62,13 @@ const AdminDataTable = ({
                                             {renderCell(item, col)}
                                         </td>
                                     ))}
-                                    <td className="px-6 py-4 text-right">
-                                        <button onClick={() => onDelete(item)} className="font-medium text-red-600 hover:underline">Xóa</button>
+                                    <td className="px-6 py-4 text-center">
+                                       <button
+                                           onClick={() => onAction(item)}
+                                           className={`font-medium ${item.active ? 'text-red-600 hover:underline' : 'text-green-600 hover:underline'}`}
+                                       >
+                                           {item.active ? 'Xóa' : 'Kích hoạt'}
+                                       </button>
                                     </td>
                                 </tr>
                             ))}

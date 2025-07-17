@@ -20,7 +20,13 @@ export const logout = () =>
   api.get(`/api/users/logout`);
 
 export const getAllAccounts = () =>
-  api.get('/api/users/list');
+  api.get('/account-service/api/users/list');
+
+export const softDeleteAccount = (userId) =>
+  api.put(`/account-service/api/users/delete/${userId}`);
+
+export const reactivateAccount = (userId) =>
+  api.put(`/account-service/api/users/reactivate/${userId}`);
 
 // Movie Management APIs
 export const getAllMovies = (params = {}) =>
