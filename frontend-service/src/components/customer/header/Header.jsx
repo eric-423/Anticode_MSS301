@@ -4,9 +4,9 @@ import LIST_NAVIGATION from "../../../utils/list-nav";
 import Film from "./item-film/Film";
 import Others from "./item-others/Others";
 import { useNavigate } from "react-router-dom";
-import LoginPopup from '../auth/login';
+import LoginPopup from "../auth/login";
 import UserProfileCard from "../../../components/customer/home/user-info/UserProfileCard";
-import jwtDecode from 'jwt-decode';
+import jwtDecode from "jwt-decode";
 
 const Header = () => {
   const [itemHover, setItemHover] = useState();
@@ -15,10 +15,15 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
+      const user = jwtDecode(token);
+      if (user.role !== "USER") {
+        localStorage.removeItem("token")
+        return;
+      }
       try {
-        setUser(jwtDecode(token));
+        setUser(user);
       } catch (e) {
         console.error(e);
       }
@@ -26,7 +31,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="pt-3 pb-2 z-50" >
+    <header className="pt-3 pb-2 z-50">
       <div className="mx-auto max-w-[1280px]">
         <nav className="flex justify-start justify-items-center items-center flex-row h-[94px]">
           <a className="mr-[20px] grow-0" href="/">
@@ -50,7 +55,6 @@ const Header = () => {
                   onMouseEnter={() => setItemHover(item)}
                   onMouseLeave={() => setItemHover()}
                   onClick={() => item.path && navigate(item.path)}
-
                 >
                   {item.name}
                   <div className="w-[14px] h-[14px]">
@@ -64,8 +68,8 @@ const Header = () => {
                   </div>
                   <div className="absolute w-[100%] h-[100%]  top-[100%]"></div>
                   {itemHover?.name !== "Phim" &&
-                    itemHover?.name !== "Rạp/Giá Vé" &&
-                    item === itemHover ? (
+                  itemHover?.name !== "Rạp/Giá Vé" &&
+                  item === itemHover ? (
                     <Others item={item} />
                   ) : null}
                   {itemHover?.name === "Phim" && item === itemHover ? (
@@ -84,34 +88,31 @@ const Header = () => {
               />
             </div>
 
-            {
-              user != null || user != undefined ? (
-                <UserProfileCard user={user} />
-              ) : (
-                <>
-                  <a
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setLoginPopUp(loginPopUp => !loginPopUp);
-                    }}
-                    className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)">
-                    Đăng Nhập
-                  </a>
+            {user != null || user != undefined ? (
+              <UserProfileCard user={user} />
+            ) : (
+              <>
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setLoginPopUp((loginPopUp) => !loginPopUp);
+                  }}
+                  className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)"
+                >
+                  Đăng Nhập
+                </a>
 
-                  <div className="px-[12px] ">
-                    <img
-                      className="w-[100px] cursor-pointer"
-                      src={IMAGES.joinMember}
-                    />
-                  </div>
-                </>
-              )
-            }
-
-
+                <div className="px-[12px] ">
+                  <img
+                    className="w-[100px] cursor-pointer"
+                    src={IMAGES.joinMember}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </nav>
-      </div >
+      </div>
       {loginPopUp && (
         <LoginPopup
           onClose={() => setLoginPopUp(false)}
@@ -121,10 +122,7 @@ const Header = () => {
           }}
         />
       )}
-    </header >
-
-
-
+    </header>
   );
 };
 
