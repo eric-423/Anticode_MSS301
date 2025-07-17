@@ -23,7 +23,6 @@ const SeatContainer = ({ showtimeDetail }) => {
   }, [showtimeDetail?.id]);
 
 
-
   const { selectedSeats, toggleSeat, isLoading } = useSeatSelection(showtimeDetail);
 
   return (

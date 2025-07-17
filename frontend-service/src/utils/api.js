@@ -105,3 +105,9 @@ export const checkStudentDiscount = (image) =>
 
 export const getHistoryBooking = (userId) =>
   api.get(`/booking-service/api/booking/customer/${userId}`);
+
+export const forgotPassword = (email) =>
+  api.post(`/account-service/api/users/forgot-password`, email);
+
+export const resetPassword = (token, newPassword) =>
+  api.post(`/account-service/api/users/reset-password`, { token, newPassword });

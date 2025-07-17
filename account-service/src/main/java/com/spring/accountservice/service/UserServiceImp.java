@@ -172,7 +172,7 @@ public class UserServiceImp implements UserService {
             throw new Exception("User not found with email: " + email);
         }
 
-        String token = UUID.randomUUID().toString();
+        String token = String.format("%06d", new Random().nextInt(999999));
         VerifyToken resetToken = new VerifyToken();
 
         for (VerifyToken existingToken : tokenRepository.findAll()) {
@@ -224,7 +224,7 @@ public class UserServiceImp implements UserService {
         try {
             List<Users> users = userRepository.findAll();
             List<UserDTO> result = new ArrayList<>();
-            for(Users user : users) {
+            for (Users user : users) {
                 UserDTO userDTO = new UserDTO();
                 userDTO.setId(user.getId());
                 userDTO.setFullName(user.getFullName());
@@ -251,10 +251,10 @@ public class UserServiceImp implements UserService {
         if (user == null) {
             throw new Exception("User not found");
         }
-        if(user.getRole().getName().equalsIgnoreCase("admin")) {
+        if (user.getRole().getName().equalsIgnoreCase("admin")) {
             throw new Exception("Cannot delete admin account");
         }
-        if(!user.isActive()){
+        if (!user.isActive()) {
             throw new Exception("User account is already deleted");
         }
         user.setActive(false);
@@ -267,7 +267,7 @@ public class UserServiceImp implements UserService {
         if (user == null) {
             throw new Exception("User not found");
         }
-        if(user.isActive()){
+        if (user.isActive()) {
             throw new Exception("User account is already active");
         }
         user.setActive(true);

@@ -74,19 +74,19 @@ const BookingFilmDetail = () => {
             if (response.data) {
                 const currentSeats = getSeatsByShowtime(parseInt(showtimeId));
                 console.log('Tất cả ghế đã chọn:', currentSeats);
-                
+
                 // Lọc bỏ ghế hàng cuối khỏi danh sách có thể áp dụng ưu đãi sinh viên
                 const availableSeatsForStudent = currentSeats.filter(seat => {
                     const totalRows = showtime?.cinemaHall?.hallType?.roll || 0;
                     const seatRow = seat.seatName.charCodeAt(0) - 65; // A=0, B=1, C=2, ...
                     const isLastRow = seatRow === totalRows - 1;
-                    
+
                     console.log(`Ghế ${seat.seatName}: hàng ${seatRow}, tổng hàng ${totalRows}, là hàng cuối: ${isLastRow}`);
                     return !isLastRow; // Loại bỏ hàng cuối
                 });
-                
+
                 console.log('Ghế có thể áp dụng ưu đãi sinh viên:', availableSeatsForStudent);
-                
+
                 if (availableSeatsForStudent.length > 0) {
                     setSelectedSeatsForStudent(availableSeatsForStudent);
                     setShowSeatSelectionModal(true);
@@ -97,9 +97,9 @@ const BookingFilmDetail = () => {
                         const seatRow = seat.seatName.charCodeAt(0) - 65;
                         return seatRow === totalRows - 1;
                     });
-                    
+
                     console.log('Ghế hàng cuối:', lastRowSeats);
-                    
+
                     if (lastRowSeats.length > 0 && currentSeats.length === lastRowSeats.length) {
                         alert('Ưu đãi sinh viên không áp dụng cho ghế hàng cuối. Vui lòng chọn thêm ghế khác để áp dụng ưu đãi.');
                     } else {
@@ -172,7 +172,6 @@ const BookingFilmDetail = () => {
 
     const calculateCurrentShowtimeTotal = () => {
         if (!showtimeId) return 0;
-
         const currentShowtimeSeats = getSeatsByShowtime(parseInt(showtimeId));
         return currentShowtimeSeats.reduce((total, seat) => total + (seat.price || 0), 0);
     };
