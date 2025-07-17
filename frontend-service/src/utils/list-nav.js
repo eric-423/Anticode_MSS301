@@ -11,16 +11,6 @@ const LIST_NAVIGATION = [
     ],
   },
   {
-    name: "Góc Điện Ảnh",
-    sub_items: [
-      { name: "Thể Loại Phim" },
-      { name: "Diễn Viên" },
-      { name: "Đạo Diễn" },
-      { name: "Bình Luận Phim" },
-      { name: "Blog Điện Ảnh" },
-    ],
-  },
-  {
     name: "Sự Kiện",
     sub_items: [
       { name: "Ưu Đãi" },

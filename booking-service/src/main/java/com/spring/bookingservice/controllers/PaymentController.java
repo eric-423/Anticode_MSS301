@@ -81,7 +81,7 @@ public class PaymentController {
                 paymentProducer.publishTransaction(transactionDTO);
             }
         }
-        return new RedirectView("http://localhost:5173/booking-success");
+        return new RedirectView("http://34.126.66.29/booking-success");
     }
 
     @GetMapping("/callback/cancel")
@@ -101,7 +101,7 @@ public class PaymentController {
                 paymentProducer.publishTransaction(transactionDTO);
             }
         }
-        return new RedirectView("http://localhost:5173/booking-fail");
+        return new RedirectView("http://34.126.66.29/booking-fail");
     }
 
 
