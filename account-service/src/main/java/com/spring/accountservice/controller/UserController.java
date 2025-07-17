@@ -4,9 +4,11 @@ package com.spring.accountservice.controller;
 import com.spring.accountservice.dto.*;
 import com.spring.accountservice.entity.Users;
 import com.spring.accountservice.entity.VerifyToken;
+import com.spring.accountservice.payload.ResponseData;
 import com.spring.accountservice.repository.UserRepository;
 import com.spring.accountservice.repository.VerifyTokenRepository;
 import com.spring.accountservice.service.Imp.UserService;
+import com.spring.accountservice.service.UserServiceImp;
 import com.spring.accountservice.utils.JwtTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -31,6 +35,8 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private UserServiceImp userServiceImp;
 
 
     @GetMapping("/validate")
@@ -113,6 +119,16 @@ public class UserController {
     @GetMapping("/list")
     public ResponseEntity<?> getListAccount() {
         return ResponseEntity.ok(userService.getListAccount());
+    }
+
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<?> getUserProfile(@PathVariable int userId) {
+        Users user = userRepository.findById(userId).orElse(null);
+        if (user == null) return ResponseEntity.badRequest().body("User not found");
+
+        ResponseData responseData = new ResponseData();
+        responseData.setData(userServiceImp.getUserInfo(userId));
+        return ResponseEntity.ok(responseData);
     }
 
     @PutMapping("/delete/{userId}")

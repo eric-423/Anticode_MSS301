@@ -4,6 +4,7 @@ package com.spring.accountservice.service;
 import com.spring.accountservice.dto.LoginRequest;
 import com.spring.accountservice.dto.RegisterRequest;
 import com.spring.accountservice.dto.UserDTO;
+import com.spring.accountservice.entity.MemberShip;
 import com.spring.accountservice.entity.Users;
 import com.spring.accountservice.entity.VerifyToken;
 import com.spring.accountservice.payload.ResponseData;
@@ -43,14 +44,15 @@ public class UserServiceImp implements UserService {
     @Autowired
     JavaMailSender mailSender;
 
+    @Autowired
+    MemberShipRepository memberShipRepository;
+
 
     @Autowired
     VerifyTokenRepository verifyTokenRepository;
 
-    @Autowired
-    private MemberShipRepository memberShipRepository;
 
-    @Value("http://localhost:5173")
+    @Value("http://34.126.66.29")
     String frontEndUrl;
 
 
@@ -113,9 +115,9 @@ public class UserServiceImp implements UserService {
         user.setEmail(registerRequest.getEmail());
         user.setPhoneNumber(registerRequest.getPhone());
         user.setRole(roleRepository.findByNameIgnoreCase("user"));
-        user.setMemberShip(memberShipRepository.findByNameIgnoreCase("vip"));
         user.setRoyalPoint(0);
         user.setCreatedAt(new Date());
+        user.setMemberShip(memberShipRepository.findByNameIgnoreCase("UNRANK"));
         user.setActive(true);
         userRepository.save(user);
         ResponseData responseData = new ResponseData();
@@ -273,4 +275,45 @@ public class UserServiceImp implements UserService {
         user.setActive(true);
         userRepository.save(user);
     }
+
+    @Override
+    public void increaseRoyalPoint(int userId, int point) throws Exception {
+        Users user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+        if (point <= 0) {
+            throw new Exception("Point must be greater than zero");
+        }
+
+        int pointAfterUpgrade = user.getRoyalPoint()+ point;
+
+        user.setRoyalPoint(pointAfterUpgrade);
+
+        if(pointAfterUpgrade>=0&&pointAfterUpgrade<=100){
+            user.setMemberShip(memberShipRepository.findByNameIgnoreCase("UNRANK"));
+        } else if(pointAfterUpgrade>100&&pointAfterUpgrade<=1000){
+            user.setMemberShip(memberShipRepository.findByNameIgnoreCase("GOLD"));
+        } else{
+            user.setMemberShip(memberShipRepository.findByNameIgnoreCase("PLATINUM"));
+        }
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public Map<String, Object> getUserInfo(int userId) {
+    Users user = userRepository.findById(userId).orElse(null);
+        Map<String, Object> data = new HashMap<>();
+    if (user != null) {
+        data.put("fullName", user.getFullName());
+        data.put("email", user.getEmail());
+        data.put("phone", user.getPhoneNumber());
+        data.put("royalPoint", user.getRoyalPoint());
+
+    }
+        return Map.of();
+    }
+
+
 }

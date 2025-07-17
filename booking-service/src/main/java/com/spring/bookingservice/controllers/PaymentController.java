@@ -21,6 +21,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import com.spring.bookingservice.dtos.UserPointEvent;
+import com.spring.bookingservice.kafka.UserPointProducer;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -37,6 +39,10 @@ public class PaymentController {
 
     @Autowired
     private PaymentProducer paymentProducer;
+
+    @Autowired
+    private UserPointProducer userPointProducer;
+
 
     @PostMapping("/create")
     public ResponseEntity<PaymentResponseDTO> createPayment(
@@ -69,6 +75,14 @@ public class PaymentController {
             if (booking != null) {
                 booking.setBookingStatus(BookingStatus.CONFIRMED);
                 bookingRepository.save(booking);
+
+                // Gửi event cộng điểm thành viên qua Kafka
+                int userId = booking.getUserID();
+                int point = (int) booking.getTotalPrice();
+                if (userId > 0 && point > 0) {
+                    UserPointEvent event = new UserPointEvent(userId, point, bookingId, booking.getTotalPrice(), java.time.LocalDateTime.now().toString());
+                    userPointProducer.sendUserPointEvent(event);
+                }
 
                 com.spring.bookingservice.dtos.TransactionDTO transactionDTO = new com.spring.bookingservice.dtos.TransactionDTO();
                 transactionDTO.setBookingId(bookingId);
