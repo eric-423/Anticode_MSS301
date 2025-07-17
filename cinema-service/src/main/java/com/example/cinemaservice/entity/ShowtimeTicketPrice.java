@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class ShowtimeTicketPrice {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "showtime_ticket_price_id")
     private int id;
 
