@@ -116,6 +116,7 @@ public class UserServiceImp implements UserService {
         user.setMemberShip(memberShipRepository.findByNameIgnoreCase("vip"));
         user.setRoyalPoint(0);
         user.setCreatedAt(new Date());
+        user.setActive(true);
         userRepository.save(user);
         ResponseData responseData = new ResponseData();
         responseData.setDesc("Dăng ký thành công, vui lòng kiểm tra email để xác minh tài khoản.");
@@ -230,6 +231,7 @@ public class UserServiceImp implements UserService {
                 userDTO.setEmail(user.getEmail());
                 userDTO.setPhoneNumber(user.getPhoneNumber());
                 userDTO.setRoleName(user.getRole().getName());
+                userDTO.setActive(user.isActive());
                 result.add(userDTO);
             }
             responseData.setData(result);

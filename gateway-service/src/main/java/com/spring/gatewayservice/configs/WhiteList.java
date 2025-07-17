@@ -22,6 +22,7 @@ public class WhiteList {
             "/swagger-ui/index.html",
             "/account-service/**",
             "/account-service/v3/api-docs",
-            "/dashboard/weekly-customer-registration"
+            "/dashboard/weekly-customer-registration",
+            "api/users/list"
     );
 }
