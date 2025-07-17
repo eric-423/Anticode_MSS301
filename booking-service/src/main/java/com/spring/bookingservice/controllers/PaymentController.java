@@ -76,9 +76,8 @@ public class PaymentController {
                 booking.setBookingStatus(BookingStatus.CONFIRMED);
                 bookingRepository.save(booking);
 
-                // Gửi event cộng điểm thành viên qua Kafka
                 int userId = booking.getUserID();
-                int point = (int) booking.getTotalPrice();
+                int point = (int) booking.getTotalPrice()/1000;
                 if (userId > 0 && point > 0) {
                     UserPointEvent event = new UserPointEvent(userId, point, bookingId, booking.getTotalPrice(), java.time.LocalDateTime.now().toString());
                     userPointProducer.sendUserPointEvent(event);
