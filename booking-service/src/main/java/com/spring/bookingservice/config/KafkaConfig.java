@@ -3,6 +3,7 @@ package com.spring.bookingservice.config;
 import com.spring.bookingservice.dtos.BookingDTO;
 import com.spring.bookingservice.dtos.TransactionDTO;
 import com.spring.bookingservice.dtos.PaymentStatusUpdateDTO;
+import com.spring.bookingservice.dtos.UserPointEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -115,5 +116,21 @@ public class KafkaConfig {
         ConcurrentKafkaListenerContainerFactory<String, PaymentStatusUpdateDTO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(paymentStatusUpdateConsumerFactory);
         return factory;
+    }
+
+    @Bean
+    public ProducerFactory<String, UserPointEvent> userPointProducerFactory(
+            @Value("${spring.kafka.bootstrap-servers:localhost:9092}") String bootstrapServers) {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
+
+    @Bean
+    public KafkaTemplate<String, UserPointEvent> userPointKafkaTemplate(
+            ProducerFactory<String, UserPointEvent> userPointProducerFactory) {
+        return new KafkaTemplate<>(userPointProducerFactory);
     }
 }

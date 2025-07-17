@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .pathMatchers("/booking-service/dashboard/*").hasAuthority("MANAGER")
                         .pathMatchers("/transaction-service/dashboard/*").hasAuthority("MANAGER")
                         .pathMatchers("/account-service/dashboard/*").hasAuthority("MANAGER")
+                        .pathMatchers("/account-service/api/users/profile/**").hasAnyAuthority("USER","ADMIN","MANAGER")
                         .pathMatchers("/booking-service/ai/vertex/**").hasAnyAuthority("USER", "ADMIN", "MANAGER")
                         .pathMatchers(HttpMethod.POST, "/booking-service/api/booking/").hasAnyAuthority("USER")
                         .pathMatchers(HttpMethod.GET, "/booking-service/api/booking/customer/**").hasAnyAuthority("USER", "ADMIN", "MANAGER")
