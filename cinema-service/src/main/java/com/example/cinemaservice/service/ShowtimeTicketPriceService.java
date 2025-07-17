@@ -47,10 +47,10 @@ public class ShowtimeTicketPriceService implements ShowtimeTicketPriceServiceImp
     }
 
     @Override
-    public ShowtimeTicketPriceDTO getByShowTimeIdAndTicketType(int  showTimeId, int ticketTypeId) {
+    public ShowtimeTicketPriceDTO getByShowTimeIdAndTicketType(int showTimeId, int ticketTypeId) {
 
 
-        ShowtimeTicketPrice showtimeTicketPrice = repository.findByShowtime_IdAndTicketType_Id(showTimeId,ticketTypeId);
+        ShowtimeTicketPrice showtimeTicketPrice = repository.findByShowtime_IdAndTicketType_Id(showTimeId, ticketTypeId);
         ShowtimeTicketPriceDTO showtimeTicketPriceDTO = new ShowtimeTicketPriceDTO();
         showtimeTicketPriceDTO.setId(showtimeTicketPrice.getId());
         showtimeTicketPriceDTO.setTicketPrice(showtimeTicketPrice.getTicketPrice());

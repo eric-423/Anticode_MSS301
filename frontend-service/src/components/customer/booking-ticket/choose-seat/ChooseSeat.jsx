@@ -21,6 +21,7 @@ const ChooseSeat = ({ movieId, showtimeId }) => {
 
   useEffect(() => {
     if (!currentShowtimeId) return;
+
     getShowtimeById(currentShowtimeId)
       .then((res) => {
         const detail = res.data.data;
