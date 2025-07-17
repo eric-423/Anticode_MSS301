@@ -1,34 +1,45 @@
-import React, { useState, useEffect } from "react";
-import IMAGES from "../../../utils/images";
-import LIST_NAVIGATION from "../../../utils/list-nav";
-import Film from "./item-film/Film";
-import Others from "./item-others/Others";
-import { useNavigate } from "react-router-dom";
-import LoginPopup from "../auth/login";
-import UserProfileCard from "../../../components/customer/home/user-info/UserProfileCard";
-import jwtDecode from "jwt-decode";
+import React, { useState, useEffect } from 'react'
+import IMAGES from '../../../utils/images'
+import LIST_NAVIGATION from '../../../utils/list-nav'
+import Film from './item-film/Film'
+import Others from './item-others/Others'
+import { useNavigate } from 'react-router-dom'
+import LoginPopup from '../auth/login'
+import UserProfileCard from '../../../components/customer/home/user-info/UserProfileCard'
+import jwtDecode from 'jwt-decode'
 
 const Header = () => {
-  const [itemHover, setItemHover] = useState();
-  const [loginPopUp, setLoginPopUp] = useState(false);
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [itemHover, setItemHover] = useState()
+  const [loginPopUp, setLoginPopUp] = useState(false)
+  const [user, setUser] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
     if (token) {
-      const user = jwtDecode(token);
-      if (user.role !== "USER") {
-        localStorage.removeItem("token")
-        return;
-      }
       try {
-        setUser(user);
+        const user = jwtDecode(token)
+        // Kiểm tra hết hạn token
+        if (user.exp && Date.now() >= user.exp * 1000) {
+          localStorage.removeItem('token')
+          setUser(null)
+          return
+        }
+        if (user.role !== 'USER') {
+          localStorage.removeItem('token')
+          setUser(null)
+          return
+        }
+        setUser(user)
       } catch (e) {
-        console.error(e);
+        localStorage.removeItem('token')
+        setUser(null)
+        console.error(e)
       }
+    } else {
+      setUser(null)
     }
-  }, []);
+  }, [])
 
   return (
     <header className="pt-3 pb-2 z-50">
@@ -67,12 +78,12 @@ const Header = () => {
                     />
                   </div>
                   <div className="absolute w-[100%] h-[100%]  top-[100%]"></div>
-                  {itemHover?.name !== "Phim" &&
-                  itemHover?.name !== "Rạp/Giá Vé" &&
+                  {itemHover?.name !== 'Phim' &&
+                  itemHover?.name !== 'Rạp/Giá Vé' &&
                   item === itemHover ? (
                     <Others item={item} />
                   ) : null}
-                  {itemHover?.name === "Phim" && item === itemHover ? (
+                  {itemHover?.name === 'Phim' && item === itemHover ? (
                     <Film />
                   ) : null}
                 </li>
@@ -94,8 +105,8 @@ const Header = () => {
               <>
                 <a
                   onClick={(e) => {
-                    e.preventDefault();
-                    setLoginPopUp((loginPopUp) => !loginPopUp);
+                    e.preventDefault()
+                    setLoginPopUp((loginPopUp) => !loginPopUp)
                   }}
                   className="text-[14px] font-nunito-sans text-[#777777] cursor-pointer hover:text-(--color-elevated-hover-button)"
                 >
@@ -117,13 +128,13 @@ const Header = () => {
         <LoginPopup
           onClose={() => setLoginPopUp(false)}
           onLoginSuccess={(user) => {
-            setUser(user);
-            setLoginPopUp(false);
+            setUser(user)
+            setLoginPopUp(false)
           }}
         />
       )}
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

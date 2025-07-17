@@ -1,29 +1,36 @@
-import jwtDecode from "jwt-decode";
-import { User, Film, Video, ShoppingBag, BarChart2 } from "lucide-react";
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import jwtDecode from 'jwt-decode'
+import { User, Film, Video, ShoppingBag, BarChart2 } from 'lucide-react'
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const SideBar = ({ activeView, setActiveView }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const navItems = [
-    { id: "dashboard", icon: BarChart2, label: "Tổng quan" },
-    { id: "movies", icon: Film, label: "Quản lý Phim" },
-    { id: "products", icon: ShoppingBag, label: "Quản lý Sản phẩm" },
-  ];
+    { id: 'dashboard', icon: BarChart2, label: 'Tổng quan' },
+    { id: 'movies', icon: Film, label: 'Quản lý Phim' },
+    { id: 'products', icon: ShoppingBag, label: 'Quản lý Sản phẩm' },
+  ]
 
   const handleLogout = () => {
     try {
-      localStorage.removeItem("token");
+      localStorage.removeItem('token')
     } catch (error) {
     } finally {
-      navigate("/");
+      navigate('/')
     }
-  };
+  }
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token || jwtDecode(token).role !== "MANAGER") handleLogout();
-  }, []);
+    const token = localStorage.getItem('token')
+    if (!token) return handleLogout()
+    try {
+      const decoded = jwtDecode(token)
+      if (decoded.exp && Date.now() >= decoded.exp * 1000) return handleLogout()
+      if (decoded.role !== 'MANAGER') return handleLogout()
+    } catch {
+      return handleLogout()
+    }
+  }, [])
 
   return (
     <div className="w-60 bg-gray-900 text-white flex flex-col min-h-screen">
@@ -43,8 +50,8 @@ const SideBar = ({ activeView, setActiveView }) => {
             <li
               className={`py-1 ${
                 activeView === item.id
-                  ? "bg-red-600 text-white"
-                  : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                  ? 'bg-red-600 text-white'
+                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
               }`}
               key={item.id}
             >
@@ -52,8 +59,8 @@ const SideBar = ({ activeView, setActiveView }) => {
                 onClick={() => setActiveView(item.id)}
                 className={`w-full flex items-center px-2 py-2 text-left rounded-lg transition-colors duration-200 ${
                   activeView === item.id
-                    ? "bg-red-600 text-white"
-                    : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                    ? 'bg-red-600 text-white'
+                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
                 }`}
               >
                 <item.icon className="h-4 w-4 mr-2" />
@@ -79,6 +86,6 @@ const SideBar = ({ activeView, setActiveView }) => {
         </button>
       </div>
     </div>
-  );
-};
-export default SideBar;
+  )
+}
+export default SideBar

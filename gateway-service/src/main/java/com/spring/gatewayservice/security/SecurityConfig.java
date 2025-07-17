@@ -2,6 +2,7 @@ package com.spring.gatewayservice.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -35,6 +36,13 @@ public class SecurityConfig {
                         .pathMatchers("/booking-service/dashboard/*").hasAuthority("MANAGER")
                         .pathMatchers("/transaction-service/dashboard/*").hasAuthority("MANAGER")
                         .pathMatchers("/account-service/dashboard/*").hasAuthority("MANAGER")
+                        .pathMatchers("/booking-service/ai/vertex/**").hasAnyAuthority("CUSTOMER","ADMIN","MANAGER")
+                        .pathMatchers(HttpMethod.POST,"/booking-service/api/booking/").hasAnyAuthority("CUSTOMER")
+                        .pathMatchers(HttpMethod.GET,"/booking-service/api/booking/customer/**").hasAnyAuthority("CUSTOMER","ADMIN","MANAGER")
+                        .pathMatchers("/booking-service/api/payment/**").hasAnyAuthority("CUSTOMER","ADMIN","MANAGER")
+                        .pathMatchers("/booking-service/ticket/**").hasAnyAuthority("ADMIN","MANAGER", "CUSTOMER")
+                        .pathMatchers("/transaction-service/api/payment-status/**").hasAnyAuthority("ADMIN","MANAGER", "CUSTOMER")
+                        .pathMatchers("/transaction-service/**").hasAnyAuthority("ADMIN","MANAGER", "CUSTOMER")
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
