@@ -6,7 +6,7 @@ export default function DifyChatbot() {
     const configScript = document.createElement('script')
     configScript.innerHTML = `
       window.difyChatbotConfig = {
-        token: '5zqS5wV8RvQSNxJ1',
+        token: 'aYP6kvi76NFkOHo6',
         systemVariables: {},
         userVariables: {},
       }
