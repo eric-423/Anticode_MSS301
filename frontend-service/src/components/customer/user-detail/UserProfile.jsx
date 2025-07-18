@@ -1,5 +1,5 @@
 const membershipLevels = [
-  { name: 'UNRANK', value: 1, icon: '🥇' },
+  { name: '', value: 1, icon: '🥇' },
   { name: 'GOLD', value: 100, icon: '⭐' },
   { name: 'PLATINUM', value: 1000, icon: '🏆' },
 ]
@@ -87,7 +87,10 @@ const UserProfile = ({ user }) => {
                 textAlign: 'center',
               }}
             >
-              {m.value.toLocaleString()} điểm
+              {
+                m.value > 1 ? m.value.toLocaleString() + " điểm" : ''
+              }
+
             </div>
             <div
               style={{

@@ -100,8 +100,12 @@ export const createPayment = (bookingId, payment) =>
 export const getSeatsByShowtime = (showtimeId) =>
   api.get(`/booking-service/showtimes/${showtimeId}/seats/unavailable`);
 
-export const checkStudentDiscount = (image) =>
-  api.post(`/booking-service/ai/vertex/check-image`, image);
+export const checkStudentDiscount = (formData) =>
+  api.post('/booking-service/ai/vertex/check-image', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 
 export const getHistoryBooking = (userId) =>
   api.get(`/booking-service/api/booking/customer/${userId}`);
