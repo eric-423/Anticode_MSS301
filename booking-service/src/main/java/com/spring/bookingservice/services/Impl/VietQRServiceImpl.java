@@ -51,11 +51,6 @@ public class VietQRServiceImpl implements VietQRService {
                 .returnUrl(returnUrl)
                 .cancelUrl(cancelUrl)
                 .build();
-            int now = (int) (System.currentTimeMillis() / 1000L);
-
-            int expiredAt = now + 300;
-
-            paymentData.setExpiredAt(expiredAt);
             CheckoutResponseData data = payOS.createPaymentLink(paymentData);
 
             response.setPaymentUrl(data.getCheckoutUrl());
