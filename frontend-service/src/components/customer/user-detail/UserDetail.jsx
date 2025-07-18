@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import './UserDetail.css'
 import PropTypes from 'prop-types'
 
 const UserIcon = () => (
@@ -121,6 +123,7 @@ async function getUserProfile(userId) {
 export default function UserDetail({ userData }) {
   const [userProfile, setUserProfile] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [selectedDate, setSelectedDate] = useState(null)
 
   useEffect(() => {
     let userId = null
@@ -133,6 +136,12 @@ export default function UserDetail({ userData }) {
       getUserProfile(userId).then(setUserProfile).catch(console.error)
     } else {
       console.warn('No userId found for profile fetch')
+    }
+  }, [userData])
+
+  useEffect(() => {
+    if (userData?.dateOfBirth) {
+      setSelectedDate(new Date(userData.dateOfBirth))
     }
   }, [userData])
 
@@ -161,7 +170,7 @@ export default function UserDetail({ userData }) {
                 type="text"
                 id="fullName"
                 name="fullName"
-                defaultValue={userProfile?.fullName}
+                defaultValue={userData?.username}
                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
               />
             </div>
@@ -177,12 +186,19 @@ export default function UserDetail({ userData }) {
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <CalendarIcon />
               </div>
-              <input
-                type="text"
-                id="birthDate"
-                name="birthDate"
-                defaultValue={userProfile?.dateOfBirth?.substring(0, 10)}
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => {
+                  setSelectedDate(date)
+                  setUserProfile(prev => ({ ...prev, dateOfBirth: date.toISOString().substring(0, 10) }))
+                }}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Chọn ngày sinh"
                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
+                showYearDropdown
+                scrollableYearDropdown
+                yearDropdownItemNumber={15}
+                maxDate={new Date()}
               />
             </div>
           </div>
@@ -201,7 +217,7 @@ export default function UserDetail({ userData }) {
                 type="email"
                 id="email"
                 name="email"
-                defaultValue={userProfile?.email}
+                defaultValue={userData?.email}
                 className="w-full pl-10 pr-24 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
                 readOnly
               />
@@ -228,7 +244,7 @@ export default function UserDetail({ userData }) {
                 type="tel"
                 id="phone"
                 name="phone"
-                defaultValue={userProfile?.phone}
+                defaultValue={userData?.phone}
                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
               />
             </div>
@@ -248,7 +264,7 @@ export default function UserDetail({ userData }) {
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 name="password"
-                defaultValue={userProfile?.password}
+                defaultValue={userData?.password}
                 className="w-full pl-10 pr-12 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
               />
               <button

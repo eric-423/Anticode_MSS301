@@ -25,6 +25,7 @@ const UserInfoPage = () => {
           return
         }
         setUser(decodeUser)
+
       } catch {
         localStorage.removeItem('token')
         setUser(null)
