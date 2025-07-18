@@ -286,15 +286,15 @@ public class UserServiceImp implements UserService {
             throw new Exception("Point must be greater than zero");
         }
 
-        int pointAfterUpgrade = user.getRoyalPoint()+ point;
+        int pointAfterUpgrade = user.getRoyalPoint() + point;
 
         user.setRoyalPoint(pointAfterUpgrade);
 
-        if(pointAfterUpgrade>=0&&pointAfterUpgrade<=100){
+        if (pointAfterUpgrade >= 0 && pointAfterUpgrade <= 100) {
             user.setMemberShip(memberShipRepository.findByNameIgnoreCase("UNRANK"));
-        } else if(pointAfterUpgrade>100&&pointAfterUpgrade<=1000){
+        } else if (pointAfterUpgrade > 100 && pointAfterUpgrade <= 1000) {
             user.setMemberShip(memberShipRepository.findByNameIgnoreCase("GOLD"));
-        } else{
+        } else {
             user.setMemberShip(memberShipRepository.findByNameIgnoreCase("PLATINUM"));
         }
 
@@ -303,16 +303,16 @@ public class UserServiceImp implements UserService {
 
     @Override
     public Map<String, Object> getUserInfo(int userId) {
-    Users user = userRepository.findById(userId).orElse(null);
+        Users user = userRepository.findById(userId).orElse(null);
         Map<String, Object> data = new HashMap<>();
-    if (user != null) {
-        data.put("fullName", user.getFullName());
-        data.put("email", user.getEmail());
-        data.put("phone", user.getPhoneNumber());
-        data.put("royalPoint", user.getRoyalPoint());
+        if (user != null) {
+            data.put("fullName", user.getFullName());
+            data.put("email", user.getEmail());
+            data.put("phone", user.getPhoneNumber());
+            data.put("royalPoint", user.getRoyalPoint());
 
-    }
-        return Map.of();
+        }
+        return data;
     }
 
 
