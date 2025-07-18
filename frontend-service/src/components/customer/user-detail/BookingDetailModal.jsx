@@ -1,63 +1,76 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
+import QRCode from 'react-qr-code'
 
 const BookingDetailModal = ({ booking, isOpen, onClose }) => {
-  if (!isOpen || !booking) return null;
+  if (!isOpen || !booking) return null
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString)
     return date.toLocaleDateString('vi-VN', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric'
-    });
-  };
+      year: 'numeric',
+    })
+  }
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
-      currency: 'VND'
-    }).format(price);
-  };
+      currency: 'VND',
+    }).format(price)
+  }
 
   const getStatusColor = (status) => {
     switch (status) {
       case 'PENDING':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800'
       case 'CONFIRMED':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800'
       case 'CANCELLED':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800'
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   const getStatusText = (status) => {
     switch (status) {
       case 'PENDING':
-        return 'Đang chờ';
+        return 'Đang chờ'
       case 'CONFIRMED':
-        return 'Đã hoàn thành';
+        return 'Đã hoàn thành'
       case 'CANCELLED':
-        return 'Đã hủy';
+        return 'Đã hủy'
       default:
-        return 'Không xác định';
+        return 'Không xác định'
     }
-  };
+  }
 
   return (
     <div className="fixed inset-0 bg-[#00000080] bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Chi tiết đặt vé</h2>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Chi tiết đặt vé
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -72,7 +85,7 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
                 alt={booking.movieName}
                 className="w-full h-full object-cover rounded-lg"
                 onError={(e) => {
-                  e.target.src = '/src/assets/glx.png';
+                  e.target.src = '/src/assets/glx.png'
                 }}
               />
             </div>
@@ -85,19 +98,29 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center">
                   <span className="text-gray-500 w-24">Rạp:</span>
-                  <span className="font-medium">Galaxy Cinema - NhA Van Hoa</span>
+                  <span className="font-medium">
+                    Galaxy Cinema - NhA Van Hoa
+                  </span>
                 </div>
                 <div className="flex items-center">
                   <span className="text-gray-500 w-24">Ngày xem:</span>
-                  <span className="font-medium">{formatDate(booking.bookingDate)}</span>
+                  <span className="font-medium">
+                    {formatDate(booking.bookingDate)}
+                  </span>
                 </div>
                 <div className="flex items-center">
                   <span className="text-gray-500 w-24">Giờ chiếu:</span>
-                  <span className="font-medium">{booking.showTime.substring(11, 16)}</span>
+                  <span className="font-medium">
+                    {booking.showTime.substring(11, 16)}
+                  </span>
                 </div>
                 <div className="flex items-center">
                   <span className="text-gray-500 w-24">Trạng thái:</span>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(booking.bookingStatus)}`}>
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+                      booking.bookingStatus
+                    )}`}
+                  >
                     {getStatusText(booking.bookingStatus)}
                   </span>
                 </div>
@@ -107,19 +130,27 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
 
           {/* Booking Details */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <h4 className="font-semibold text-gray-900 mb-3">Thông tin đặt vé</h4>
+            <h4 className="font-semibold text-gray-900 mb-3">
+              Thông tin đặt vé
+            </h4>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-gray-500">Ngày đặt vé:</span>
-                <p className="font-medium text-gray-900">{formatDate(booking.bookingDate)}</p>
+                <p className="font-medium text-gray-900">
+                  {formatDate(booking.bookingDate)}
+                </p>
               </div>
               <div>
                 <span className="text-gray-500">Ghế:</span>
-                <p className="font-medium text-gray-900">{booking.seatNumbers.join(', ')}</p>
+                <p className="font-medium text-gray-900">
+                  {booking.seatNumbers.join(', ')}
+                </p>
               </div>
               <div>
                 <span className="text-gray-500">Tổng tiền:</span>
-                <p className="font-medium text-orange-600 text-lg">{formatPrice(booking.totalPrice)}</p>
+                <p className="font-medium text-orange-600 text-lg">
+                  {formatPrice(booking.totalPrice)}
+                </p>
               </div>
             </div>
           </div>
@@ -138,6 +169,24 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
               </ul>
             </div>
           </div>
+
+          {/* QR Code Section */}
+          {booking.bookingStatus === 'CONFIRMED' && (
+            <div className="flex flex-col items-center mt-8 mb-2">
+              <QRCode
+                value={String(
+                  booking.bookingId || booking.id || booking.bookingCode
+                )}
+                size={128}
+              />
+              <div className="mt-2 text-xs text-gray-500 text-center">
+                Mã QR chứa ID vé:{' '}
+                <span className="font-semibold text-gray-700">
+                  {booking.bookingId || booking.id || booking.bookingCode}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
@@ -156,8 +205,8 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 BookingDetailModal.propTypes = {
   booking: PropTypes.shape({
@@ -171,10 +220,10 @@ BookingDetailModal.propTypes = {
     totalPrice: PropTypes.number.isRequired,
     status: PropTypes.oneOf(['completed', 'upcoming', 'cancelled']).isRequired,
     poster: PropTypes.string.isRequired,
-    bookingDate: PropTypes.string.isRequired
+    bookingDate: PropTypes.string.isRequired,
   }),
   isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired
-};
+  onClose: PropTypes.func.isRequired,
+}
 
-export default BookingDetailModal; 
+export default BookingDetailModal
