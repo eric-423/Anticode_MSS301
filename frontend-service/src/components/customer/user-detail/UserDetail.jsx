@@ -106,7 +106,7 @@ async function getUserProfile(userId) {
   console.log('Fetching profile for userId:', userId)
   const token = localStorage.getItem('token')
   const res = await fetch(
-    `http://35.247.155.58:8080/api/users/profile/${userId}`,
+    `http://35.247.155.58:8080/account-service/api/users/profile/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
