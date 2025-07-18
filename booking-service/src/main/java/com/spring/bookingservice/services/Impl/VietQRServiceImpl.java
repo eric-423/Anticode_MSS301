@@ -52,6 +52,7 @@ public class VietQRServiceImpl implements VietQRService {
                 .cancelUrl(cancelUrl)
                 .build();
 
+            paymentData.setExpiredAt(5);
             CheckoutResponseData data = payOS.createPaymentLink(paymentData);
 
             response.setPaymentUrl(data.getCheckoutUrl());
