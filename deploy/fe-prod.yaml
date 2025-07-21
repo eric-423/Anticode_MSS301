@@ -7,4 +7,4 @@ metadata:
 description: fe
 #requireApproval: true
 gke:
-  cluster: projects/mss301-464710/locations/asia-southeast1/clusters/mss301-cluster-fe
+  cluster: projects/central-rampart-464708-t8/locations/asia-southeast1/clusters/mss301-cluster-fe
