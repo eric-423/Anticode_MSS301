@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: account-service-container
-          image: asia-southeast1-docker.pkg.dev/mss301-464710/mss301-repository/account-service:prod
+          image: asia-southeast1-docker.pkg.dev/central-rampart-464708-t8/mss301-repository/account-service:prod
           imagePullPolicy: Always
           ports:
             - containerPort: 8084
