@@ -1,6 +1,7 @@
 package com.spring.accountservice.service;
 
 import com.spring.accountservice.dto.CustomerNewDTO;
+import com.spring.accountservice.entity.Users;
 import com.spring.accountservice.repository.UserRepository;
 import com.spring.accountservice.service.Imp.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,4 +31,10 @@ public class DashboardServiceImp implements DashboardService {
         customerNewDTO.setNumber(userRepository.countByRegistrationDateBetween(startOfWeek,endOfWeek));
         return customerNewDTO;
     }
+
+    @Override
+    public String getEmailByUserId(int userId) {
+        return userRepository.getUsersById(userId).getEmail();
+    }
+
 }

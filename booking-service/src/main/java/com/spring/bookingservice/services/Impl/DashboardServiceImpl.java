@@ -2,7 +2,6 @@ package com.spring.bookingservice.services.Impl;
 
 import com.spring.bookingservice.dtos.*;
 import com.spring.bookingservice.pojos.Booking;
-import com.spring.bookingservice.pojos.BookingConcession;
 import com.spring.bookingservice.pojos.Ticket;
 import com.spring.bookingservice.repositories.BookingConcessionRepository;
 import com.spring.bookingservice.repositories.BookingRepository;
@@ -10,7 +9,11 @@ import com.spring.bookingservice.repositories.TicketRepository;
 import com.spring.bookingservice.services.ConcessionProductService;
 import com.spring.bookingservice.services.DashboardService;
 import com.spring.bookingservice.services.MovieService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -43,6 +46,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Autowired
     private MovieService movieService;
+
 
     @Override
     public TicketSoldDTO getDailyTicketsSold(Date date) {
@@ -115,6 +119,13 @@ public class DashboardServiceImpl implements DashboardService {
                 .toList();
     }
 
+    @Override
+    public List<BookingDTO> getOrderHistory(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Booking> bookings = bookingRepository.findAll(pageable);
+        return bookings.stream().map(this::convertBookingToBookingDTO).collect(Collectors.toList());
+    }
+
     private double getRevenueProductByMonth(LocalDate firstDayOfMonth, LocalDate lastDayOfMonth) {
         LocalDateTime startOfDayFirstMonth = firstDayOfMonth.atStartOfDay();
         LocalDateTime endOfDayLastMonth = lastDayOfMonth.atTime(LocalTime.MAX);
@@ -146,6 +157,30 @@ public class DashboardServiceImpl implements DashboardService {
                       Ticket::getPrice
                 )
                 .sum();
+    }
+
+
+    private BookingDTO convertBookingToBookingDTO(Booking bookingReturn) {
+        BookingDTO bookingDTOReturn = new BookingDTO();
+        BeanUtils.copyProperties(bookingReturn, bookingDTOReturn);
+        List<BookingConcessionDTO> bookingConcessionDTOSReturn = new ArrayList<>();
+        bookingReturn.getBookingConcessionList().forEach(bookingConcessionDTO -> {
+            BookingConcessionDTO bookingConcessionDTOReturn = new BookingConcessionDTO();
+            BeanUtils.copyProperties(bookingConcessionDTO, bookingConcessionDTOReturn);
+            bookingConcessionDTOReturn.setConcessionName(concessionProductService.getConcessionProductById(bookingConcessionDTO.getConcessionProductID()).getName());
+            bookingConcessionDTOSReturn.add(bookingConcessionDTOReturn);
+        });
+        List<TicketDTO> ticketDTOsReturn = new ArrayList<>();
+        bookingReturn.getBookingSeatList().forEach(bookingSeatDTO -> {
+            TicketDTO ticketDTO = new TicketDTO();
+            BeanUtils.copyProperties(bookingSeatDTO, ticketDTO);
+            ticketDTOsReturn.add(ticketDTO);
+        });
+        bookingDTOReturn.setFilm(movieService.getMovieByShowtimeID(bookingReturn.getBookingSeatList().getFirst().getShowtime()).getSynopsis());
+
+        bookingDTOReturn.setBookingSeatList(ticketDTOsReturn);
+        bookingDTOReturn.setBookingConcessionList(bookingConcessionDTOSReturn);
+        return bookingDTOReturn;
     }
 
 

@@ -11,4 +11,5 @@ public interface DashboardService {
     List<TicketRevenueDTO> getMonthlyTicketRevenue(Date date);
     List<ProductRevenueDTO> getMonthlyProductRevenue(Date date);
     List<MovieRevenueDTO> getMovieRevenueTop();
+    List<BookingDTO> getOrderHistory(int page, int size);
 }

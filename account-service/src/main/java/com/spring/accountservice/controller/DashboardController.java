@@ -24,4 +24,9 @@ public class DashboardController {
     public ResponseEntity<CustomerNewDTO> getWeeklyCustomerRegistration(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return new ResponseEntity<>(dashboardService.getWeeklyCustomerRegister(date), HttpStatus.OK);
     }
+
+    @GetMapping("/get-email-by-user-id")
+    public ResponseEntity<String> getEmailByUserId(@RequestParam int userId) {
+        return new ResponseEntity<>(dashboardService.getEmailByUserId(userId), HttpStatus.OK);
+    }
 }

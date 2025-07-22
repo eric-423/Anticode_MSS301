@@ -8,6 +8,12 @@ const api = axios.create({
   },
 });
 
+export const getOrderHistory = (page, size) => 
+  api.get(`/booking-service/dashboard/order-history?page=${page}&size=${size}`)
+
+export const getEmailByUserId = (userId) => 
+  api.get(`/account-service/dashboard/get-email-by-user-id`)
+
 export const getDailyRevenue = (date) =>
   api.get(`/transaction-service/dashboard/daily-revenue?date=${date}`);
 

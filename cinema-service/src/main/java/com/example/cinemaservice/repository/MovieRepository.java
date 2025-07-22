@@ -16,4 +16,5 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     Movie findByShowtimeList_Id(int id);
 
 
+    Movie getMovieById(int id);
 }

@@ -21,4 +21,6 @@ public interface MovieServiceImp {
     public void delete(Integer id);
 
     MovieDTO getByTicketId(Integer ticketId);
+
+    public MovieDTO getMovieByShowtimeID(int showtimeID);
 }
