@@ -6,5 +6,6 @@ import lombok.Data;
 public class BookingConcessionDTO {
     private int id;
     private int quantity;
+    private String concessionName;
     private int concessionProductID;
 }

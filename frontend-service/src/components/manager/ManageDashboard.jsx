@@ -5,6 +5,8 @@ import Dashboard from "./Dashboard";
 import Movies from "./Movies";
 import Cinemas from "./Cinemas";
 import Products from "./Products";
+import OrderHistory from "./OrderHistory";
+import TransactionHistory from "./TransactionHistory";
 
 const ManageDashboard = () => {
     const [activeView, setActiveView] = useState('dashboard');
@@ -19,6 +21,10 @@ const ManageDashboard = () => {
                 return <Cinemas />;
             case 'products':
                 return <Products />;
+            case 'order-history':
+                return <OrderHistory />
+            case 'transaction-history':
+                return <TransactionHistory />;
             default:
                 return <Dashboard />;
         }
@@ -30,6 +36,8 @@ const ManageDashboard = () => {
             case 'movies': return 'Quản lý Phim';
             case 'cinemas': return 'Quản lý Rạp';
             case 'products': return 'Quản lý Sản phẩm';
+            case 'order-history': return 'Lịch Sử Đặt Vé'
+            case 'transaction-history': return 'Lịch Sử Thanh Toán'
             default: return 'Tổng quan';
         }
     }

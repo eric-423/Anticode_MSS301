@@ -16,4 +16,7 @@ public interface MovieService {
 
     @GetMapping("movies/get/{ticketId}")
     public MovieDTO getMovieByTicket(@PathVariable("ticketId") Integer ticketId);
+
+    @GetMapping("/movies/get-movie-by-showtime-id/{showtimeID}")
+    public MovieDTO getMovieByShowtimeID(@PathVariable("showtimeID") int showtimeID);
 }
