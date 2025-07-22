@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
 
     @Query("SELECT COUNT(u) FROM Users u WHERE u.createdAt >= :startDate AND u.createdAt < :endDate")
     Integer countByRegistrationDateBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    Users getUsersById(int id);
 }

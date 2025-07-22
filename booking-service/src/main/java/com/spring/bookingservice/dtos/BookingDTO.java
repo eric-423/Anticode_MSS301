@@ -13,6 +13,7 @@ public class BookingDTO {
     private double totalPrice;
     private BookingStatus bookingStatus;
     private Date bookDate;
+    private String film;
     private int transactionID;
     private int userID;
     private List<BookingConcessionDTO> bookingConcessionList;

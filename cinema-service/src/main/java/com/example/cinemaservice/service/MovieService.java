@@ -6,9 +6,12 @@ import com.example.cinemaservice.dtos.MovieDTO;
 import com.example.cinemaservice.entity.FilmPersonel;
 import com.example.cinemaservice.entity.Genres;
 import com.example.cinemaservice.entity.Movie;
+import com.example.cinemaservice.entity.Showtime;
 import com.example.cinemaservice.entity.enums.MovieStatus;
 import com.example.cinemaservice.repository.MovieRepository;
+import com.example.cinemaservice.repository.ShowtimeRepository;
 import com.example.cinemaservice.service.Imp.MovieServiceImp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,9 @@ import java.util.List;
 @Service
 public class MovieService implements MovieServiceImp {
     private final MovieRepository repository;
+
+    @Autowired
+    private ShowtimeRepository showtimeRepository;
 
     public MovieService(MovieRepository repository) {
         this.repository = repository;
@@ -132,5 +138,12 @@ public class MovieService implements MovieServiceImp {
     Movie movie = repository.findByShowtimeList_Id(bookingId);
 
     return convertToDTO(movie);
+    }
+
+    @Override
+    public MovieDTO getMovieByShowtimeID(int showtimeID) {
+        Showtime showtime = showtimeRepository.getShowtimesById(showtimeID);
+        Movie movie = repository.getMovieById(showtime.getMovie().getId());
+        return movie == null ? null : convertToDTO(movie);
     }
 }

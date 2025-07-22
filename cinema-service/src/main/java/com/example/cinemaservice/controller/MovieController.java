@@ -38,6 +38,11 @@ public class MovieController {
         return ResponseEntity.ok(responseData);
     }
 
+    @GetMapping("/get-movie-by-showtime-id/{showtimeID}")
+    public ResponseEntity<MovieDTO> getMovieByShowtimeID(@PathVariable("showtimeID") int showtimeID){
+        return new ResponseEntity<>(movieServiceImp.getMovieByShowtimeID(showtimeID), HttpStatus.OK);
+    }
+
     @GetMapping("/get/{ticketId}")
     public ResponseEntity<MovieDTO> getMovieByTicket(@PathVariable("ticketId") Integer ticketId) {
         return ResponseEntity.ok(movieServiceImp.getByTicketId(ticketId));

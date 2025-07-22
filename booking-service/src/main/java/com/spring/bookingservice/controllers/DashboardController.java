@@ -21,6 +21,12 @@ public class DashboardController {
     @Autowired
     private DashboardService dashboardService;
 
+    @GetMapping("/order-history")
+    public ResponseEntity<List<BookingDTO>> getOrderHistory(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size){
+        return new ResponseEntity<>(dashboardService.getOrderHistory(page,size), HttpStatus.OK);
+    }
+
     @GetMapping("/daily-tickets-sold")
     public ResponseEntity<TicketSoldDTO> getDailyTicketsSold(@RequestParam  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return new ResponseEntity<>(dashboardService.getDailyTicketsSold(date), HttpStatus.OK);
