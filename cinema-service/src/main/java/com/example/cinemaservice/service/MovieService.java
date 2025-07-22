@@ -142,8 +142,12 @@ public class MovieService implements MovieServiceImp {
 
     @Override
     public MovieDTO getMovieByShowtimeID(int showtimeID) {
-        Showtime showtime = showtimeRepository.getShowtimesById(showtimeID);
-        Movie movie = repository.getMovieById(showtime.getMovie().getId());
-        return movie == null ? null : convertToDTO(movie);
+        try{
+            Showtime showtime = showtimeRepository.getShowtimesById(showtimeID);
+            Movie movie = repository.getMovieById(showtime.getMovie().getId());
+            return convertToDTO(movie);
+        }catch (Exception e){
+            return null;
+        }
     }
 }
