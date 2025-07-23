@@ -29,5 +29,6 @@ public class ConcessionProduct {
     @Column(name = "size", nullable = false)
     private String size;
 
-
+    @Column(name = "is_available", nullable = false)
+    private boolean isAvailable = true;
 }

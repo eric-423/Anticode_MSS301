@@ -67,6 +67,7 @@ const MovieModal = ({ isOpen, onClose, onSubmit, movie = null, isEditing = false
     useEffect(() => {
         if (movie && isEditing) {
             setForm({
+                id: movie.id || '',
                 title: movie.title || '',
                 synopsis: movie.synopsis || '',
                 duration: movie.duration.replace(' phút', '') || '',
@@ -99,28 +100,34 @@ const MovieModal = ({ isOpen, onClose, onSubmit, movie = null, isEditing = false
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        const movieData = {
-            ...form,
-            status: unformatStatus(form.status),
-            duration: parseInt(form.duration) || 0,
-            ageRanging: parseInt(form.ageRanging) || 0,
-            showtimeList: showtimeList
-                .filter(st => st.startTime && st.endTime && st.cinemaHall?.id)
-                .map(st => {
-                    const showtimeData = {
-                        startTime: st.startTime,
-                        endTime: st.endTime,
-                        cinemaHall: { id: parseInt(st.cinemaHall.id) },
-                    };
-                    if (st.id) {
-                        showtimeData.id = st.id;
-                    }
-                    return showtimeData;
-                })
-        };
-        onSubmit(movieData);
+    e.preventDefault();
+
+    const movieData = {
+        ...form,
+        id: movie?.id,
+        status: unformatStatus(form.status),
+        duration: parseInt(form.duration) || 0,
+        ageRanging: parseInt(form.ageRanging) || 0,
+        showtimeList: showtimeList
+            .filter(st => st.startTime && st.endTime && st.cinemaHall?.id)
+            .map(st => {
+                const showtimeData = {
+                    // Chuyển về định dạng ISO (hoặc định dạng bạn mong muốn)
+                    startTime: new Date(st.startTime).toISOString(),
+                    endTime: new Date(st.endTime).toISOString(),
+                    cinemaHall: { id: parseInt(st.cinemaHall.id) },
+                    // movie: { id: movie?.id || 0 } // Thêm ID phim nếu có
+                };
+                if (st.id) {
+                    showtimeData.id = st.id;
+                }
+                return showtimeData;
+            })
     };
+
+    onSubmit(movieData);
+};
+
 
     if (!isOpen) return null;
 

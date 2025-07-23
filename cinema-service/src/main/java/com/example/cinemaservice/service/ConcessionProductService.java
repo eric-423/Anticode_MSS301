@@ -42,7 +42,7 @@ public class ConcessionProductService implements ConcessionProductServiceImp {
         List<ConcessionProduct> products = repository.findAll();
         List<ConcessionProductDTO> concessionProductDTOS = new ArrayList<>();
 
-        for(ConcessionProduct product : products) {
+        for (ConcessionProduct product : products) {
             concessionProductDTOS.add(convertToDTO(product));
         }
 
@@ -79,6 +79,13 @@ public class ConcessionProductService implements ConcessionProductServiceImp {
 
     @Override
     public void delete(Integer id) {
-        repository.deleteById(id);
+        ConcessionProduct concessionProduct = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("ConcessionProduct not found with id: " + id));
+        if (concessionProduct != null){
+            concessionProduct.setAvailable(false);
+            repository.save(concessionProduct);
+        }
     }
+
+
 }

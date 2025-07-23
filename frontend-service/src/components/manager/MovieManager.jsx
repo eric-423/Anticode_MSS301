@@ -64,6 +64,8 @@ const MovieManager = () => {
     };
 
     const handleSubmit = async (movieData) => {
+        console.log('Submitting movie data:', movieData);
+        
         try {
             if (editingMovie) {
                 await updateMovie(editingMovie.id, movieData);

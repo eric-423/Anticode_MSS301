@@ -36,7 +36,8 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product = null, isEditing = f
     e.preventDefault();
     onSubmit({
       ...form,
-      price: parseFloat(form.price)
+      price: parseFloat(form.price),
+      isAvailable: product?.isAvailable ?? 1, // Default to 1 if not editing
     });
   };
 

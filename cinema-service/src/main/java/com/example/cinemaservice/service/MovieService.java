@@ -11,6 +11,7 @@ import com.example.cinemaservice.entity.enums.MovieStatus;
 import com.example.cinemaservice.repository.MovieRepository;
 import com.example.cinemaservice.repository.ShowtimeRepository;
 import com.example.cinemaservice.service.Imp.MovieServiceImp;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,9 +35,38 @@ public class MovieService implements MovieServiceImp {
     }
 
     @Override
+    @Transactional
     public Movie create(Movie entity) {
-        validateShowtimesWithDuration(entity);
-        return repository.save(entity);
+
+        List<Showtime> tempShowtimes = entity.getShowtimeList();
+        entity.setShowtimeList(null); // Bỏ tạm showtimes trước khi save
+
+        Movie savedMovie = repository.save(entity); // Bước 1: Save movie trước
+
+        if (tempShowtimes != null && savedMovie.getDuration() != 0) {
+            for (Showtime showtime : tempShowtimes) {
+                showtime.setMovie(savedMovie);
+
+                long now = System.currentTimeMillis();
+                long start = showtime.getStartTime().getTime();
+                long end = showtime.getEndTime().getTime();
+                long maxEnd = start + savedMovie.getDuration() * 60 * 1000L;
+
+                if (end < maxEnd) {
+                    throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ", end: " + showtime.getEndTime() + ") vượt quá duration của phim (" + savedMovie.getDuration() + " phút)");
+                }
+
+                if (start < now) {
+                    throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ") không được trước thời điểm hiện tại");
+                }
+            }
+
+            savedMovie.setShowtimeList(tempShowtimes);
+        }
+
+        return repository.save(savedMovie);
+
+
     }
 
     @Override
@@ -70,7 +100,7 @@ public class MovieService implements MovieServiceImp {
 
         List<MovieDTO> movieDTOS = new ArrayList<>();
 
-        for(Movie movie : movies) {
+        for (Movie movie : movies) {
             MovieDTO dto = convertToDTO(movie);
             movieDTOS.add(dto);
         }
@@ -93,7 +123,7 @@ public class MovieService implements MovieServiceImp {
         List<Genres> genres = movie.getGenres();
         List<GenreDTO> genreDTOS = new ArrayList<>();
 
-        for(Genres genre : genres) {
+        for (Genres genre : genres) {
             GenreDTO genreDTO = new GenreDTO();
             genreDTO.setId(genre.getId());
             genreDTO.setName(genre.getName());
@@ -103,7 +133,7 @@ public class MovieService implements MovieServiceImp {
         List<FilmPersonel> personels = movie.getPersonels();
         List<FilmPersonelDTO> filmPersonelDTOS = new ArrayList<>();
 
-        for(FilmPersonel personel : personels) {
+        for (FilmPersonel personel : personels) {
             FilmPersonelDTO filmPersonelDTO = new FilmPersonelDTO();
             filmPersonelDTO.setId(personel.getId());
             filmPersonelDTO.setName(personel.getName());
@@ -139,18 +169,18 @@ public class MovieService implements MovieServiceImp {
 
     @Override
     public MovieDTO getByTicketId(Integer bookingId) {
-    Movie movie = repository.findByShowtimeList_Id(bookingId);
+        Movie movie = repository.findByShowtimeList_Id(bookingId);
 
-    return convertToDTO(movie);
+        return convertToDTO(movie);
     }
 
     @Override
     public MovieDTO getMovieByShowtimeID(int showtimeID) {
-        try{
+        try {
             Showtime showtime = showtimeRepository.getShowtimesById(showtimeID);
             Movie movie = repository.getMovieById(showtime.getMovie().getId());
             return convertToDTO(movie);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -158,14 +188,16 @@ public class MovieService implements MovieServiceImp {
     private void validateShowtimesWithDuration(Movie movie) {
         if (movie.getShowtimeList() != null && movie.getDuration() != 0) {
             for (Showtime showtime : movie.getShowtimeList()) {
-                long now = LocalDate.now().atStartOfDay().toInstant(java.time.ZoneOffset.UTC).toEpochMilli();
+                showtime.setMovie(movie);
+                long now = System.currentTimeMillis();
                 long start = showtime.getStartTime().getTime();
                 long end = showtime.getEndTime().getTime();
                 long maxEnd = start + movie.getDuration() * 60 * 1000L;
+                System.out.println("Showtime (start: " + showtime.getStartTime() + ", end: " + showtime.getEndTime() + "), duration: " + movie.getDuration() + " phút, maxEnd: " + maxEnd);
                 if (end < maxEnd) {
                     throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ", end: " + showtime.getEndTime() + ") vượt quá duration của phim (" + movie.getDuration() + " phút)");
                 }
-                if( start < now) {
+                if (start < now) {
                     throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ") không được trước thời điểm hiện tại");
                 }
             }
