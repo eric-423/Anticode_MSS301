@@ -1,5 +1,6 @@
 package com.example.cinemaservice.controller;
 
+import com.example.cinemaservice.dtos.CinemaHallsDTO;
 import com.example.cinemaservice.entity.CinemaHall;
 import com.example.cinemaservice.service.Imp.CinemaHallServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class CinemaHallController {
     private CinemaHallServiceImp cinemaHallServiceImp;
 
     @GetMapping
-    public Iterable<CinemaHall> getAllCinemaHalls() {
+    public Iterable<CinemaHallsDTO> getAllCinemaHalls() {
         return cinemaHallServiceImp.getAll();
     }
 

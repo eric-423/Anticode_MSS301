@@ -1,5 +1,6 @@
 package com.example.cinemaservice.service.Imp;
 
+import com.example.cinemaservice.dtos.CinemaHallsDTO;
 import com.example.cinemaservice.entity.CinemaHall;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface CinemaHallServiceImp {
 
     public Optional<CinemaHall> getById(Integer id);
 
-    public List<CinemaHall> getAll();
+    public List<CinemaHallsDTO> getAll();
 
     public CinemaHall update(Integer id, CinemaHall entity);
 
