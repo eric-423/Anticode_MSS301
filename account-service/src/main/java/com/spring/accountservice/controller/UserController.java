@@ -122,7 +122,7 @@ public class UserController {
     }
 
     @GetMapping("/profile/{userId}")
-    public ResponseEntity<?> getUserProfile(@PathVariable int userId) {
+    public ResponseEntity<?> getUserProfile(@PathVariable int userId) throws Exception {
         Users user = userRepository.findById(userId).orElse(null);
         if (user == null) return ResponseEntity.badRequest().body("User not found");
 
