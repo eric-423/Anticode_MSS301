@@ -30,5 +30,6 @@ public class HallType {
     private int column;
 
     @OneToMany(mappedBy = "hallType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<CinemaHall> cinemaHalls;
 }
