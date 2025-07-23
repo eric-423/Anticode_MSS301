@@ -8,6 +8,12 @@ const api = axios.create({
   },
 });
 
+export const getPageTransactionHistory = () => 
+  api.get(`/transaction-service/dashboard/get-page-transaction-history`)
+
+export const getPageOrderHistory = () => 
+   api.get(`/booking-service/dashboard/get-page-order-history`)
+
 export const getTransactionHistory = (page, size) => 
     api.get(`/transaction-service/dashboard/transaction-history?page=${page}&size=${size}`)
 

@@ -54,4 +54,9 @@ public class DashboardController {
         return new ResponseEntity<>(dashboardService.getUserByBookingId(bookingId), HttpStatus.OK);
     }
 
+    @GetMapping("/get-page-order-history")
+    public ResponseEntity<Integer> getPageOrderHistory(){
+        return new ResponseEntity<>(dashboardService.getPageOrderHistory(), HttpStatus.OK);
+    }
+
 }

@@ -45,6 +45,11 @@ public class DashboardService implements IDashboardService {
         return transactions.stream().map(this::convertToTransactionDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public Integer getPageTransactionsHistory() {
+        return (int) Math.ceil((double) transactionRepository.count() / 10);
+    }
+
     private TransactionDTO convertToTransactionDTO(Transaction transaction) {
         TransactionDTO transactionDTO = new TransactionDTO();
         BeanUtils.copyProperties(transaction, transactionDTO);

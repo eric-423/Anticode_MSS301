@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getEmailByUserId, getOrderHistory } from "../../utils/api-dashboard";
+import {
+  getEmailByUserId,
+  getOrderHistory,
+  getPageOrderHistory,
+} from "../../utils/api-dashboard";
 
 const formatter = new Intl.DateTimeFormat("en-CA", {
   year: "numeric",
@@ -44,10 +48,20 @@ const OrderHistory = () => {
   ];
 
   const [orders, setOrders] = useState([]);
+  const [page, setPage] = useState(3);
+  const [activePage, setActivePage] = useState(0);
+
+  useEffect(() => {
+    const fecthGetPage = async () => {
+      const pageRes = (await getPageOrderHistory()).data;
+      setPage(pageRes);
+    };
+    fecthGetPage();
+  }, []);
 
   useEffect(() => {
     const fetchOrderHistory = async () => {
-      const orderRes = await getOrderHistory(0, 10);
+      const orderRes = await getOrderHistory(activePage, 9);
       const ordersHandle = await Promise.all(
         orderRes.data.map(async (item) => {
           return {
@@ -71,8 +85,8 @@ const OrderHistory = () => {
 
       setOrders(ordersHandle);
     };
-    fetchOrderHistory();
-  }, []);
+    if (page) fetchOrderHistory();
+  }, [page, activePage]);
 
   const caculateFrame = () => {
     return title.map((item) => `${item.column}fr `).join("");
@@ -91,7 +105,7 @@ const OrderHistory = () => {
             <li>{item.name}</li>
           ))}
         </ul>
-        <div>
+        <div className="min-h-[68vh]">
           {orders &&
             orders.map((order) => (
               <ul
@@ -111,6 +125,20 @@ const OrderHistory = () => {
               </ul>
             ))}
         </div>
+      </div>
+      <div className="flex justify-center items-center mt-4 gap-x-[20px]">
+        {Array.from({ length: page }).map((_, index) => (
+          <div
+            onClick={() => setActivePage(index)}
+            className={`w-[30px] h-[30px]  flex justify-center items-center cursor-pointer rounded-[.375rem]  ${
+              activePage === index
+                ? "bg-red-600 text-white"
+                : "bg-gray-200 text-gray-700"
+            } `}
+          >
+            {index}
+          </div>
+        ))}
       </div>
     </div>
   );
