@@ -65,6 +65,7 @@ public class ConcessionProductService implements ConcessionProductServiceImp {
         dto.setPrice(product.getPrice());
         dto.setProductImageUrl(product.getProductImageUrl());
         dto.setSize(product.getSize());
+        dto.setAvailable(product.isAvailable());
         return dto;
     }
 
@@ -83,6 +84,7 @@ public class ConcessionProductService implements ConcessionProductServiceImp {
                 .orElseThrow(() -> new RuntimeException("ConcessionProduct not found with id: " + id));
         if (concessionProduct != null){
             concessionProduct.setAvailable(false);
+            System.out.println(concessionProduct);
             repository.save(concessionProduct);
         }
     }

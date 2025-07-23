@@ -77,8 +77,10 @@ export const getAllProducts = (params = {}) =>
 export const getProductById = (id) =>
   api.get(`/cinema-service/concession-products/${id}`);
 
-export const createProduct = (data) =>
-  api.post('/cinema-service/concession-products', data);
+export const createProduct = (data) =>{
+  console.log('Creating product with data:', data);
+  return api.post('/cinema-service/concession-products', data);
+}
 
 export const updateProduct = (id, data) =>
   api.put(`/cinema-service/concession-products/${id}`, data);
