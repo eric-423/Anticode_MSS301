@@ -6,9 +6,7 @@ const ShowtimeInputList = ({ showtimes, setShowtimes }) => {
     useEffect(() => {
         getAllCinemaHalls()
         .then(res => {
-            setCinemaHalls(res.data)
-            console.log(res.data);
-            
+            setCinemaHalls(res.data);
         })
         .catch(() => setCinemaHalls([]));
     }, []);
@@ -39,6 +37,19 @@ const ShowtimeInputList = ({ showtimes, setShowtimes }) => {
             <button type="button" onClick={handleAdd} className="bg-blue-500 text-white px-2 py-1 rounded mt-2">Thêm suất chiếu</button>
         </div>
     );
+};
+
+const unformatStatus = (status) => {
+    switch (status) {
+        case 'Sắp chiếu':
+            return 'COMING_SOON';
+        case 'Đang chiếu':
+            return 'NOW_SHOWING';
+        case 'Không chiếu':
+            return 'NOT_SHOWING';
+        default:
+            return status;
+    }
 };
 
 const MovieModal = ({ isOpen, onClose, onSubmit, movie = null, isEditing = false }) => {
@@ -91,15 +102,22 @@ const MovieModal = ({ isOpen, onClose, onSubmit, movie = null, isEditing = false
         e.preventDefault();
         const movieData = {
             ...form,
+            status: unformatStatus(form.status),
             duration: parseInt(form.duration) || 0,
             ageRanging: parseInt(form.ageRanging) || 0,
             showtimeList: showtimeList
                 .filter(st => st.startTime && st.endTime && st.cinemaHall?.id)
-                .map(st => ({
-                    startTime: st.startTime,
-                    endTime: st.endTime,
-                    cinemaHall: { id: parseInt(st.cinemaHall.id) },
-                })),
+                .map(st => {
+                    const showtimeData = {
+                        startTime: st.startTime,
+                        endTime: st.endTime,
+                        cinemaHall: { id: parseInt(st.cinemaHall.id) },
+                    };
+                    if (st.id) {
+                        showtimeData.id = st.id;
+                    }
+                    return showtimeData;
+                })
         };
         onSubmit(movieData);
     };
