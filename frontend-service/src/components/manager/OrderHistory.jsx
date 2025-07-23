@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DataTable from "./DataTable";
 import { getEmailByUserId, getOrderHistory } from "../../utils/api-dashboard";
 
 const OrderHistory = () => {
@@ -74,7 +73,13 @@ const OrderHistory = () => {
           style={{
             gridTemplateColumns: caculateFrame(),
           }}
-        ></ul>
+        >
+          {
+            title.map((item) => (
+              <li>{item.name}</li>
+            ))
+          }
+        </ul>
         <div>
           {orders.map((order) => (
             <ul

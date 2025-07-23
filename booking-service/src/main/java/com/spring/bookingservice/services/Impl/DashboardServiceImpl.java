@@ -126,6 +126,11 @@ public class DashboardServiceImpl implements DashboardService {
         return bookings.stream().map(this::convertBookingToBookingDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public Integer getUserByBookingId(int bookingId) {
+        return  bookingRepository.getBookingById(bookingId).getUserID();
+    }
+
     private double getRevenueProductByMonth(LocalDate firstDayOfMonth, LocalDate lastDayOfMonth) {
         LocalDateTime startOfDayFirstMonth = firstDayOfMonth.atStartOfDay();
         LocalDateTime endOfDayLastMonth = lastDayOfMonth.atTime(LocalTime.MAX);
