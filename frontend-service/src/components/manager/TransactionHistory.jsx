@@ -83,7 +83,7 @@ const TransactionHistory = () => {
     <div className="p-[32px]">
       <div className="bg-white p-6 rounded-xl shadow-md">
         <ul
-          className="grid grid-cols-12 text-[12px] text-gray-700 uppercase bg-gray-100 py-5 px-4 rounded-[.375rem] font-bold"
+          className="grid grid-cols-12 text-[12px] text-gray-700 uppercase bg-gray-100 py-5 px-4 rounded-[.375rem] font-bold gap-x-[20px]"
           style={{
             gridTemplateColumns: caculateFrame(),
           }}
@@ -98,11 +98,11 @@ const TransactionHistory = () => {
             </li>
           ))}
         </ul>
-        <div className="min-h-[68vh]">
+        <div className="min-h-[68vh] ">
           {transactions &&
             transactions.map((transaction) => (
               <ul
-                className="grid grid-cols-12 py-5 px-4 text-[16px]"
+                className="grid grid-cols-12 py-5 px-4 text-[16px] gap-x-[20px]"
                 style={{
                   gridTemplateColumns: caculateFrame(),
                 }}
@@ -119,8 +119,9 @@ const TransactionHistory = () => {
               </ul>
             ))}
         </div>
-        <div className="flex justify-center items-center mt-4 gap-x-[20px]">
-          {Array.from({ length: page }).map((_, index) => (
+      </div>
+      <div className="flex justify-center items-center mt-4 gap-x-[20px]">
+          {page > 1 && Array.from({ length: page }).map((_, index) => (
             <div
               className={`w-[30px] h-[30px]  flex justify-center items-center cursor-pointer rounded-[.375rem]  ${
                 activePage === index
@@ -134,7 +135,6 @@ const TransactionHistory = () => {
             </div>
           ))}
         </div>
-      </div>
     </div>
   );
 };

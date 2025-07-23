@@ -48,7 +48,7 @@ const OrderHistory = () => {
   ];
 
   const [orders, setOrders] = useState([]);
-  const [page, setPage] = useState(3);
+  const [page, setPage] = useState();
   const [activePage, setActivePage] = useState(0);
 
   useEffect(() => {
@@ -127,7 +127,7 @@ const OrderHistory = () => {
         </div>
       </div>
       <div className="flex justify-center items-center mt-4 gap-x-[20px]">
-        {Array.from({ length: page }).map((_, index) => (
+        {page > 1 && Array.from({ length: page }).map((_, index) => (
           <div
             onClick={() => setActivePage(index)}
             className={`w-[30px] h-[30px]  flex justify-center items-center cursor-pointer rounded-[.375rem]  ${
