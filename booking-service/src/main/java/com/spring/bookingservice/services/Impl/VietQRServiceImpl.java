@@ -27,8 +27,8 @@ public class VietQRServiceImpl implements VietQRService {
     @Value("${app.payment.base-url:http://localhost:8081}")
     private String baseUrl;
 
-    private final static String SUCCESS_URL = "http://35.247.155.58:8080/booking-service/api/payment/callback/success";
-    private final static String CANCEL_URL = "http://35.247.155.58:8080/booking-service/api/payment/callback/cancel";
+    private final static String SUCCESS_URL = "http://35.187.229.228:8080/booking-service/api/payment/callback/success";
+    private final static String CANCEL_URL = "http://35.187.229.228:8080/booking-service/api/payment/callback/cancel";
 
     @Override
     public PaymentResponseDTO createVietQRPayment(BookingDTO bookingDTO, PaymentRequestDTO paymentRequest) {

@@ -7,18 +7,18 @@ const TransactionHistory = () => {
       column: 2,
     },
     {
-      name: "Customer",
-      column: 2,
+      name: "Order Code",
+      column: 2.5,
     },
     {
-      name: "Booking",
-      column: 2.5,
+      name: "Customer",
+      column: 2,
     },
     {
       name: "Method",
       column: 2,
     },
-       {
+    {
       name: "Date",
       column: 1.5,
     },
