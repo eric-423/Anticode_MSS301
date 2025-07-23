@@ -52,9 +52,11 @@ const MovieManager = () => {
     };
 
     const handleDelete = async (movie) => {
+        console.log('Deleting movie:', movie);
+
         if (window.confirm(`Bạn có chắc chắn muốn xóa phim "${movie.title}"?`)) {
             try {
-                await deleteMovie(movie.id);
+                await updateMovie(movie.id, deleteMovieData(movie)); // Soft delete
                 await fetchMovies();
             } catch (error) {
                 console.error('Lỗi khi xóa phim:', error);
@@ -100,6 +102,19 @@ const MovieManager = () => {
             imageUrl: movie.imageUrl,
             trailerUrl: movie.trailerUrl,
         }));
+    };
+
+    const deleteMovieData = (movie) => {
+        return {
+            id: movie.id,
+            title: movie.title,
+            synopsis: movie.synopsis,
+            duration: parseInt(movie.duration), // "120 phút" => 120
+            ageRanging: parseInt(movie.ageRanging), // "10+" => 10
+            status: 'NOT_SHOWING', // Luôn gửi enum
+            imageUrl: movie.imageUrl,
+            trailerUrl: movie.trailerUrl
+        };
     };
 
     const formatStatus = (status) => {
