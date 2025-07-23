@@ -45,6 +45,8 @@ public class SecurityConfig {
                         .pathMatchers("/booking-service/ticket/**").hasAnyAuthority("ADMIN", "MANAGER", "USER")
                         .pathMatchers("/transaction-service/api/payment-status/**").hasAnyAuthority("ADMIN", "MANAGER", "USER")
                         .pathMatchers("/transaction-service/**").hasAnyAuthority("ADMIN", "MANAGER", "USER")
+                        .pathMatchers("/cinema-service/cinema-halls/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .pathMatchers("/cinema-service/**").hasAnyAuthority("ADMIN", "MANAGER")
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

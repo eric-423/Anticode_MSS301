@@ -14,4 +14,5 @@ public class ConcessionProductDTO {
 
     private String size;
 
+    private boolean isAvailable = true;
 }

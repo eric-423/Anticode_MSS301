@@ -6,6 +6,8 @@ import com.example.cinemaservice.service.Imp.CinemaHallServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cinema-halls")
 public class CinemaHallController {
@@ -14,12 +16,12 @@ public class CinemaHallController {
     private CinemaHallServiceImp cinemaHallServiceImp;
 
     @GetMapping
-    public Iterable<CinemaHallsDTO> getAllCinemaHalls() {
+    public List<CinemaHallsDTO> getAllCinemaHalls() {
         return cinemaHallServiceImp.getAll();
     }
 
     @GetMapping("/{id}")
-    public CinemaHall getCinemaHallById(Integer id) {
+    public CinemaHall getCinemaHallById(@PathVariable Integer id) {
         return cinemaHallServiceImp.getById(id)
                 .orElseThrow(() -> new RuntimeException("Cinema Hall not found with id: " + id));
     }

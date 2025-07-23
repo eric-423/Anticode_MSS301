@@ -32,7 +32,8 @@ const ProductManager = () => {
     try {
       const response = await getAllProducts({ page: pageParam, size: sizeParam });
       const products = response.data.data?.content || response.data.data || [];
-      setData(products);
+      // Filter out soft-deleted products (isAvailable === 0)
+      setData(products.filter(p => p.isAvailable !== 0));
       setTotalPages(response.data.data?.totalPages || 1);
     } catch (error) {
       setError('Không thể tải danh sách sản phẩm');
@@ -60,7 +61,9 @@ const ProductManager = () => {
     if (window.confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${product.name}"?`)) {
       try {
         await deleteProduct(product.id);
-        await fetchProducts();
+        console.log(product);
+        
+        await fetchProducts(); // Refetch to update the list
       } catch (error) {
         setError('Không thể xóa sản phẩm');
       }
