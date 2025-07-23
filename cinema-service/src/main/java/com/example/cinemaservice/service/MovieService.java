@@ -164,7 +164,13 @@ public class MovieService implements MovieServiceImp {
 
     @Override
     public void delete(Integer id) {
-        repository.deleteById(id);
+        Movie movie = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movie not found with id: " + id));
+        if(movie != null){
+            movie.setStatus(MovieStatus.NOT_SHOWING);
+            movie.setShowtimeList(null);
+            repository.save(movie);
+        }
     }
 
     @Override
