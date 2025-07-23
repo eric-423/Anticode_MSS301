@@ -17,6 +17,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class MovieService implements MovieServiceImp {
 
     @Override
     public Movie create(Movie entity) {
+        validateShowtimesWithDuration(entity);
         return repository.save(entity);
     }
 
@@ -125,6 +128,7 @@ public class MovieService implements MovieServiceImp {
             throw new RuntimeException("Movie not found: " + id);
         }
         entity.setId(id);
+        validateShowtimesWithDuration(entity);
         return repository.save(entity);
     }
 
@@ -148,6 +152,23 @@ public class MovieService implements MovieServiceImp {
             return convertToDTO(movie);
         }catch (Exception e){
             return null;
+        }
+    }
+
+    private void validateShowtimesWithDuration(Movie movie) {
+        if (movie.getShowtimeList() != null && movie.getDuration() != 0) {
+            for (Showtime showtime : movie.getShowtimeList()) {
+                long now = LocalDate.now().atStartOfDay().toInstant(java.time.ZoneOffset.UTC).toEpochMilli();
+                long start = showtime.getStartTime().getTime();
+                long end = showtime.getEndTime().getTime();
+                long maxEnd = start + movie.getDuration() * 60 * 1000L;
+                if (end < maxEnd) {
+                    throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ", end: " + showtime.getEndTime() + ") vượt quá duration của phim (" + movie.getDuration() + " phút)");
+                }
+                if( start < now) {
+                    throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ") không được trước thời điểm hiện tại");
+                }
+            }
         }
     }
 }

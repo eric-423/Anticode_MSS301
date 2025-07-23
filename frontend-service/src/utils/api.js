@@ -32,6 +32,9 @@ export const reactivateAccount = (userId) =>
 export const getAllMovies = (params = {}) =>
   api.get('/cinema-service/movies', { params });
 
+export const getAllCinemaHalls = () =>
+  api.get('/cinema-service/cinema-halls');
+
 export const getMovieById = (id) =>
   api.get(`/cinema-service/movies/${id}`);
 

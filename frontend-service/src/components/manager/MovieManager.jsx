@@ -73,6 +73,7 @@ const MovieManager = () => {
             setShowModal(false);
             await fetchMovies();
         } catch (error) {
+            alert("Không thể lưu phim, kiểm tra lại")
             console.error('Lỗi khi lưu phim:', error);
             setError('Không thể lưu phim');
         }
