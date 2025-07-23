@@ -3,19 +3,21 @@ import React, { useState, useEffect } from 'react';
 const ProductModal = ({ isOpen, onClose, onSubmit, product = null, isEditing = false }) => {
   const [form, setForm] = useState({
     name: '',
-    category: '',
     price: '',
-    stock: '',
-    status: 'Còn hàng',
+    size: '',
+    productImageUrl: '',
+    available: 0
   });
 
   useEffect(() => {
     if (product && isEditing) {
+      console.log('Editing product:', product);
       setForm({
         name: product.name || '',
         price: product.price || '',
         size: product.size || '',
         productImageUrl: product.productImageUrl || '',
+        available: 1
       });
     } else {
       setForm({
@@ -23,6 +25,7 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product = null, isEditing = f
         price: '',
         size: '',
         productImageUrl: '',
+        available: 1
       });
     }
   }, [product, isEditing]);
@@ -37,7 +40,7 @@ const ProductModal = ({ isOpen, onClose, onSubmit, product = null, isEditing = f
     onSubmit({
       ...form,
       price: parseFloat(form.price),
-      isAvailable: product?.isAvailable ?? 1, // Default to 1 if not editing
+      available: 1,
     });
   };
 

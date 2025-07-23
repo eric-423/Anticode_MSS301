@@ -14,6 +14,7 @@ const columns = [
   { key: 'price', label: 'Giá' },
   { key: 'size', label: 'Size' },
   { key: 'productImageUrl', label: 'Hình ảnh' },
+  { key: 'status', label: 'Trạng thái' }
 ];
 
 const ProductManager = () => {
@@ -32,8 +33,7 @@ const ProductManager = () => {
     try {
       const response = await getAllProducts({ page: pageParam, size: sizeParam });
       const products = response.data.data?.content || response.data.data || [];
-      // Filter out soft-deleted products (isAvailable === 0)
-      setData(products.filter(p => p.isAvailable !== 0));
+      setData(products);
       setTotalPages(response.data.data?.totalPages || 1);
     } catch (error) {
       setError('Không thể tải danh sách sản phẩm');
@@ -53,18 +53,28 @@ const ProductManager = () => {
   };
 
   const handleEdit = (product) => {
-    setEditingProduct(product);
+    const originalProduct = data.find(p => p.id === product.id);
+    setEditingProduct(originalProduct);
     setShowModal(true);
   };
 
   const handleDelete = async (product) => {
+    const productToUpdate = data.find((p) => p.id === product.id);
+
     if (window.confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${product.name}"?`)) {
       try {
-        await deleteProduct(product.id);
-        console.log(product);
-        
-        await fetchProducts(); // Refetch to update the list
+        if (productToUpdate) {
+          const updatedProduct = { ...productToUpdate, available: 0 };
+          await updateProduct(productToUpdate.id, updatedProduct);
+          
+          // Update local state to reflect the change immediately
+          setData(prevData => prevData.map(p => p.id === product.id ? updatedProduct : p));
+
+        } else {
+          setError("Không thể tìm thấy sản phẩm để xóa.");
+        }
       } catch (error) {
+        alert('Không thể xóa sản phẩm');
         setError('Không thể xóa sản phẩm');
       }
     }
@@ -72,14 +82,20 @@ const ProductManager = () => {
 
   const handleSubmit = async (productData) => {
     try {
+      setShowModal(false);
       if (editingProduct) {
         await updateProduct(editingProduct.id, productData);
+        const updatedProductInState = { ...editingProduct, ...productData };
+        setData(prevData =>
+          prevData.map(p => (p.id === editingProduct.id ? updatedProductInState : p))
+        );
+        setEditingProduct(null);
       } else {
         await createProduct(productData);
+        await fetchProducts();
       }
-      setShowModal(false);
-      await fetchProducts();
     } catch (error) {
+      alert('Không thể lưu sản phẩm');
       setError('Không thể lưu sản phẩm');
     }
   };
@@ -96,11 +112,18 @@ const ProductManager = () => {
     if (page < totalPages - 1) setPage(page + 1);
   };
 
+  const formattedData = data.map(product => {    
+    return {
+      ...product,
+      status: product.available == 1 ? 'Còn hàng' : 'Hết hàng',
+    };
+  });
+
   return (
     <>
       <DataTable
         columns={columns}
-        data={data}
+        data={formattedData}
         title="Quản lý sản phẩm"
         onAdd={handleAdd}
         onEdit={handleEdit}
