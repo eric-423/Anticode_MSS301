@@ -179,7 +179,7 @@ public class BookingServiceImpl implements BookingService {
 
     private BookingCustomerDTO convertBookingToBookingCustomerDTO(Booking booking) {
         BookingCustomerDTO bookingCustomerDTO = new BookingCustomerDTO();
-        MovieDTO movieDTO = movieService.getMovieByTicket(booking.getBookingSeatList().get(0).getId());
+        MovieDTO movieDTO = movieService.getMovieByTicket(booking.getBookingSeatList().get(0).getShowtime());
         bookingCustomerDTO.setBookingId(booking.getId());
         bookingCustomerDTO.setMovieName(movieDTO.getTitle());
         bookingCustomerDTO.setImageUrl(movieDTO.getImageUrl());
