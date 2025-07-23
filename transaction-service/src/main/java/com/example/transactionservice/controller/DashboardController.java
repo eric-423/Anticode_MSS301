@@ -34,4 +34,9 @@ public class DashboardController {
                                                                       @RequestParam(defaultValue = "10") int size){
         return new ResponseEntity<>(dashboardService.getTransactionsHistory(page,size), HttpStatus.OK);
     }
+
+    @GetMapping("/get-page-transaction-history")
+    public ResponseEntity<Integer> getPageTransactionHistory(){
+        return new ResponseEntity<>(dashboardService.getPageTransactionsHistory(), HttpStatus.OK);
+    }
 }

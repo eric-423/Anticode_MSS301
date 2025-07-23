@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getTransactionHistory } from "../../utils/api-dashboard";
+import {
+  getEmailByUserId,
+  getPageTransactionHistory,
+  getTransactionHistory,
+} from "../../utils/api-dashboard";
 
 const formatter = new Intl.DateTimeFormat("en-CA", {
   year: "numeric",
@@ -11,15 +15,15 @@ const TransactionHistory = () => {
   const title = [
     {
       name: "Transaction Code",
-      column: 2,
+      column: 1.5,
     },
     {
       name: "Order Code",
-      column: 2.5,
+      column: 1.5,
     },
     {
       name: "Customer",
-      column: 2,
+      column: 3,
     },
     {
       name: "Method",
@@ -35,11 +39,22 @@ const TransactionHistory = () => {
     },
     {
       name: "Status",
-      column: 1,
+      column: 1.5,
     },
   ];
 
+  const [page, setPage] = useState();
+  const [activePage, setActivePage] = useState(0);
   const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fecthGetPage = async () => {
+      const pageRes = (await getPageTransactionHistory()).data;
+      setPage(pageRes);
+    };
+    fecthGetPage();
+  }, []);
+
   useEffect(() => {
     const fetchTransactionHistory = async () => {
       const transactionsRes = await getTransactionHistory(0, 10);
@@ -58,9 +73,8 @@ const TransactionHistory = () => {
       );
       setTransactions(transactionHandle);
     };
-
-    fetchTransactionHistory();
-  }, []);
+    if (page) fetchTransactionHistory();
+  }, [page, activePage]);
 
   const caculateFrame = () => {
     return title.map((item) => `${item.column}fr `).join("");
@@ -84,7 +98,7 @@ const TransactionHistory = () => {
             </li>
           ))}
         </ul>
-        <div>
+        <div className="min-h-[68vh]">
           {transactions &&
             transactions.map((transaction) => (
               <ul
@@ -93,11 +107,32 @@ const TransactionHistory = () => {
                   gridTemplateColumns: caculateFrame(),
                 }}
               >
-                {Object.values(transaction).map((item) => (
-                  <li>{item}</li>
+                {Object.values(transaction).map((item, index) => (
+                  <li
+                    className={`${
+                      index === title.length - 1 ? "text-center" : null
+                    } `}
+                  >
+                    {item}
+                  </li>
                 ))}
               </ul>
             ))}
+        </div>
+        <div className="flex justify-center items-center mt-4 gap-x-[20px]">
+          {Array.from({ length: page }).map((_, index) => (
+            <div
+              className={`w-[30px] h-[30px]  flex justify-center items-center cursor-pointer rounded-[.375rem]  ${
+                activePage === index
+                  ? "bg-red-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              } `}
+
+              onClick={() => setActivePage(index)}
+            >
+              {index}
+            </div>
+          ))}
         </div>
       </div>
     </div>
