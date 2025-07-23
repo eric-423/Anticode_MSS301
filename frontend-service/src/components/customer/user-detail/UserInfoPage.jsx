@@ -40,8 +40,8 @@ const UserInfoPage = () => {
       const response = await getHistoryBooking(
         jwtDecode(localStorage.getItem('token')).id
       )
+      console.log(response)
       setHistoryBooking(response.data.content)
-      console.log(response.data)
     }
     fetchHistoryBooking()
   }, [])
