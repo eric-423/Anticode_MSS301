@@ -1,4 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getTransactionHistory } from "../../utils/api-dashboard";
+
+const formatter = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
 
 const TransactionHistory = () => {
   const title = [
@@ -32,6 +39,29 @@ const TransactionHistory = () => {
     },
   ];
 
+  const [transactions, setTransactions] = useState([]);
+  useEffect(() => {
+    const fetchTransactionHistory = async () => {
+      const transactionsRes = await getTransactionHistory(0, 10);
+      const transactionHandle = await Promise.all(
+        transactionsRes.data.map(async (item) => {
+          return {
+            transactionCode: item.id,
+            orderCode: item.bookingId,
+            customer: (await getEmailByUserId(item.userId)).data,
+            method: item.paymentMethod,
+            date: formatter.format(new Date(item.transactionDate)),
+            amount: item.amount,
+            status: item.paymentStatus,
+          };
+        })
+      );
+      setTransactions(transactionHandle);
+    };
+
+    fetchTransactionHistory();
+  }, []);
+
   const caculateFrame = () => {
     return title.map((item) => `${item.column}fr `).join("");
   };
@@ -55,22 +85,19 @@ const TransactionHistory = () => {
           ))}
         </ul>
         <div>
-          <ul
-            className="grid grid-cols-12 py-5 px-4 text-[16px]"
-            style={{
-              gridTemplateColumns: caculateFrame(),
-            }}
-          >
-            {title.map((item, index) => (
-              <li
-                className={`${
-                  index === title.length - 1 ? "text-center" : null
-                } `}
+          {transactions &&
+            transactions.map((transaction) => (
+              <ul
+                className="grid grid-cols-12 py-5 px-4 text-[16px]"
+                style={{
+                  gridTemplateColumns: caculateFrame(),
+                }}
               >
-                {item.name}
-              </li>
+                {Object.values(transaction).map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
             ))}
-          </ul>
         </div>
       </div>
     </div>

@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getEmailByUserId, getOrderHistory } from "../../utils/api-dashboard";
 
+const formatter = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
 const OrderHistory = () => {
   const title = [
     {
@@ -21,11 +27,11 @@ const OrderHistory = () => {
     },
     {
       name: "Total Price",
-      column: 1.5,
+      column: 1.25,
     },
     {
       name: "Date",
-      column: 1,
+      column: 1.25,
     },
     {
       name: "Status",
@@ -41,22 +47,29 @@ const OrderHistory = () => {
 
   useEffect(() => {
     const fetchOrderHistory = async () => {
-      const orderRes = (await getOrderHistory(0, 10)).data;
-      setOrders(
-        orderRes.map(async (item) => {
+      const orderRes = await getOrderHistory(0, 10);
+      const ordersHandle = await Promise.all(
+        orderRes.data.map(async (item) => {
           return {
             id: item.id,
             customer: (await getEmailByUserId(item.userID)).data,
             film: item.film,
-            concession: item.bookingConcessionList
-              .map((concession) => `${concession.concessionName}`)
-              .join(", "),
+            concession:
+              item.bookingConcessionList === undefined ||
+              item.bookingConcessionList === null ||
+              item.bookingConcessionList?.length === 0
+                ? "N/A"
+                : item.bookingConcessionList
+                    .map((concession) => `${concession.concessionName}`)
+                    .join(", "),
             price: item.totalPrice,
-            date: item.bookDate,
+            date: formatter.format(new Date(item.bookDate)),
             status: item.bookingStatus,
           };
         })
       );
+
+      setOrders(ordersHandle);
     };
     fetchOrderHistory();
   }, []);
@@ -69,35 +82,34 @@ const OrderHistory = () => {
     <div className="p-[32px]">
       <div className="bg-white p-6 rounded-xl shadow-md">
         <ul
-          className="grid grid-cols-12 text-[12px] text-gray-700 uppercase bg-gray-100 py-5 px-4 rounded-[.375rem] font-bold"
+          className="grid grid-cols-12 text-[12px] text-gray-700 uppercase bg-gray-100 py-5 px-4 rounded-[.375rem] font-bold gap-x-[20px]"
           style={{
             gridTemplateColumns: caculateFrame(),
           }}
         >
-          {
-            title.map((item) => (
-              <li>{item.name}</li>
-            ))
-          }
+          {title.map((item) => (
+            <li>{item.name}</li>
+          ))}
         </ul>
         <div>
-          {orders.map((order) => (
-            <ul
-              className="grid grid-cols-12 py-5 px-4 text-[16px]"
-              style={{
-                gridTemplateColumns: caculateFrame(),
-              }}
-            >
-              {Object.values(order).map((item) => (
-                <li>{item}</li>
-              ))}
-              <li>
-                <button className="font-medium text-blue-600 hover:underline mr-4 cursor-pointer">
-                  Xem
-                </button>
-              </li>
-            </ul>
-          ))}
+          {orders &&
+            orders.map((order) => (
+              <ul
+                className="grid grid-cols-12 py-5 px-4 text-[16px] gap-x-[20px]"
+                style={{
+                  gridTemplateColumns: caculateFrame(),
+                }}
+              >
+                {Object.values(order).map((item) => (
+                  <li className="line-clamp-1">{item}</li>
+                ))}
+                <li>
+                  <button className="font-medium text-blue-600 hover:underline mr-4 cursor-pointer">
+                    Xem
+                  </button>
+                </li>
+              </ul>
+            ))}
         </div>
       </div>
     </div>
