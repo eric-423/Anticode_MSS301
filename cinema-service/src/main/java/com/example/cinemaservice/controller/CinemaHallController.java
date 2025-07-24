@@ -41,5 +41,8 @@ public class CinemaHallController {
         cinemaHallServiceImp.delete(id);
     }
 
-
+    @GetMapping("/all")
+    public List<CinemaHallsDTO> getAllWithShowtime(){
+        return cinemaHallServiceImp.getAllWithShowtimes();
+    }
 }
