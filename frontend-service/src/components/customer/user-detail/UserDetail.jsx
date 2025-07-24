@@ -3,6 +3,8 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import './UserDetail.css'
 import PropTypes from 'prop-types'
+import { getUserInfo } from '../../../utils/api'
+import jwtDecode from 'jwt-decode'
 
 const UserIcon = () => (
   <svg
@@ -103,23 +105,6 @@ const EyeOffIcon = () => (
     <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.742L2.458 6.697A10.004 10.004 0 01.458 10c3.274 5.057 9.03 7 9.542 7 .847 0 1.673-.125 2.454-.36z" />
   </svg>
 )
-
-async function getUserProfile(userId) {
-  console.log('Fetching profile for userId:', userId)
-  const token = localStorage.getItem('token')
-  const res = await fetch(
-    `http://35.187.229.228:8080/account-service/api/users/profile/${userId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  )
-  if (!res.ok) throw new Error('Không lấy được thông tin user')
-  const json = await res.json()
-  return json.data
-}
-
 export default function UserDetail({ userData }) {
   const [userProfile, setUserProfile] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
@@ -127,27 +112,30 @@ export default function UserDetail({ userData }) {
 
   useEffect(() => {
     let userId = null
-    if (userData && userData.id) {
-      userId = userData.id
-    } else {
-      userId = localStorage.getItem('userId')
+    const token = localStorage.getItem('token')
+    if (token) {
+      const decodeUser = jwtDecode(token)
+      userId = decodeUser.id
     }
-    if (userId) {
-      getUserProfile(userId).then(setUserProfile).catch(console.error)
-    } else {
-      console.warn('No userId found for profile fetch')
+
+    const fetchUserProfile = async () => {
+      try {
+        const response = await getUserInfo(userId)
+        setUserProfile(response.data.data)
+        console.log(response.data.data)
+      } catch (error) {
+        console.error('Error fetching user profile:', error)
+      }
     }
-  }, [userData])
+    fetchUserProfile()
+
+  }, [])
 
   useEffect(() => {
     if (userData?.dateOfBirth) {
       setSelectedDate(new Date(userData.dateOfBirth))
     }
   }, [userData])
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
-  }
 
   if (!userProfile) return <div>Đang tải thông tin...</div>
 
@@ -170,7 +158,7 @@ export default function UserDetail({ userData }) {
                 type="text"
                 id="fullName"
                 name="fullName"
-                defaultValue={userData?.username}
+                defaultValue={userProfile?.fullName}
                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
               />
             </div>
@@ -217,7 +205,7 @@ export default function UserDetail({ userData }) {
                 type="email"
                 id="email"
                 name="email"
-                defaultValue={userData?.email}
+                defaultValue={userProfile?.email}
                 className="w-full pl-10 pr-24 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
                 readOnly
               />
@@ -244,7 +232,7 @@ export default function UserDetail({ userData }) {
                 type="tel"
                 id="phone"
                 name="phone"
-                defaultValue={userData?.phone}
+                defaultValue={userProfile?.phoneNumber}
                 className="w-full pl-10 pr-3 py-2 bg-gray-100 border-transparent rounded-md focus:ring-orange-500 focus:border-orange-500 block"
               />
             </div>
@@ -256,7 +244,7 @@ export default function UserDetail({ userData }) {
             >
               Mật khẩu
             </label>
-            <div className="relative">
+            {/* <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <LockIcon />
               </div>
@@ -280,7 +268,7 @@ export default function UserDetail({ userData }) {
               >
                 {showPassword ? <EyeOffIcon /> : <EyeIcon />}
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex justify-end pt-4">

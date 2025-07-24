@@ -18,15 +18,17 @@ public class UserPointConsumer {
 
     @KafkaListener(topics = "user-point", groupId = "account-service")
     public void consumeUserPointEvent(UserPointEvent event) {
+        System.out.println("[Kafka] Đã nhận event user-point: " + event);
         Users user = userRepository.findById(event.getUserId()).orElse(null);
         if (user != null) {
             try {
                 userService.increaseRoyalPoint(user.getId(), event.getPoint());
+                System.out.println("[Kafka] Đã cộng " + event.getPoint() + " điểm cho userId: " + user.getId());
             } catch (Exception e) {
-                System.err.println("Error updating user point for user ID: " + user.getId() + " - " + e.getMessage());
+                System.err.println("[Kafka] Lỗi khi cộng điểm cho user ID: " + user.getId() + " - " + e.getMessage());
             }
         } else {
-            System.err.println("User not found for ID: " + event.getUserId());
+            System.err.println("[Kafka] Không tìm thấy user với ID: " + event.getUserId());
         }
     }
 } 

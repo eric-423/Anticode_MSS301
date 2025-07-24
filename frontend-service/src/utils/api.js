@@ -2,10 +2,15 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://35.187.229.228:8080',
+  // baseURL: 'http://localhost:8080',
+
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+export const getUserInfo = (userId) =>
+  api.get(`/account-service/api/users/profile/${userId}`);
 
 export const register = (credentials) =>
   api.post('/account-service/api/users/register', credentials);
@@ -90,7 +95,7 @@ export const getAllProducts = (params = {}) =>
 export const getProductById = (id) =>
   api.get(`/cinema-service/concession-products/${id}`);
 
-export const createProduct = (data) =>{
+export const createProduct = (data) => {
   console.log('Creating product with data:', data);
   return api.post('/cinema-service/concession-products', data);
 }

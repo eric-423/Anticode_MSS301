@@ -1,8 +1,5 @@
-const membershipLevels = [
-  { name: '', value: 1, icon: '🥇' },
-  { name: 'GOLD', value: 100, icon: '⭐' },
-  { name: 'PLATINUM', value: 1000, icon: '🏆' },
-]
+import membershipLevels from '../../../utils/membershipLevels';
+import React from 'react'; // Added missing import for React
 
 const UserProfile = ({ user }) => {
   const royalPoint = user?.royalPoint || 0
@@ -56,65 +53,78 @@ const UserProfile = ({ user }) => {
           </span>
         </span>
       </div>
-      <div style={{ margin: '24px 0 8px 0', position: 'relative', height: 40 }}>
+      <div style={{ margin: '40px 0 16px 0', position: 'relative', height: 90 }}>
         <div
           style={{
             position: 'absolute',
-            top: 18,
+            top: 32,
             left: 0,
             right: 0,
-            height: 4,
+            height: 6,
             background: '#e0e0e0',
-            borderRadius: 2,
+            borderRadius: 3,
           }}
         />
-        {membershipLevels.map((m) => (
-          <div
-            key={m.value}
-            style={{
-              position: 'absolute',
-              left: `${(m.value / max) * 100}%`,
-              top: 0,
-              transform: 'translateX(-50%)',
-            }}
-          >
-            <div style={{ fontSize: 24, marginLeft: 20 }}>{m.icon}</div>
-            <div
-              style={{
-                width: 70,
-                fontSize: 12,
-                color: '#888',
-                textAlign: 'center',
-              }}
-            >
-              {
-                m.value > 1 ? m.value.toLocaleString() + " điểm" : ''
-              }
-
-            </div>
-            <div
-              style={{
-                width: 70,
-                fontSize: 12,
-                color: '#888',
-                textAlign: 'center',
-              }}
-            >
-              {m.name}
-            </div>
-          </div>
-        ))}
         <div
           style={{
             position: 'absolute',
-            top: 18,
+            top: 32,
             left: 0,
-            height: 4,
+            height: 6,
             background: '#f60',
-            borderRadius: 2,
+            borderRadius: 3,
             width: `${percent}%`,
+            zIndex: 1,
           }}
         />
+
+        <div
+          style={{
+            position: 'absolute',
+            left: `calc(${percent}% - 13px)`,
+            top: 4,
+            zIndex: 2,
+            transition: 'left 0.3s',
+          }}
+        >
+          <span style={{ fontSize: 16, color: '#FFD700', filter: 'drop-shadow(0 4px 8px #0003)' }}>⭐</span>
+        </div>
+        {/* Các mốc dưới thanh: tách icon và chữ thành 2 div tuyệt đối riêng biệt */}
+        {membershipLevels.map((m) => (
+          <React.Fragment key={m.value}>
+            {/* Icon */}
+            <div
+              style={{
+                position: 'absolute',
+                left: `${(m.value / max) * 100}%`,
+                top: 32,
+                transform: 'translateX(-50%)',
+                fontSize: 24,
+                textAlign: 'center',
+              }}
+            >
+              {m.icon}
+            </div>
+            {/* Chữ */}
+            <div
+              style={{
+                position: 'absolute',
+                left: `${(m.value / max) * 100}%`,
+                top: 60,
+                transform: 'translateX(-50%)',
+                textAlign: 'center',
+                minWidth: 60,
+                fontSize: 13,
+                color: '#888',
+                fontWeight: 400,
+                lineHeight: 1.2,
+              }}
+            >
+              <div>{m.value.toLocaleString()} điểm</div>
+              <div style={{ fontWeight: 600 }}>{m.name}</div>
+            </div>
+          </React.Fragment>
+        ))}
       </div>
     </div>
   )

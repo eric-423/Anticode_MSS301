@@ -40,9 +40,6 @@ function UserProfileCard({ user }) {
           </h2>
           <div className="text-xs text-gray-600">Email: {user.email}</div>
           <div className="text-xs text-gray-600">SĐT: {user.phone}</div>
-          <div className="text-xs text-gray-600 font-bold">
-            Điểm thành viên: {user?.royalPoint || 0}
-          </div>
         </div>
       </div>
 
