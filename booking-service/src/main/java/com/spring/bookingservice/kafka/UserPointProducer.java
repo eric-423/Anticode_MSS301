@@ -11,6 +11,13 @@ public class UserPointProducer {
     private KafkaTemplate<String, UserPointEvent> kafkaTemplate;
 
     public void sendUserPointEvent(UserPointEvent event) {
-        kafkaTemplate.send("user-point", event);
+        System.out.println("[Kafka] Đang gửi event user-point: " + event);
+        try {
+            kafkaTemplate.send("user-point", event);
+            System.out.println("[Kafka] Đã gửi event user-point thành công!");
+        } catch (Exception e) {
+            System.err.println("[Kafka] Lỗi khi gửi event user-point: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 } 

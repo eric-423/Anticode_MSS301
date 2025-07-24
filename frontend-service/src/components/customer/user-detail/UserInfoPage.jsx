@@ -6,12 +6,12 @@ import TabNavigation from './TabNavigation'
 import Header from '../header/Header'
 import UserDetail from './UserDetail'
 import jwtDecode from 'jwt-decode'
-import { getHistoryBooking } from '../../../utils/api'
+import { getHistoryBooking, getUserInfo } from '../../../utils/api'
 import BookingHistory from './BookingHistory'
 
 const UserInfoPage = () => {
   const [tab, setTab] = useState('profile')
-  const [user, setUser] = useState(null)
+  const [userProfile, setUserProfile] = useState(null)
   const [historyBooking, setHistoryBooking] = useState([])
 
   useEffect(() => {
@@ -21,26 +21,34 @@ const UserInfoPage = () => {
         const decodeUser = jwtDecode(token)
         if (decodeUser.exp && Date.now() >= decodeUser.exp * 1000) {
           localStorage.removeItem('token')
-          setUser(null)
+          setUserProfile(null)
           return
         }
-        setUser(decodeUser)
-
+        // Lấy profile từ API
+        const fetchUserProfile = async () => {
+          try {
+            const response = await getUserInfo(decodeUser.id)
+            setUserProfile(response.data.data)
+          } catch {
+            setUserProfile(null)
+          }
+        }
+        fetchUserProfile()
       } catch {
         localStorage.removeItem('token')
-        setUser(null)
+        setUserProfile(null)
       }
     } else {
-      setUser(null)
+      setUserProfile(null)
     }
   }, [])
 
   useEffect(() => {
     const fetchHistoryBooking = async () => {
-      const response = await getHistoryBooking(
-        jwtDecode(localStorage.getItem('token')).id
-      )
-
+      const token = localStorage.getItem('token')
+      if (!token) return
+      const decodeUser = jwtDecode(token)
+      const response = await getHistoryBooking(decodeUser.id)
       const setBookingTime = response.data.content.map(booking => {
         return {
           ...booking,
@@ -49,7 +57,6 @@ const UserInfoPage = () => {
             : booking.showTime,
         }
       })
-
       setHistoryBooking(setBookingTime)
     }
     fetchHistoryBooking()
@@ -68,7 +75,7 @@ const UserInfoPage = () => {
         }}
       >
         <div style={{ marginRight: 48 }}>
-          <UserProfile user={user} spending={spendingData} />
+          <UserProfile user={userProfile} spending={spendingData} />
         </div>
 
         <div
@@ -81,7 +88,7 @@ const UserInfoPage = () => {
           }}
         >
           <TabNavigation tab={tab} setTab={setTab} />
-          {tab === 'profile' && <UserDetail userData={user ? user : null} />}
+          {tab === 'profile' && <UserDetail userData={userProfile} />}
           {tab === 'history' && (
             <BookingHistory bookings={historyBooking} />
           )}

@@ -69,6 +69,7 @@ public class PaymentController {
     @GetMapping("/callback/success")
     public RedirectView handlePaymentSuccess(
             @RequestParam(required = false) Integer bookingId) {
+        System.out.println("[DEBUG] /callback/success được gọi với bookingId = " + bookingId);
 
         if (bookingId != null) {
             Booking booking = bookingRepository.getBookingById(bookingId);
@@ -94,7 +95,7 @@ public class PaymentController {
                 paymentProducer.publishTransaction(transactionDTO);
             }
         }
-        return new RedirectView("http://35.240.150.111/booking-success");
+        return new RedirectView("http://localhost/booking-success");
     }
 
     @GetMapping("/callback/cancel")
