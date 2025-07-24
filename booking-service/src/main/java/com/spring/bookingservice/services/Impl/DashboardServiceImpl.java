@@ -126,6 +126,16 @@ public class DashboardServiceImpl implements DashboardService {
         return bookings.stream().map(this::convertBookingToBookingDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public Integer getUserByBookingId(int bookingId) {
+        return  bookingRepository.getBookingById(bookingId).getUserID();
+    }
+
+    @Override
+    public Integer getPageOrderHistory() {
+        return (int) Math.ceil((double) bookingRepository.count() / 10);
+    }
+
     private double getRevenueProductByMonth(LocalDate firstDayOfMonth, LocalDate lastDayOfMonth) {
         LocalDateTime startOfDayFirstMonth = firstDayOfMonth.atStartOfDay();
         LocalDateTime endOfDayLastMonth = lastDayOfMonth.atTime(LocalTime.MAX);
@@ -176,7 +186,7 @@ public class DashboardServiceImpl implements DashboardService {
             BeanUtils.copyProperties(bookingSeatDTO, ticketDTO);
             ticketDTOsReturn.add(ticketDTO);
         });
-        bookingDTOReturn.setFilm(movieService.getMovieByShowtimeID(bookingReturn.getBookingSeatList().getFirst().getShowtime()).getSynopsis());
+        bookingDTOReturn.setFilm(movieService.getMovieByShowtimeID(bookingReturn.getBookingSeatList().getFirst().getShowtime()).getTitle());
 
         bookingDTOReturn.setBookingSeatList(ticketDTOsReturn);
         bookingDTOReturn.setBookingConcessionList(bookingConcessionDTOSReturn);

@@ -192,12 +192,12 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
           <div>
-            <p className="text-gray-500 text-sm">Doanh thu hôm nay</p>
+            <p className="text-gray-500 text-sm">Doanh thu hôm nay ({formatter.format(new Date())})</p>
             <p className="text-3xl font-bold text-gray-800">
               {todayRevenue && todayRevenue}đ
             </p>
-            <p className="text-green-500 text-sm mt-1">
-              +{revenueChangePercentage}% so với hôm qua
+            <p className={`${revenueChangePercentage < 0 ? "text-red-500" :"text-green-500"} text-sm mt-1`}>
+              {revenueChangePercentage}% so với hôm qua
             </p>
           </div>
           <div className="bg-blue-100 p-3 rounded-full">
@@ -206,11 +206,11 @@ const Dashboard = () => {
         </div>
         <div className="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
           <div>
-            <p className="text-gray-500 text-sm">Vé đã bán</p>
+            <p className="text-gray-500 text-sm">Vé đã bán ({formatter.format(new Date())})</p>
             <p className="text-3xl font-bold text-gray-800">
               {ticketSold && ticketSold}
             </p>
-            <p className="text-green-500 text-sm mt-1">
+            <p className={`${ticketChangePercentage < 0 ? "text-red-500" :"text-green-500"} text-sm mt-1`}>
               {ticketChangePercentage}% so với hôm qua
             </p>
           </div>
@@ -220,9 +220,9 @@ const Dashboard = () => {
         </div>
         <div className="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
           <div>
-            <p className="text-gray-500 text-sm">Sản phẩm bán ra</p>
+            <p className="text-gray-500 text-sm">Sản phẩm bán ra ({formatter.format(new Date())})</p>
             <p className="text-3xl font-bold text-gray-800">{productSold}</p>
-            <p className="text-green-500 text-sm mt-1">
+            <p className={`${productChangePercentage < 0 ? "text-red-500" :"text-green-500"} text-sm mt-1`}>
               {productChangePercentage}% so với hôm qua
             </p>
           </div>
@@ -232,11 +232,11 @@ const Dashboard = () => {
         </div>
         <div className="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
           <div>
-            <p className="text-gray-500 text-sm">Khách hàng mới</p>
+            <p className="text-gray-500 text-sm">Khách hàng mới </p>
             <p className="text-3xl font-bold text-gray-800">
               {customerRegistration}
             </p>
-            <p className="text-green-500 text-sm mt-1">
+            <p className={`${customerChangePercentage < 0 ? "text-red-500" :"text-green-500"} text-sm mt-1`}>
               +{customerChangePercentage}% so với tuần trước
             </p>
           </div>

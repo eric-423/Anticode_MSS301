@@ -3,6 +3,7 @@ package com.spring.accountservice.service.Imp;
 
 import com.spring.accountservice.dto.LoginRequest;
 import com.spring.accountservice.dto.RegisterRequest;
+import com.spring.accountservice.dto.UserDTO;
 import com.spring.accountservice.payload.ResponseData;
 
 import java.util.Map;
@@ -26,5 +27,5 @@ public interface UserService {
 
     void increaseRoyalPoint(int userId, int point) throws Exception;
 
-    Map<String, Object> getUserInfo(int userId);
+    UserDTO getUserInfo(int userId) throws Exception;
 }

@@ -12,6 +12,7 @@ public class TransactionDTO implements Serializable {
     private int id;
     private PaymentMethods paymentMethod;
     private double amount;
+    private int userId;
     private LocalDateTime transactionDate;
     private PaymentStatus paymentStatus;
     private int bookingId;

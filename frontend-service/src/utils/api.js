@@ -2,11 +2,9 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://35.187.229.228:8080',
-  // baseURL: 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json',
   },
-
 });
 
 export const register = (credentials) =>

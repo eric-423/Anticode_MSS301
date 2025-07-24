@@ -11,6 +11,7 @@ import com.spring.accountservice.payload.ResponseData;
 import com.spring.accountservice.repository.*;
 import com.spring.accountservice.service.Imp.UserService;
 import com.spring.accountservice.utils.JwtTokenHelper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -302,17 +303,11 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Map<String, Object> getUserInfo(int userId) {
-        Users user = userRepository.findById(userId).orElse(null);
-        Map<String, Object> data = new HashMap<>();
-        if (user != null) {
-            data.put("fullName", user.getFullName());
-            data.put("email", user.getEmail());
-            data.put("phone", user.getPhoneNumber());
-            data.put("royalPoint", user.getRoyalPoint());
-
-        }
-        return data;
+    public UserDTO getUserInfo(int userId) throws Exception {
+        Users user = userRepository.findById(userId).orElseThrow(Exception::new);
+        UserDTO userDTO = new UserDTO();
+        BeanUtils.copyProperties(user, userDTO);
+        return userDTO;
     }
 
 

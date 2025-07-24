@@ -30,7 +30,7 @@ public class ConcessionProductService implements ConcessionProductServiceImp {
     public ConcessionProductDTO getById(Integer id) {
         Optional<ConcessionProduct> optionalProduct = repository.findById(id);
         if (optionalProduct.isEmpty()) {
-            throw new RuntimeException("Concession Product not found with id: " + id);
+            return null;
         }
         ConcessionProduct product = optionalProduct.get();
         ConcessionProductDTO dto = convertToDTO(product);
