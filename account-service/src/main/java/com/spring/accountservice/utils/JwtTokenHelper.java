@@ -39,6 +39,7 @@ public class JwtTokenHelper {
                 .claim("role", users.getRole().getName())
                 .claim("username", users.getFullName())
                 .claim("phone", users.getPhoneNumber())
+                .claim("royalPoint", users.getRoyalPoint())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date().getTime()) + 28800000));
 

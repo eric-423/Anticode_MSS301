@@ -8,7 +8,5 @@ public class UserDTO {
     private String fullName;
     private String email;
     private String phoneNumber;
-    private String roleName;
-    private boolean isActive = true;
     private int royalPoint;
 }
