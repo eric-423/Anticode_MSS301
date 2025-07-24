@@ -10,4 +10,5 @@ public class UserDTO {
     private String phoneNumber;
     private String roleName;
     private boolean isActive = true;
+    private int royalPoint;
 }
