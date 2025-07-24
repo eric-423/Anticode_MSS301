@@ -8,9 +8,7 @@ import com.example.cinemaservice.entity.CinemaHall;
 import com.example.cinemaservice.entity.HallType;
 import com.example.cinemaservice.entity.Showtime;
 import com.example.cinemaservice.entity.ShowtimeTicketPrice;
-import com.example.cinemaservice.repository.CinemaHallRepository;
-import com.example.cinemaservice.repository.MovieRepository;
-import com.example.cinemaservice.repository.ShowtimeRepository;
+import com.example.cinemaservice.repository.*;
 import com.example.cinemaservice.service.Imp.ShowtimeServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +30,11 @@ public class ShowtimeService implements ShowtimeServiceImp {
 
     @Autowired
     private CinemaHallRepository cinemaHallRepository;
+
+    @Autowired
+    private ShowtimeTicketPriceRepository showtimeTicketPriceRepository;
+    @Autowired
+    private TicketTypeRepository ticketTypeRepository;
 
     public ShowtimeService(ShowtimeRepository repository) {
         this.repository = repository;
@@ -196,14 +199,17 @@ public class ShowtimeService implements ShowtimeServiceImp {
 
         long durationInMillis = movie.getDuration() * 60000L;
         Date endTime = new Date(showTimeDTO.getStartTime().getTime() + durationInMillis);
-
         Showtime showtime = new Showtime();
         showtime.setStartTime(showTimeDTO.getStartTime());
         showtime.setEndTime(endTime);
         showtime.setMovie(movie);
         showtime.setCinemaHall(cinemaHallRepository.findById(showTimeDTO.getCinemaHallId()).get());
-
-        repository.save(showtime);
+        Showtime showtimeSaved = repository.save(showtime);
+        ShowtimeTicketPrice showtimeTicketPrice = new ShowtimeTicketPrice();
+        showtimeTicketPrice.setShowtime(showtimeSaved);
+        showtimeTicketPrice.setTicketPrice(50000);
+        showtimeTicketPrice.setTicketType(ticketTypeRepository.findById(1).orElseThrow());
+        showtimeTicketPriceRepository.save(showtimeTicketPrice);
         return convertToDTO(showtime);
     }
     @Override

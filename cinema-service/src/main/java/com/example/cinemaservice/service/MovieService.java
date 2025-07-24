@@ -42,6 +42,8 @@ public class MovieService implements MovieServiceImp {
     @Transactional
     public Movie create(Movie entity) {
         validateShowtimesWithDuration(entity);
+
+
         return repository.save(entity);
     }
 
