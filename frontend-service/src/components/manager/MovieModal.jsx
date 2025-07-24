@@ -1,43 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllCinemaHalls } from '../../utils/api';
 
-const ShowtimeInputList = ({ showtimes, setShowtimes }) => {
-    const [cinemaHalls, setCinemaHalls] = useState([]);
-    useEffect(() => {
-        getAllCinemaHalls()
-        .then(res => {
-            setCinemaHalls(res.data);
-        })
-        .catch(() => setCinemaHalls([]));
-    }, []);
-
-    const handleChange = (idx, field, value) => {
-        setShowtimes(prev => prev.map((s, i) => i === idx ? { ...s, [field]: value } : s));
-    };
-    const handleHallChange = (idx, value) => {
-        setShowtimes(prev => prev.map((s, i) => i === idx ? { ...s, cinemaHall: { id: value } } : s));
-    };
-    const handleAdd = () => setShowtimes(prev => [...prev, { startTime: '', endTime: '', cinemaHall: { id: '' } }]);
-    const handleRemove = (idx) => setShowtimes(prev => prev.filter((_, i) => i !== idx));
-
-    return (
-        <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Danh sách suất chiếu</label>
-            {showtimes.map((st, idx) => (
-                <div key={idx} className="flex gap-2 mb-2 items-end">
-                    <input type="datetime-local" value={st.startTime} onChange={e => handleChange(idx, 'startTime', e.target.value)} className="border px-2 py-1 rounded flex-grow" />
-                    <input type="datetime-local" value={st.endTime} onChange={e => handleChange(idx, 'endTime', e.target.value)} className="border px-2 py-1 rounded flex-grow" />
-                    <select value={st.cinemaHall?.id || ''} onChange={e => handleHallChange(idx, e.target.value)} className="border px-2 py-1 rounded flex-grow">
-                        <option value="">Chọn phòng chiếu</option>
-                        {cinemaHalls.map(hall => <option key={hall.id} value={hall.id}>{hall.hallName}</option>)}
-                    </select>
-                    <button type="button" onClick={() => handleRemove(idx)} className="text-red-500 ml-2 px-2 py-1 rounded hover:bg-red-100 transition-colors whitespace-nowrap">Xóa</button>
-                </div>
-            ))}
-            <button type="button" onClick={handleAdd} className="bg-blue-500 text-white px-2 py-1 rounded mt-2">Thêm suất chiếu</button>
-        </div>
-    );
-};
 
 const unformatStatus = (status) => {
     switch (status) {
@@ -62,7 +25,6 @@ const MovieModal = ({ isOpen, onClose, onSubmit, movie = null, isEditing = false
         imageUrl: '',
         trailerUrl: ''
     });
-    const [showtimeList, setShowtimes] = useState([]);
 
     useEffect(() => {
         if (movie && isEditing) {
@@ -76,7 +38,6 @@ const MovieModal = ({ isOpen, onClose, onSubmit, movie = null, isEditing = false
                 imageUrl: movie.imageUrl || '',
                 trailerUrl: movie.trailerUrl || ''
             });
-            setShowtimes(movie.showtimeList || []);
         } else {
             setForm({
                 title: '',
@@ -87,7 +48,6 @@ const MovieModal = ({ isOpen, onClose, onSubmit, movie = null, isEditing = false
                 imageUrl: '',
                 trailerUrl: ''
             });
-            setShowtimes([]);
         }
     }, [movie, isEditing]);
 
@@ -108,21 +68,6 @@ const MovieModal = ({ isOpen, onClose, onSubmit, movie = null, isEditing = false
         status: unformatStatus(form.status),
         duration: parseInt(form.duration) || 0,
         ageRanging: parseInt(form.ageRanging) || 0,
-        showtimeList: showtimeList
-            .filter(st => st.startTime && st.endTime && st.cinemaHall?.id)
-            .map(st => {
-                const showtimeData = {
-                    // Chuyển về định dạng ISO (hoặc định dạng bạn mong muốn)
-                    startTime: new Date(st.startTime).toISOString(),
-                    endTime: new Date(st.endTime).toISOString(),
-                    cinemaHall: { id: parseInt(st.cinemaHall.id) },
-                    // movie: { id: movie?.id || 0 } // Thêm ID phim nếu có
-                };
-                if (st.id) {
-                    showtimeData.id = st.id;
-                }
-                return showtimeData;
-            })
     };
 
     onSubmit(movieData);
@@ -249,7 +194,6 @@ const MovieModal = ({ isOpen, onClose, onSubmit, movie = null, isEditing = false
                     </div>
 
                     {/* Danh sách suất chiếu */}
-                    <ShowtimeInputList showtimes={showtimeList} setShowtimes={setShowtimes} />
 
                     <div className="flex justify-end space-x-3 pt-4">
                         <button

@@ -8,6 +8,7 @@ const SideBar = ({ activeView, setActiveView }) => {
   const navItems = [
     { id: "dashboard", icon: BarChart2, label: "Tổng quan" },
     { id: "movies", icon: Film, label: "Quản lý Phim" },
+    { id: "showtimes", icon: Video, label: "Quản lý Suất chiếu" },
     { id: "products", icon: ShoppingBag, label: "Quản lý Sản phẩm" },
     { id: "order-history", icon: ShoppingBag, label: "Lịch Sử Đặt Vé" },
     { id: "transaction-history", icon: ShoppingBag, label: "Lịch Sử Thanh Toán" },

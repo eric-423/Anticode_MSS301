@@ -9,6 +9,7 @@ import BookingTickets from "../pages/customer/booking-tickets/BookingTickets";
 import UserInfoPage from "../components/customer/user-detail/UserInfoPage";
 import ManageDashboardPage from '../pages/manager/ManageDashboardPage'
 import BookingHistoryPage from '../pages/customer/BookingHistoryPage'
+import ShowtimeManagerPage from '../pages/manager/ShowtimeManagerPage'
 
 import ConcessionsPage from "../pages/customer/concessions/ConcessionsPage";
 import BookingSuccess from '../components/customer/booking-status/booking-success'
@@ -86,6 +87,13 @@ const ROUTER = [
     path: "/manager",
     page: <ManageDashboardPage />,
     title: "Manage Dashboard",
+    subRouter: [],
+  },
+  {
+    name: "manager",
+    path: "/manager/showtimes",
+    page: <ShowtimeManagerPage />,
+    title: "Manage Showtimes",
     subRouter: [],
   },
   {

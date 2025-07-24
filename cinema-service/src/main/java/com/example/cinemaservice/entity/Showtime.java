@@ -34,6 +34,7 @@ public class Showtime {
 
     @ManyToOne
     @JoinColumn(name = "cinema_hall_id", nullable = false)
+    @JsonIgnore
     private CinemaHall cinemaHall;
 
     @OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

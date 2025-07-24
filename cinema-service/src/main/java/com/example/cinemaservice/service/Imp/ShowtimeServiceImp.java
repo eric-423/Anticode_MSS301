@@ -9,6 +9,7 @@ import java.util.List;
 public interface ShowtimeServiceImp {
 
     public Showtime create(Showtime entity);
+    public ShowTimeDTO createShowtime(ShowTimeDTO showTimeDTO);
 
     public ShowTimeDTO getById(Integer id);
 
@@ -16,11 +17,12 @@ public interface ShowtimeServiceImp {
 
     List<ShowTimeDTO> findByMovieId(int movieId);
 
-    public Showtime update(Integer id, Showtime entity);
+    public ShowTimeDTO update(Integer id, ShowTimeDTO showTimeDTO);
 
     public void delete(Integer id);
 
     List<Date> getShowTimeDateByMovieId(int movieId);
 
     public List<ShowTimeDTO> getShowtimeByDate(String inputDateStr, int movieId);
+    List<ShowTimeDTO> getShowtimesByCinemaHall(int cinemaHallId);
 }

@@ -51,6 +51,20 @@ export const updateMovie = (id, movieData) =>
 export const deleteMovie = (id) =>
   api.delete(`/cinema-service/movies/delete/${id}`,);
 
+// Showtime Management APIs
+export const getAllShowtimes = (params = {}) =>
+  api.get('/cinema-service/showtimes', { params });
+
+export const createShowtime = (showtimeData) =>
+  api.post('/cinema-service/showtimes/create', showtimeData);
+
+export const updateShowtime = (id, showtimeData) =>
+  api.put(`/cinema-service/showtimes/${id}`, showtimeData);
+
+export const deleteShowtime = (id) =>
+  api.delete(`/cinema-service/showtimes/${id}`);
+export const getShowtimesByCinemaHall = (cinemaHallId) =>
+  api.get(`/cinema-service/showtimes/cinema-hall/${cinemaHallId}`);
 export const getShowtimesByMovie = (movieId) =>
   api.get(`/cinema-service/movies/${movieId}/showtimes`,);
 
