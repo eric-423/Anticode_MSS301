@@ -161,6 +161,7 @@ const ShowtimeManager = () => {
                         showtime={editingShowtime}
                         isEditing={!!editingShowtime}
                         cinemaHallId={selectedHall.id}
+                        existingShowtimes={data}
                     />
                 </>
             )}

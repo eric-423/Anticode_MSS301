@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAllMovies } from '../../utils/api';
 
-const ShowtimeModal = ({ isOpen, onClose, onSubmit, showtime = null, isEditing = false, cinemaHallId }) => {
+const ShowtimeModal = ({ isOpen, onClose, onSubmit, showtime = null, isEditing = false, cinemaHallId, existingShowtimes = [] }) => {
     const [form, setForm] = useState({
         startTime: '',
         movieId: '',
@@ -49,6 +49,20 @@ const ShowtimeModal = ({ isOpen, onClose, onSubmit, showtime = null, isEditing =
 
         const durationInMinutes = selectedMovie.duration;
         const endTime = new Date(startTime.getTime() + durationInMinutes * 60000);
+
+        const showtimesToCheck = isEditing
+            ? existingShowtimes.filter(st => st.id !== showtime.id)
+            : existingShowtimes;
+
+        for (const existing of showtimesToCheck) {
+            const existingStartTime = new Date(existing.startTime);
+            const existingEndTime = new Date(existing.endTime);
+
+            if (startTime < existingEndTime && endTime > existingStartTime) {
+                alert('Suất chiếu bị trùng lặp với một suất chiếu khác trong cùng phòng chiếu!');
+                return;
+            }
+        }
 
         const formattedEndTime = endTime.toISOString().slice(0, 16);
 

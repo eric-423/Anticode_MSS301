@@ -22,6 +22,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.Comparator;
 
 @Service
 public class MovieService implements MovieServiceImp {
@@ -37,36 +41,8 @@ public class MovieService implements MovieServiceImp {
     @Override
     @Transactional
     public Movie create(Movie entity) {
-
-        List<Showtime> tempShowtimes = entity.getShowtimeList();
-        entity.setShowtimeList(null); // Bỏ tạm showtimes trước khi save
-
-        Movie savedMovie = repository.save(entity); // Bước 1: Save movie trước
-
-        if (tempShowtimes != null && savedMovie.getDuration() != 0) {
-            for (Showtime showtime : tempShowtimes) {
-                showtime.setMovie(savedMovie);
-
-                long now = System.currentTimeMillis();
-                long start = showtime.getStartTime().getTime();
-                long end = showtime.getEndTime().getTime();
-                long maxEnd = start + savedMovie.getDuration() * 60 * 1000L;
-
-                if (end < maxEnd) {
-                    throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ", end: " + showtime.getEndTime() + ") vượt quá duration của phim (" + savedMovie.getDuration() + " phút)");
-                }
-
-                if (start < now) {
-                    throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ") không được trước thời điểm hiện tại");
-                }
-            }
-
-            savedMovie.setShowtimeList(tempShowtimes);
-        }
-
-        return repository.save(savedMovie);
-
-
+        validateShowtimesWithDuration(entity);
+        return repository.save(entity);
     }
 
     @Override
@@ -192,19 +168,57 @@ public class MovieService implements MovieServiceImp {
     }
 
     private void validateShowtimesWithDuration(Movie movie) {
-        if (movie.getShowtimeList() != null && movie.getDuration() != 0) {
-            for (Showtime showtime : movie.getShowtimeList()) {
-                showtime.setMovie(movie);
-                long now = System.currentTimeMillis();
-                long start = showtime.getStartTime().getTime();
-                long end = showtime.getEndTime().getTime();
-                long maxEnd = start + movie.getDuration() * 60 * 1000L;
-                System.out.println("Showtime (start: " + showtime.getStartTime() + ", end: " + showtime.getEndTime() + "), duration: " + movie.getDuration() + " phút, maxEnd: " + maxEnd);
-                if (end < maxEnd) {
-                    throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ", end: " + showtime.getEndTime() + ") vượt quá duration của phim (" + movie.getDuration() + " phút)");
+        if (movie.getShowtimeList() == null || movie.getShowtimeList().isEmpty() || movie.getDuration() == 0) {
+            return;
+        }
+
+        // First, calculate all end times and set movie reference
+        for (Showtime showtime : movie.getShowtimeList()) {
+            showtime.setMovie(movie);
+            long start = showtime.getStartTime().getTime();
+            long calculatedEndTimeMillis = start + (long) movie.getDuration() * 60 * 1000L;
+            showtime.setEndTime(new Date(calculatedEndTimeMillis));
+        }
+
+        // Group showtimes by hall ID to validate each hall's schedule independently
+        Map<Integer, List<Showtime>> showtimesByHall = movie.getShowtimeList().stream()
+                .collect(Collectors.groupingBy(s -> s.getCinemaHall().getId()));
+
+        long now = System.currentTimeMillis();
+
+        for (Map.Entry<Integer, List<Showtime>> entry : showtimesByHall.entrySet()) {
+            List<Showtime> hallShowtimes = entry.getValue();
+            
+            // Sort by start time to easily check for internal conflicts
+            hallShowtimes.sort(Comparator.comparing(Showtime::getStartTime));
+
+            for (int i = 0; i < hallShowtimes.size(); i++) {
+                Showtime current = hallShowtimes.get(i);
+
+                // Validate start time is not in the past
+                if (current.getStartTime().getTime() < now) {
+                    throw new IllegalArgumentException("Showtime (start: " + current.getStartTime() + ") không được trước thời điểm hiện tại");
                 }
-                if (start < now) {
-                    throw new IllegalArgumentException("Showtime (start: " + showtime.getStartTime() + ") không được trước thời điểm hiện tại");
+
+                // Check for conflicts against the PREVIOUS showtime in the same request (after sorting)
+                if (i > 0) {
+                    Showtime previous = hallShowtimes.get(i - 1);
+                    if (current.getStartTime().before(previous.getEndTime())) {
+                        throw new IllegalArgumentException("Showtime bị trùng lặp với một suất chiếu khác trong cùng yêu cầu tại phòng chiếu " + current.getCinemaHall().getHallName());
+                    }
+                }
+
+                // Check for conflicts against the database
+                List<Showtime> dbConflicts = showtimeRepository.findConflictingShowtimes(
+                        current.getCinemaHall().getId(), current.getStartTime(), current.getEndTime());
+                
+                // If updating, exclude the showtime itself from the conflict check
+                if (current.getId() != 0) {
+                    dbConflicts.removeIf(s -> s.getId() == current.getId());
+                }
+
+                if (!dbConflicts.isEmpty()) {
+                    throw new IllegalArgumentException("Showtime bị trùng lặp tại phòng chiếu " + current.getCinemaHall().getHallName() + ". Xung đột với suất chiếu ID: " + dbConflicts.get(0).getId());
                 }
             }
         }
