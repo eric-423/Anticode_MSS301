@@ -67,12 +67,27 @@ public class ShowtimeService implements ShowtimeServiceImp {
     }
 
     @Override
-    public Showtime update(Integer id, Showtime entity) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Showtime not found: " + id);
+    public ShowTimeDTO update(Integer id, ShowTimeDTO showTimeDTO) {
+        Showtime existingShowtime = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Showtime not found: " + id));
+
+        if (showTimeDTO.getStartTime().before(new Date())) {
+            throw new RuntimeException("Start time cannot be in the past.");
         }
-        entity.setId(id);
-        return repository.save(entity);
+
+        com.example.cinemaservice.entity.Movie movie = moveieRepository.findById(showTimeDTO.getMovieId())
+                .orElseThrow(() -> new RuntimeException("Movie not found: " + showTimeDTO.getMovieId()));
+
+        long durationInMillis = movie.getDuration() * 60000L;
+        Date endTime = new Date(showTimeDTO.getStartTime().getTime() + durationInMillis);
+
+        existingShowtime.setStartTime(showTimeDTO.getStartTime());
+        existingShowtime.setEndTime(endTime);
+        existingShowtime.setMovie(movie);
+        existingShowtime.setCinemaHall(cinemaHallRepository.findById(showTimeDTO.getCinemaHallId()).get());
+
+        repository.save(existingShowtime);
+        return convertToDTO(existingShowtime);
     }
 
     @Override
@@ -147,6 +162,9 @@ public class ShowtimeService implements ShowtimeServiceImp {
         showTimeDTO.setId(showtime.getId());
         showTimeDTO.setStartTime(showtime.getStartTime());
         showTimeDTO.setEndTime(showtime.getEndTime());
+        showTimeDTO.setCinemaHallId(showtime.getCinemaHall().getId());
+        showTimeDTO.setMovieId(showtime.getMovie().getId());
+        showTimeDTO.setMovieTitle(showtime.getMovie().getTitle());
 
         HallTypeDTO hallTypeDTO = new HallTypeDTO();
         HallType hallType = showtime.getCinemaHall().getHallType();
@@ -162,11 +180,35 @@ public class ShowtimeService implements ShowtimeServiceImp {
         cinemaHallsDTO.setHallName(cinemaHall.getHallName());
         cinemaHallsDTO.setScrrenType(cinemaHall.getScrrenType());
         cinemaHallsDTO.setHallType(hallTypeDTO);
-        showTimeDTO.setCinemaHall(cinemaHallsDTO);
-
-
 
         return showTimeDTO;
     }
 
+
+    @Override
+    public ShowTimeDTO createShowtime(ShowTimeDTO showTimeDTO) {
+        if (showTimeDTO.getStartTime().before(new Date())) {
+            throw new RuntimeException("Start time cannot be in the past.");
+        }
+
+        com.example.cinemaservice.entity.Movie movie = moveieRepository.findById(showTimeDTO.getMovieId())
+                .orElseThrow(() -> new RuntimeException("Movie not found: " + showTimeDTO.getMovieId()));
+
+        long durationInMillis = movie.getDuration() * 60000L;
+        Date endTime = new Date(showTimeDTO.getStartTime().getTime() + durationInMillis);
+
+        Showtime showtime = new Showtime();
+        showtime.setStartTime(showTimeDTO.getStartTime());
+        showtime.setEndTime(endTime);
+        showtime.setMovie(movie);
+        showtime.setCinemaHall(cinemaHallRepository.findById(showTimeDTO.getCinemaHallId()).get());
+
+        repository.save(showtime);
+        return convertToDTO(showtime);
+    }
+    @Override
+    public List<ShowTimeDTO> getShowtimesByCinemaHall(int cinemaHallId) {
+        List<Showtime> showtimes = repository.getShowtimesByCinemaHall_Id(cinemaHallId);
+        return showtimes.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
 }

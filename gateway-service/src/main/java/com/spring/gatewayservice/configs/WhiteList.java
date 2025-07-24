@@ -37,6 +37,7 @@ public class WhiteList {
             "/cinema-service/hall-types/**",
             "/cinema-service/showtimes",
             "/cinema-service/showtimes/**",
+            "/cinema-service/showtimes/cinema-hall/**",
             "/cinema-service/showtime-ticket-prices",
             "/cinema-service/showtime-ticket-prices/**",
             "/cinema-service/ticket-types",

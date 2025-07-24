@@ -28,10 +28,10 @@ public class CinemaHall {
 
     @ManyToOne
     @JoinColumn(name = "hall_type_id", nullable = false)
+    @JsonIgnore
     private HallType hallType;
 
     @OneToMany(mappedBy = "cinemaHall", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<Showtime> showtimes;
 
 }

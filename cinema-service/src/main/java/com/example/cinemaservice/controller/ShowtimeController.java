@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/showtimes")
 public class ShowtimeController {
+
     @Autowired
     private ShowtimeServiceImp showtimeServiceImp;
 
@@ -36,10 +37,26 @@ public class ShowtimeController {
     public Showtime createShowtime(Showtime showtime) {
         return showtimeServiceImp.create(showtime);
     }
+    @PostMapping("/create")
+    public ResponseEntity<?> createShowtime(@RequestBody ShowTimeDTO showTimeDTO) {
+        try {
+            ResponseData responseData = new ResponseData();
+            responseData.setData(showtimeServiceImp.createShowtime(showTimeDTO));
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
     @PutMapping("/{id}")
-    public Showtime updateShowtime(Integer id, Showtime showtime) {
-        return showtimeServiceImp.update(id, showtime);
+    public ResponseEntity<?> updateShowtime(@PathVariable Integer id, @RequestBody ShowTimeDTO showTimeDTO) {
+        try {
+            ResponseData responseData = new ResponseData();
+            responseData.setData(showtimeServiceImp.update(id, showTimeDTO));
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -59,6 +76,7 @@ public class ShowtimeController {
         }
     }
 
+    
     @GetMapping("/movie/show-time-date/{movieId}")
     public ResponseEntity<?> getShowTimeByDate(@RequestParam String date, @PathVariable Integer movieId) {
         try {
@@ -68,6 +86,16 @@ public class ShowtimeController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Error retrieving showtimes for date: " + date);
+        }
+    }
+    @GetMapping("/cinema-hall/{cinemaHallId}")
+    public ResponseEntity<?> getShowtimesByCinemaHall(@PathVariable Integer cinemaHallId) {
+        try {
+            ResponseData responseData = new ResponseData();
+            responseData.setData(showtimeServiceImp.getShowtimesByCinemaHall(cinemaHallId));
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error retrieving showtimes for cinema hall ID: " + cinemaHallId);
         }
     }
 }

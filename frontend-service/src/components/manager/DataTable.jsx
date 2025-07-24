@@ -82,7 +82,7 @@ const DataTable = ({
                                     ))}
                                     <td className="px-6 py-4 text-right">
                                         <button onClick={() => onEdit(item)} className="font-medium text-blue-600 hover:underline mr-4">Sửa</button>
-                                        <button onClick={() => onDelete(item)} className="font-medium text-red-600 hover:underline">Xóa</button>
+                                        {onDelete && <button onClick={() => onDelete(item)} className="font-medium text-red-600 hover:underline">Xóa</button>}
                                     </td>
                                 </tr>
                             ))}

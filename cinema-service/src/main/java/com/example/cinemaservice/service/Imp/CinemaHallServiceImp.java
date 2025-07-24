@@ -17,4 +17,6 @@ public interface CinemaHallServiceImp {
     public CinemaHall update(Integer id, CinemaHall entity);
 
     public void delete(Integer id);
+
+    public List<CinemaHallsDTO> getAllWithShowtimes();
 }
