@@ -176,14 +176,13 @@ public class ShowtimeService implements ShowtimeServiceImp {
         hallTypeDTO.setRoll(hallType.getRoll());
         hallTypeDTO.setColumn(hallType.getColumn());
 
-
-        CinemaHall cinemaHall = showtime.getCinemaHall();
+        CinemaHall cinemaHall = cinemaHallRepository.getCinemaHallById(showtime.getCinemaHall().getId());
         CinemaHallsDTO cinemaHallsDTO = new CinemaHallsDTO();
         cinemaHallsDTO.setId(cinemaHall.getId());
         cinemaHallsDTO.setHallName(cinemaHall.getHallName());
         cinemaHallsDTO.setScrrenType(cinemaHall.getScrrenType());
         cinemaHallsDTO.setHallType(hallTypeDTO);
-
+        showTimeDTO.setCinemaHall(cinemaHallsDTO);
         return showTimeDTO;
     }
 
