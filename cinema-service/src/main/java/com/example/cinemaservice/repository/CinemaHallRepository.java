@@ -12,4 +12,6 @@ public interface CinemaHallRepository extends JpaRepository<CinemaHall, Integer>
 
     @Query("SELECT ch FROM CinemaHall ch left join fetch ch.showtimes")
     List<CinemaHall> findAllWithShowtimes();
+
+    CinemaHall getCinemaHallById(int id);
 }
