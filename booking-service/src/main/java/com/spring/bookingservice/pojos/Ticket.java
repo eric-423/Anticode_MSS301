@@ -20,7 +20,6 @@ public class Ticket {
     private String qrImage;
 
     @Column(name = "status")
-    @Enumerated(EnumType.STRING)
     private TicketStatus status;
 
     @Column(name = "seat_name")
