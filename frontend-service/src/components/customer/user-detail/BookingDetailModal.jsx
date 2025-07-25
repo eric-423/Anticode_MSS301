@@ -153,6 +153,30 @@ const BookingDetailModal = ({ booking, isOpen, onClose }) => {
                 </p>
               </div>
             </div>
+            {/* Thông tin bắp nước */}
+            {booking.bookingConcessions && booking.bookingConcessions.length > 0 && (
+              <div className="mt-4">
+                <h5 className="font-semibold text-gray-900 mb-2">Bắp nước / Combo</h5>
+                <table className="min-w-full text-sm border rounded">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="px-2 py-1 text-left font-medium text-gray-700">Tên</th>
+                      <th className="px-2 py-1 text-left font-medium text-gray-700">Số lượng</th>
+                      <th className="px-2 py-1 text-left font-medium text-gray-700">Giá</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {booking.bookingConcessions.map((item) => (
+                      <tr key={item.id}>
+                        <td className="px-2 py-1 text-gray-900">{item.concessionName}</td>
+                        <td className="px-2 py-1 text-gray-900">{item.quantity}</td>
+                        <td className="px-2 py-1 text-orange-600">{formatPrice(item.price)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
           {/* Additional Info */}
