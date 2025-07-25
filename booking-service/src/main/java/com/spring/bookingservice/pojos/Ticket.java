@@ -11,6 +11,7 @@ public class Ticket {
 
     @Id
     @Column(name = "ticket_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "price")
@@ -20,6 +21,7 @@ public class Ticket {
     private String qrImage;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private TicketStatus status;
 
     @Column(name = "seat_name")
