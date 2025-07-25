@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "cinema-service", url = "${cinema.service.url}")
 public interface ConcessionProductService {
-    @GetMapping("concession-products/{id}")
-    ConcessionProductDTO getConcessionProductById(@PathVariable Integer id);
+    @GetMapping("concession-products/booking/{id}")
+    ConcessionProductDTO getConcessionProductByIdForBooking(@PathVariable Integer id);
 }

@@ -8,4 +8,5 @@ public class BookingConcessionDTO {
     private int quantity;
     private String concessionName;
     private int concessionProductID;
+    private double price=0;
 }

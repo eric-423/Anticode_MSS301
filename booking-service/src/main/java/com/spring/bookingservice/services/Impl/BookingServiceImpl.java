@@ -7,12 +7,10 @@ import com.spring.bookingservice.kafka.BookingProducer;
 import com.spring.bookingservice.pojos.Booking;
 import com.spring.bookingservice.pojos.BookingConcession;
 import com.spring.bookingservice.pojos.Ticket;
+import com.spring.bookingservice.repositories.BookingConcessionRepository;
 import com.spring.bookingservice.repositories.BookingRepository;
 import com.spring.bookingservice.repositories.TicketRepository;
-import com.spring.bookingservice.services.BookingService;
-import com.spring.bookingservice.services.MovieService;
-import com.spring.bookingservice.services.RedisHoldingSeatService;
-import com.spring.bookingservice.services.ShowTimeService;
+import com.spring.bookingservice.services.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,6 +41,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private ConcessionProductService concessionProductService;
+    @Autowired
+    private BookingConcessionRepository bookingConcessionRepository;
 
     @Override
     public BookingDTO getBooking(int id) {
@@ -76,12 +79,14 @@ public class BookingServiceImpl implements BookingService {
         List<BookingConcession> bookingConcessions = new ArrayList<>();
 
         for (BookingConcessionDTO bookingConcessionDTO : bookingDTO.getBookingConcessionList()) {
+            System.out.println("BookingConcessionDTO: " + bookingConcessionDTO.getConcessionProductID());
             BookingConcession bookingConcession = new BookingConcession();
-            BeanUtils.copyProperties(bookingConcessionDTO, bookingConcession);
+            bookingConcession.setQuantity(bookingConcessionDTO.getQuantity());
             bookingConcession.setBooking(booking);
+            bookingConcession.setConcessionProductID(bookingConcessionDTO.getConcessionProductID());
+
             bookingConcessions.add(bookingConcession);
         }
-
         booking.setBookingConcessionList(bookingConcessions);
 
         List<Ticket> tickets = new ArrayList<>();
@@ -177,6 +182,7 @@ public class BookingServiceImpl implements BookingService {
         return null;
     }
 
+
     private BookingCustomerDTO convertBookingToBookingCustomerDTO(Booking booking) {
         BookingCustomerDTO bookingCustomerDTO = new BookingCustomerDTO();
         MovieDTO movieDTO = movieService.getMovieByTicket(booking.getBookingSeatList().get(0).getShowtime());
@@ -185,6 +191,22 @@ public class BookingServiceImpl implements BookingService {
         bookingCustomerDTO.setImageUrl(movieDTO.getImageUrl());
         bookingCustomerDTO.setBookingStatus(booking.getBookingStatus().toString());
         bookingCustomerDTO.setBookingDate(booking.getBookDate());
+
+        if(booking.getBookingConcessionList() != null) {
+            List<BookingConcessionDTO> bookingConcessionDTOS = new ArrayList<>();
+
+            for (BookingConcession bookingConcession : booking.getBookingConcessionList()) {
+
+                ConcessionProductDTO concessionProductDTO = concessionProductService.getConcessionProductByIdForBooking(bookingConcession.getConcessionProductID());
+                BookingConcessionDTO bookingConcessionDTO = new BookingConcessionDTO();
+                bookingConcessionDTO.setId(concessionProductDTO.getId());
+                bookingConcessionDTO.setConcessionName(concessionProductDTO.getName());
+                bookingConcessionDTO.setQuantity(bookingConcession.getQuantity());
+                bookingConcessionDTO.setPrice(concessionProductDTO.getPrice());
+                bookingConcessionDTOS.add(bookingConcessionDTO);
+            }
+            bookingCustomerDTO.setBookingConcessions(bookingConcessionDTOS);
+        }
 
         List<Ticket> tickets = booking.getBookingSeatList();
         List<String> seatNumbers = new ArrayList<>();
