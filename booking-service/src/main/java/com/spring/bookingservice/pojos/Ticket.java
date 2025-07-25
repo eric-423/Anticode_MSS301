@@ -10,7 +10,6 @@ import lombok.Data;
 public class Ticket {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ticket_id")
     private int id;
 
