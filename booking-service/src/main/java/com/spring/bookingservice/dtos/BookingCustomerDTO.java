@@ -21,4 +21,6 @@ public class BookingCustomerDTO {
     private String cinemaName;
     private String imageUrl;
 
+    private List<BookingConcessionDTO> bookingConcessions;
+
 }

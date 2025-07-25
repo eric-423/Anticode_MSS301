@@ -149,7 +149,7 @@ public class DashboardServiceImpl implements DashboardService {
                     bookingConcessionRepository.getBookingConcessionsByBooking_Id(booking.getId()).stream()
                 )
                 .mapToDouble(bookingConcession -> {
-                    ConcessionProductDTO concessionProductDTO = concessionProductService.getConcessionProductById(bookingConcession.getConcessionProductID());
+                    ConcessionProductDTO concessionProductDTO = concessionProductService.getConcessionProductByIdForBooking(bookingConcession.getConcessionProductID());
                     return concessionProductDTO.getPrice();
                 }).sum();
     }
@@ -177,7 +177,7 @@ public class DashboardServiceImpl implements DashboardService {
         bookingReturn.getBookingConcessionList().forEach(bookingConcessionDTO -> {
             BookingConcessionDTO bookingConcessionDTOReturn = new BookingConcessionDTO();
             BeanUtils.copyProperties(bookingConcessionDTO, bookingConcessionDTOReturn);
-            bookingConcessionDTOReturn.setConcessionName(concessionProductService.getConcessionProductById(bookingConcessionDTO.getConcessionProductID()).getName());
+            bookingConcessionDTOReturn.setConcessionName(concessionProductService.getConcessionProductByIdForBooking(bookingConcessionDTO.getConcessionProductID()).getName());
             bookingConcessionDTOSReturn.add(bookingConcessionDTOReturn);
         });
         List<TicketDTO> ticketDTOsReturn = new ArrayList<>();

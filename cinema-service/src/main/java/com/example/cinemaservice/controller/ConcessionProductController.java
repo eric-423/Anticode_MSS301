@@ -33,6 +33,13 @@ public class ConcessionProductController {
         return ResponseEntity.ok(responseData);
     }
 
+
+    @GetMapping("/booking/{id}")
+    public ResponseEntity<?> getConcessionProductByIdForBooking(@PathVariable Integer id) {
+
+        return ResponseEntity.ok(concessionProductServiceImp.getById(id));
+    }
+
     @PostMapping
     public ConcessionProduct createConcessionProduct(@RequestBody ConcessionProduct concessionProduct) {
         return concessionProductServiceImp.create(concessionProduct);
