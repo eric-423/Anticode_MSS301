@@ -73,7 +73,7 @@ const ConcessionsSummary = () => {
         bookDate: new Date().toISOString(),
         userID: userID,
         bookingConcessionList: selectedConcessions.map(item => ({
-          concessionProductId: item.id,
+          concessionProductID: item.id,
           quantity: item.quantity,
           price: item.price
         })),
