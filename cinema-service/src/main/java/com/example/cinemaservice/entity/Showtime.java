@@ -29,12 +29,10 @@ public class Showtime {
 
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
-    @JsonIgnore
     private Movie movie;
 
     @ManyToOne
     @JoinColumn(name = "cinema_hall_id", nullable = false)
-    @JsonIgnore
     private CinemaHall cinemaHall;
 
     @OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
